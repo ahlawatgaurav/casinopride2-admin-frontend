@@ -74,3 +74,11 @@
 .rs-sidenav-default {
   height: 630px !important;
 }
+
+.links {
+  color: black !important;
+  border: none;
+  text-decoration: none !important;
+  font-size: 15px;
+  font-weight: 500;
+}

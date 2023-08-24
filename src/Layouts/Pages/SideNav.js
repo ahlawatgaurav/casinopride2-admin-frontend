@@ -14,6 +14,7 @@ import { Logout } from "../../Redux/actions/auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../../assets/NavBar.css";
+import { Link } from "react-router-dom";
 
 const SideNav = () => {
   const [expanded, setExpanded] = React.useState(true);
@@ -99,11 +100,52 @@ const SideNav = () => {
                 title="Users"
                 icon={<MagicIcon />}
               >
-                <Nav.Item eventKey="3-1">Manager</Nav.Item>
-                <Nav.Item eventKey="3-2">GRE</Nav.Item>
-                <Nav.Item eventKey="3-3">Accounts</Nav.Item>
-                <Nav.Item eventKey="3-4">Driver</Nav.Item>
+                <Nav.Item eventKey="3-1">
+                  <Link to="/ManagerList" className="links">
+                    Manager
+                  </Link>
+                </Nav.Item>
+                <Nav.Item eventKey="3-2">
+                  <Link to="/GREList" className="links">
+                    GRE
+                  </Link>
+                </Nav.Item>
+                <Nav.Item eventKey="3-3">
+                  {" "}
+                  <Link to="/MasterAgent" className="links">
+                    Master Agent
+                  </Link>
+                </Nav.Item>
+                <Nav.Item eventKey="3-4">
+                  <Link to="/AgentList" className="links">
+                    Agent
+                  </Link>
+                </Nav.Item>
+                <Nav.Item eventKey="3-4">
+                  <Link to="/DriverList" className="links">
+                    Driver
+                  </Link>
+                </Nav.Item>
+                <Nav.Item eventKey="3-4">
+                  <Link to="/AccountsList" className="links">
+                    Accounts
+                  </Link>
+                </Nav.Item>
               </Nav.Menu>
+            ) : (
+              <></>
+            )}
+            {loginDetails?.logindata?.UserType == "1" ? (
+              <Nav.Item eventKey="6" icon={<DashboardIcon />}>
+                Coupons
+              </Nav.Item>
+            ) : (
+              <></>
+            )}
+            {loginDetails?.logindata?.UserType == "1" ? (
+              <Nav.Item eventKey="7" icon={<DashboardIcon />}>
+                Packages
+              </Nav.Item>
             ) : (
               <></>
             )}

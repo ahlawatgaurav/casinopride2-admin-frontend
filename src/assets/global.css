@@ -1,0 +1,15 @@
+.table_text {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.table_heading {
+  background-color: rgb(210, 234, 242) !important;
+  color: grey;
+  font-weight: 600;
+  font-size: 16px;
+}
+.form_text {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+}
