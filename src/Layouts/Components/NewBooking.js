@@ -68,7 +68,7 @@ const NewBooking = () => {
     dispatch(
       getCouponsbyInitials(loginDetails?.logindata?.Token, 4, (callback) => {
         if (callback.status) {
-          setLoading(false);
+          // setLoading(false);
           console.log("Callback---------get coupons", callback?.response);
         }
       })

@@ -27,6 +27,8 @@ const AddPackage = () => {
     itemName: item.ItemName,
     itemWeekdayPrice: item.ItemWeekdayPrice,
     itemWeekendPrice: item.ItemWeekendPrice,
+    itemWeekdayRate: item?.ItemWeekdayRate,
+    itemWeekendRate: item?.ItemWeekendRate,
     itemTax: item.ItemTax,
     isDeductable: item.IsDeductable,
   }));
@@ -72,6 +74,8 @@ const AddPackage = () => {
         itemWeekendPrice: 0,
         itemTax: 0,
         isDeductable: 0,
+        itemWeekdayRate: 0,
+        itemWeekendRate: 0,
       },
     ]);
   };
@@ -79,6 +83,27 @@ const AddPackage = () => {
   const handleItemInputChange = (index, field, value) => {
     const updatedItems = [...packageItems];
     updatedItems[index][field] = value;
+
+    if (
+      field === "itemWeekdayPrice" ||
+      field === "itemWeekendPrice" ||
+      field === "itemTax"
+    ) {
+      const { itemWeekdayPrice, itemWeekendPrice, itemTax } =
+        updatedItems[index];
+      const calculatedWeekdayRate = calculateInvoiceAmount(
+        itemWeekdayPrice,
+        itemTax
+      );
+      const calculatedWeekendRate = calculateInvoiceAmount(
+        itemWeekendPrice,
+        itemTax
+      );
+
+      updatedItems[index].itemWeekdayRate = calculatedWeekdayRate;
+      updatedItems[index].itemWeekendRate = calculatedWeekendRate;
+    }
+
     setPackageItems(updatedItems);
   };
 
@@ -113,6 +138,19 @@ const AddPackage = () => {
   const handleToggle = () => {
     setIsChecked(!isChecked);
   };
+
+  const taxRate = 28;
+  const packagePrice = 2000;
+  function calculateInvoiceAmount(packagePrice, taxRate) {
+    // Ensure taxRate is a percentage (e.g., 28% as 0.28)
+    // Calculate the invoice amount
+    const invoiceAmount = (packagePrice * 100) / (100 + taxRate);
+    return invoiceAmount;
+  }
+  const invoiceAmount = calculateInvoiceAmount(packagePrice, taxRate);
+  // console.log("package price--->", packagePrice);
+  // console.log("tax--->", taxRate);
+  // console.log("tax amount--->", invoiceAmount.toFixed(2));
 
   const handleSubmit = () => {
     if (
@@ -161,12 +199,16 @@ const AddPackage = () => {
       packageTeensPrice: packageTeensPrice,
       isPackageEnabled: isChecked == "1" ? 1 : 0,
     };
-    console.log("dataaaaa", data);
+    console.log("dataaaaa------------>", data);
+    console.log(
+      "<------------packageItems----------->",
+      loginDetails?.logindata?.Token
+    );
 
     dispatch(
       editPackage(data, loginDetails?.logindata?.Token, (callback) => {
         if (callback.status) {
-          toast.success("Package Added");
+          toast.success("Package Edited");
           navigate(-1);
           toast.error(callback.error);
         } else {

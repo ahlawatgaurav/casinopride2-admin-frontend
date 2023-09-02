@@ -124,7 +124,7 @@ const PackageList = () => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search"
+                placeholder="Search package name"
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
                   filterPackageDetailsFn();
@@ -163,9 +163,7 @@ const PackageList = () => {
             <th scope="col" className="text-center table_heading">
               Edit
             </th>
-            <th scope="col" className="text-center table_heading">
-              Delete
-            </th>
+
             <th scope="col" className="text-center table_heading">
               View more
             </th>
@@ -228,12 +226,7 @@ const PackageList = () => {
                     />
                   </Link>
                 </td>
-                <td className="manager-list">
-                  <AiFillDelete
-                    onClick={() => handleShow(item.PackageId)}
-                    style={{ color: "#C5CEE0", fontSize: "20px" }}
-                  />
-                </td>
+
                 <td
                   className="manager-list"
                   onClick={() => handleViewMore(item)}
@@ -345,6 +338,20 @@ const PackageList = () => {
                   style={{ fontSize: "14px", marginBottom: "5px" }}
                 >
                   Item Weekend Price: {item.ItemWeekendPrice}
+                </p>
+
+                <p
+                  className="manager-list"
+                  style={{ fontSize: "14px", marginBottom: "5px" }}
+                >
+                  Item Weekday Price (tax): {item.ItemWeekdayRate}
+                </p>
+
+                <p
+                  className="manager-list"
+                  style={{ fontSize: "14px", marginBottom: "5px" }}
+                >
+                  Item Weekend Price (tax): {item.ItemWeekendRate}
                 </p>
               </div>
             ))}
