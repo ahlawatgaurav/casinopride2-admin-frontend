@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../../../assets/ManagerList.css";
 import { Link } from "react-router-dom";
 import {
-  getWebsiteDiscounts,
+  getPanleDiscounts,
   deleteWebsiteDiscount,
 } from "../../../Redux/actions/users";
 import { useDispatch } from "react-redux";
@@ -14,7 +14,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button, Modal } from "react-bootstrap";
 
-const Discountonwebsite = () => {
+const DiscountOnPanel = () => {
   const dispatch = useDispatch();
 
   const loginDetails = useSelector(
@@ -38,7 +38,7 @@ const Discountonwebsite = () => {
 
   const fetchDiscountDetails = () => {
     dispatch(
-      getWebsiteDiscounts(loginDetails?.logindata?.Token, 4, (callback) => {
+      getPanleDiscounts(loginDetails?.logindata?.Token, 4, (callback) => {
         if (callback.status) {
           setLoading(false);
           console.log(
@@ -67,7 +67,7 @@ const Discountonwebsite = () => {
     } else {
       const lowerCaseQuery = searchQuery.toLowerCase();
       const filtered = discountDetails.filter((item) =>
-        item?.DiscountTitle.toLowerCase().includes(lowerCaseQuery)
+        item?.PanelDiscountTitle.toLowerCase().includes(lowerCaseQuery)
       );
       setFilteredDiscountDetails(filtered);
     }
@@ -94,7 +94,7 @@ const Discountonwebsite = () => {
 
   return (
     <div>
-      <h3 className="mb-4">Discount on Website List</h3>
+      <h3 className="mb-4">Discount on Panel List</h3>
       <div className="container">
         <div className="row">
           <div className="col-md-8 col-lg-6 mb-3">
@@ -113,11 +113,11 @@ const Discountonwebsite = () => {
           <div className="col-md-4 col-lg-6 d-flex justify-content-end mb-3">
             <button className="btn btn-primary">
               <Link
-                to="/AddDiscountOnWebsite"
+                to="/AddDiscountOnPanel"
                 state={{ userType: "4" }}
                 className="addLinks"
               >
-                Add Discount on website
+                Add Discount on Panel
               </Link>
             </button>
           </div>
@@ -132,12 +132,7 @@ const Discountonwebsite = () => {
             <th scope="col" className="text-center table_heading">
               Discount
             </th>
-            <th scope="col" className="text-center table_heading">
-              Start Date
-            </th>
-            <th scope="col" className="text-center table_heading">
-              End Date
-            </th>
+
             <th scope="col" className="text-center table_heading">
               Status
             </th>
@@ -181,10 +176,9 @@ const Discountonwebsite = () => {
           ) : (
             filteredDiscountDetails.map((item) => (
               <tr key={item.id}>
-                <td className="manager-list ">{item.DiscountTitle}</td>
-                <td className="manager-list">{item.Discount}</td>
-                <td className="manager-list">{item.StartDate}</td>
-                <td className="manager-list">{item.EndDate}</td>
+                <td className="manager-list ">{item.PanelDiscountTitle}</td>
+                <td className="manager-list">{item.PanelDiscount}</td>
+
                 <td className="manager-list">
                   {item.IsDiscountEnabled ? (
                     <span style={{ color: "green" }}>Active</span>
@@ -195,7 +189,7 @@ const Discountonwebsite = () => {
 
                 <td className="manager-list">
                   <Link
-                    to="/AddDiscountOnWebsite"
+                    to="/AddDiscountOnPanel"
                     state={{ userData: item }}
                     className="links"
                   >
@@ -214,4 +208,4 @@ const Discountonwebsite = () => {
   );
 };
 
-export default Discountonwebsite;
+export default DiscountOnPanel;

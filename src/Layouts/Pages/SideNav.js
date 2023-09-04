@@ -150,12 +150,25 @@ const SideNav = () => {
             ) : (
               <></>
             )}
+
             {loginDetails?.logindata?.UserType == "1" ? (
-              <Nav.Item eventKey="6" icon={<DashboardIcon />}>
-                <Link to="/Discountonwebsite" className="links">
-                  Discounts on website
-                </Link>
-              </Nav.Item>
+              <Nav.Menu
+                placement="rightStart"
+                eventKey="10"
+                title="Discounts"
+                icon={<MagicIcon />}
+              >
+                <Nav.Item eventKey="3-1">
+                  <Link to="/Discountonwebsite" className="links">
+                    Website Discounts
+                  </Link>
+                </Nav.Item>
+                <Nav.Item eventKey="3-2">
+                  <Link to="/DiscountOnPanel" className="links">
+                    Panel Discounts
+                  </Link>
+                </Nav.Item>
+              </Nav.Menu>
             ) : (
               <></>
             )}

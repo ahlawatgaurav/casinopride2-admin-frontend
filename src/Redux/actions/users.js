@@ -348,6 +348,36 @@ export const getWebsiteDiscounts =
       });
   };
 
+export const getPanleDiscounts =
+  (token, usertype, callback) => async (dispatch) => {
+    console.log(token);
+    console.log(usertype);
+
+    api.CORE_PORT.get("/core/panelDiscount", {
+      headers: { AuthToken: token },
+    })
+      .then((response) => {
+        console.log("Get Panel Discount details ->", response.data);
+        if (response.data?.Details) {
+          console.log(response.data?.Details);
+          callback({
+            status: true,
+            response: response?.data,
+          });
+        } else if (response.data?.Error) {
+          callback({
+            status: false,
+            error: response.data?.Error?.ErrorMessage,
+          });
+        }
+      })
+      .catch((err) => {
+        {
+          console.log("error", err);
+        }
+      });
+  };
+
 export const AddDiscountOnWebsiteDetails =
   (data, token, callback) => async (dispatch) => {
     api.CORE_PORT.post("/core/websiteDiscount", data, {
@@ -355,6 +385,33 @@ export const AddDiscountOnWebsiteDetails =
     })
       .then((response) => {
         console.log("Add websiteDiscount Details ->", response.data);
+        if (response.data?.Details) {
+          console.log(response.data?.Details);
+          callback({
+            status: true,
+            response: response?.data,
+          });
+        } else if (response.data?.Error) {
+          callback({
+            status: false,
+            error: response.data?.Error?.ErrorMessage,
+          });
+        }
+      })
+      .catch((err) => {
+        {
+          console.log("error", err);
+        }
+      });
+  };
+
+export const AddDiscountOnPanelFn =
+  (data, token, callback) => async (dispatch) => {
+    api.CORE_PORT.post("/core/panelDiscount", data, {
+      headers: { AuthToken: token },
+    })
+      .then((response) => {
+        console.log("Add panel discount Details ->", response.data);
         if (response.data?.Details) {
           console.log(response.data?.Details);
           callback({
@@ -412,6 +469,33 @@ export const EditWebsiteDiscounts =
     })
       .then((response) => {
         console.log("Edit website Discount Details ->", response.data);
+        if (response.data?.Details) {
+          console.log(response.data?.Details);
+          callback({
+            status: true,
+            response: response?.data,
+          });
+        } else if (response.data?.Error) {
+          callback({
+            status: false,
+            error: response.data?.Error?.ErrorMessage,
+          });
+        }
+      })
+      .catch((err) => {
+        {
+          console.log("error", err);
+        }
+      });
+  };
+
+export const EditPanelDiscounts =
+  (data, token, callback) => async (dispatch) => {
+    api.CORE_PORT.put("/core/panelDiscount", data, {
+      headers: { AuthToken: token },
+    })
+      .then((response) => {
+        console.log("Edit Panel Discount Details ->", response.data);
         if (response.data?.Details) {
           console.log(response.data?.Details);
           callback({

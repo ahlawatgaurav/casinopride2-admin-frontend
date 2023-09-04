@@ -21,6 +21,8 @@ import AddDiscountOnWebsite from "./Layouts/Components/AddDiscountOnWebsite";
 import NewBooking from "./Layouts/Components/NewBooking";
 import BookingList from "./Layouts/Pages/Booking/BookingList";
 import PackagesPage from "./Layouts/Pages/Packages/PackagePage";
+import DiscountOnPanel from "./Layouts/Pages/DiscountOnPanel/DiscountOnPanel";
+import AddDiscountOnPanel from "./Layouts/Components/AddDiscountOnPanel";
 
 function App() {
   return (
@@ -107,6 +109,15 @@ function App() {
         />
 
         <Route
+          path="/DiscountOnPanel"
+          element={
+            <Layout>
+              <DiscountOnPanel />
+            </Layout>
+          }
+        />
+
+        <Route
           path="/AgentList"
           element={
             <Layout>
@@ -147,6 +158,15 @@ function App() {
           element={
             <Layout>
               <CouponsList />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/AddDiscountOnPanel"
+          element={
+            <Layout>
+              <AddDiscountOnPanel />
             </Layout>
           }
         />
