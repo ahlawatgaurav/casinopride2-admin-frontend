@@ -109,6 +109,11 @@ const NewBooking = () => {
     );
   };
 
+  const isValidEmail = (email) => {
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailPattern.test(email);
+  };
+
   const currentDate = new Date();
   const year = currentDate.getFullYear();
   const month = String(currentDate.getMonth() + 1).padStart(2, "0");
@@ -170,8 +175,12 @@ const NewBooking = () => {
   };
 
   const onsubmit = () => {
-    if (guestName == "" || phone == "") {
+    if (guestName == "" || phone === "") {
       toast.warning("Please fill all the fields");
+    } else if (phone.length > 10 || phone.length < 10) {
+      toast.warning("Please enter a valid phone number (up to 10 digits)");
+    } else if (!isValidEmail(email)) {
+      toast.warning("Please enter a valid email address");
     } else {
       const data = {
         guestName: guestName,

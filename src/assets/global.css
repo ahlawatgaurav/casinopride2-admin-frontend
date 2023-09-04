@@ -37,3 +37,10 @@
 .addLinks {
   color: white !important;
 }
+
+.table-modal-list {
+  border-bottom: none;
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 10px;
+}

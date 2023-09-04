@@ -154,7 +154,7 @@ const ManagerList = () => {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="4" className="text-center">
+                <td colSpan="6" className="text-center">
                   <div
                     style={{
                       display: "flex",
@@ -178,7 +178,7 @@ const ManagerList = () => {
               </tr>
             ) : filteredManagerDetails.length === 0 ? (
               <tr>
-                <td colSpan="4" className="text-center">
+                <td colSpan="6" className="text-center">
                   No data found.
                 </td>
               </tr>
