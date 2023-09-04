@@ -243,11 +243,7 @@ const AgentList = () => {
             Username: {selectedUserDetails.Username}
           </p>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseViewMore}>
-            Close
-          </Button>
-        </Modal.Footer>
+        <Modal.Footer></Modal.Footer>
       </Modal>
     </div>
   );

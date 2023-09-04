@@ -103,7 +103,7 @@ const Discountonwebsite = () => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search"
+                placeholder="Search Discount title"
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
                   filterPackageDetailsFn();
@@ -138,6 +138,9 @@ const Discountonwebsite = () => {
             </th>
             <th scope="col" className="text-center table_heading">
               End Date
+            </th>
+            <th scope="col" className="text-center table_heading">
+              Status
             </th>
 
             <th scope="col" className="text-center table_heading">
@@ -187,6 +190,13 @@ const Discountonwebsite = () => {
                 <td className="manager-list">{item.Discount}</td>
                 <td className="manager-list">{item.StartDate}</td>
                 <td className="manager-list">{item.EndDate}</td>
+                <td className="manager-list">
+                  {item.IsDiscountEnabled ? (
+                    <span style={{ color: "green" }}>Active</span>
+                  ) : (
+                    <span style={{ color: "red" }}>Inactive</span>
+                  )}
+                </td>
 
                 <td className="manager-list">
                   <Link

@@ -123,7 +123,7 @@ const CouponsList = () => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search"
+                placeholder="Search coupon name"
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
                   filterCouponListDetails();

@@ -54,10 +54,14 @@ const AddCoupon = () => {
     setIsChecked(!isChecked);
   };
 
+  const initialDate = userData
+    ? moment(userData.StartDate).format("YYYY-MM-DD")
+    : "";
+
   const addWeekToDate = (dateString) => {
     const parsedDate = moment(dateString);
     const newDate = parsedDate.add(7, "days");
-    return newDate.format("YYYY-MM-DD");
+    return newDate.format("yyyy-mm-dd");
   };
 
   const todayDate = moment().format("YYYY-MM-DD");
@@ -156,6 +160,8 @@ const AddCoupon = () => {
     }
   };
 
+  const formattedDate = moment(startDate).format("YYYY-MM-DD");
+
   return (
     <div>
       {" "}
@@ -195,9 +201,9 @@ const AddCoupon = () => {
           <input
             class="form-control mt-2"
             type="number"
-            placeholder="Enter  Series Start"
+            placeholder="Enter series Start"
             onChange={(e) => setseriesStart(e.target.value)}
-            defaultValue={userData?.SeriesStart}
+            defaultValue={initialDate}
           />
         </div>
         <div className="col-lg-6 mt-3">
@@ -207,7 +213,7 @@ const AddCoupon = () => {
           <input
             class="form-control mt-2"
             type="number"
-            placeholder="Enter Series End"
+            placeholder="Enter series End"
             onChange={(e) => setseriesEnd(e.target.value)}
             defaultValue={userData?.SeriesEnd}
           />
@@ -220,7 +226,7 @@ const AddCoupon = () => {
           <input
             class="form-control mt-2"
             type="date"
-            placeholder="Enter   Start Date"
+            placeholder="Enter Start Date"
             onChange={(e) => setstartDate(e.target.value)}
             defaultValue={addWeekToDate(userData?.StartDate)}
             min={todayDate}
@@ -236,7 +242,7 @@ const AddCoupon = () => {
             placeholder=" End Date"
             onChange={(e) => setendDate(e.target.value)}
             defaultValue={addWeekToDate(userData?.EndDate)}
-            min={todayDate}
+            min={startDate}
           />
         </div>
 

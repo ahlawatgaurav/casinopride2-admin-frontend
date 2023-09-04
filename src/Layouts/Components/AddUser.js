@@ -15,6 +15,8 @@ const AddUser = () => {
   const { userType } = location.state;
   const { userData } = location.state;
 
+  console.log("<--------userData------->", userData);
+
   const loginDetails = useSelector(
     (state) => state.auth?.userDetailsAfterLogin.Details
   );
@@ -38,6 +40,10 @@ const AddUser = () => {
   );
   const [monthlysettlement, setMonrhtlysettlement] = useState(
     userData?.MonthlySettlement ? userData?.MonthlySettlement : 0
+  );
+
+  const [isChecked, setIsChecked] = useState(
+    userData?.IsPackageEnabled ? userData?.IsPackageEnabled : 0
   );
 
   const isValidEmail = (email) => {
@@ -146,11 +152,15 @@ const AddUser = () => {
 
   const [disabled, setDisabled] = useState(true);
 
+  const handleToggle = () => {
+    setIsChecked(!isChecked);
+  };
+
   return (
     <div>
       <ToastContainer />
       <div className="row">
-        <h3 className="mb-4">Add User</h3>
+        <h3 className="mb-4">{userData ? "Edit User" : "Add User"}</h3>
 
         <div className="col-lg-6 mt-3 mt-3">
           <label for="formGroupExampleInput " className="form_text">
@@ -265,7 +275,8 @@ const AddUser = () => {
             <input
               class="form-control mt-2"
               type="text"
-              placeholder="Monthly settlement"
+              disabled={!userData}
+              placeholder="0"
               onChange={(e) => setMonrhtlysettlement(e.target.value)}
               defaultValue={userData?.MonthlySettlement}
             />
@@ -273,6 +284,21 @@ const AddUser = () => {
         ) : (
           <></>
         )}
+
+        <div className="col-lg-6 mt-5">
+          <div className="form-check form-switch">
+            <label for="formGroupExampleInput " className="form_text">
+              Is user active?
+            </label>
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="switch"
+              checked={isChecked}
+              onChange={handleToggle}
+            />
+          </div>
+        </div>
       </div>
       {!userData ? (
         <div className="col-lg-6 mb-2 btn-lg mx-auto d-flex justify-content-center ">
