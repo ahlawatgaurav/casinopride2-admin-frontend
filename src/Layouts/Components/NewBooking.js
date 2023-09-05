@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import {
   getCouponsbyInitials,
   getPanelDiscounts,
+  EditUsedCoupon,
 } from "../../Redux/actions/users";
 import { AddBookingFn } from "../../Redux/actions/booking";
 import { connect, useSelector } from "react-redux";
@@ -54,6 +55,10 @@ const NewBooking = () => {
   const [referredByToggle, setReferredByToggle] = useState(false);
 
   const [panelDiscounts, setPanelDiscounts] = useState("");
+
+  const [usedCouponArr, setUsedCouponArr] = useState([]);
+
+  const [remainingCoupons, setRemainingCoupons] = useState("");
 
   const handleToggle = (field) => {
     // Toggle the state of the corresponding field
@@ -148,9 +153,15 @@ const NewBooking = () => {
             if (callback.status) {
               console.log(
                 "Coupon Details ---------->",
-                callback?.response?.Details?.Id
+                callback?.response?.Details
+              );
+              setRemainingCoupons(
+                callback?.response?.Details?.RemainingCoupons
               );
               setCouponId(callback?.response?.Details?.Id);
+              setUsedCouponArr(
+                callback?.response?.Details?.UsedCoupons.slice(1, -1).split(",")
+              );
 
               const inputString = callback?.response?.Details?.UsedCoupons;
               const stringWithoutBrackets = inputString.slice(1, -1);
@@ -172,6 +183,47 @@ const NewBooking = () => {
     } else {
       toast.error("Coupon code format is invalid.");
     }
+  };
+
+  console.log("usedCouponArr-------------->", usedCouponArr);
+
+  const couponCodeAppend = () => {
+    const updatedCouponData = [...usedCouponArr, couponCode];
+    console.log(
+      "updatedCouponData***************************",
+      updatedCouponData
+    );
+
+    const dataArray = Array.from(
+      { length: updatedCouponData.length },
+      (_, index) => updatedCouponData[index]
+    );
+
+    // Convert the array to a string
+    const stringRepresentation = "[" + dataArray.join(",") + "]";
+
+    console.log(
+      "updatedCouponData***************************",
+      stringRepresentation
+    );
+
+    const couponData = {
+      couponId: couponId,
+      usedCoupons: stringRepresentation,
+      remainingCoupons: remainingCoupons,
+    };
+
+    dispatch(
+      EditUsedCoupon(couponData, loginDetails?.logindata?.Token, (callback) => {
+        if (callback.status) {
+          toast.success("Coupon used updated");
+          // navigate(-1);
+          toast.error(callback.error);
+        } else {
+          toast.error(callback.error);
+        }
+      })
+    );
   };
 
   const onsubmit = () => {
@@ -196,7 +248,7 @@ const NewBooking = () => {
         totalGuestCount: totalGuestCount,
         numOfTeens: numberofteens,
         // discountId:2,
-        panelDiscountId: couponCode,
+        panelDiscountId: selectedOption,
         couponId: couponId,
         referredBy: referredBy,
         settledByCompany: 0,
@@ -218,6 +270,9 @@ const NewBooking = () => {
               "booking details --------------?",
               callback?.response?.Details
             );
+
+            couponCodeAppend();
+
             toast.success("Booking details success");
             navigate(-1);
             toast.error(callback.error);

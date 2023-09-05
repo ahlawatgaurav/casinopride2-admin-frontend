@@ -571,3 +571,29 @@ export const getPanelDiscounts = (token, callback) => async (dispatch) => {
       }
     });
 };
+
+export const EditUsedCoupon = (data, token, callback) => async (dispatch) => {
+  api.CORE_PORT.patch("/core/usedCoupon", data, {
+    headers: { AuthToken: token },
+  })
+    .then((response) => {
+      console.log("Edit used Coupon ->", response.data);
+      if (response.data?.Details) {
+        console.log(response.data?.Details);
+        callback({
+          status: true,
+          response: response?.data,
+        });
+      } else if (response.data?.Error) {
+        callback({
+          status: false,
+          error: response.data?.Error?.ErrorMessage,
+        });
+      }
+    })
+    .catch((err) => {
+      {
+        console.log("error", err);
+      }
+    });
+};

@@ -8,7 +8,6 @@ import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./Redux/store";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-import "rsuite/styles/index.less";
 import "rsuite/dist/rsuite.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

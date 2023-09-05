@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { AddCouponDetails, EditCouponDetails } from "../../Redux/actions/users";
 import { useSelector } from "react-redux";
@@ -8,6 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../../assets/global.css";
 import moment from "moment";
+import axios from "axios";
 
 const AddCoupon = () => {
   const location = useLocation();
