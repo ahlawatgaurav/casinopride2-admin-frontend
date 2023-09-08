@@ -1,8 +1,13 @@
 import axios from "axios";
 
-console.log("process.env.BOOKING_PORT", process.env.BOOKING_PORT);
-
 const api = {
+  BILLING_PORT: axios.create({
+    baseURL: `${process.env.REACT_APP_BASE_URL}${process.env.REACT_APP_BILLING_PORT}/api`,
+    headers: {
+      Authorization: "Qm94d1I5MFA6U3BMSlQ1NFFk",
+    },
+  }),
+
   BOOKING_PORT: axios.create({
     baseURL: `${process.env.REACT_APP_BASE_URL}${process.env.REACT_APP_BOOKING_PORT}/api`,
     headers: {

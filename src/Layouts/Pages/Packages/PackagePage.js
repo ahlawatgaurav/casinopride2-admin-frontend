@@ -59,8 +59,6 @@ const PackagesPage = ({
     };
   });
 
-  console.log("T%eens price>", groupedData);
-
   const [selectedPackages, setSelectedPackages] = useState({});
 
   const handleCounterChange = (
@@ -68,17 +66,24 @@ const PackagesPage = ({
     counterType,
     increment,
     PackageWeekdayPrice,
-    PackageWeekendPrice
+    PackageWeekendPrice,
+    PackageName
   ) => {
     setSelectedPackages((prevSelectedPackages) => {
       const updatedPackages = { ...prevSelectedPackages };
 
       const currentCount = updatedPackages[packageId]?.[counterType] || 0;
 
+      console.log(
+        "PackageName------------------------------<<>>>>>>>>>>><<<<<<<<<<>>>>>>>>>>>>",
+        PackageName
+      );
+
       if (increment || currentCount > 0) {
         updatedPackages[packageId] = {
           ...updatedPackages[packageId],
           [counterType]: currentCount + (increment ? 1 : -1),
+          PackageName,
         };
 
         if (updatedPackages[packageId][counterType] <= 0) {
@@ -95,6 +100,7 @@ const PackagesPage = ({
   const packageIds = [];
   const packageGuestCounts = [];
   const packagePrices = [];
+  const PackageName = [];
 
   function isWeekday(date) {
     const day = date.getDay();
@@ -112,6 +118,8 @@ const PackagesPage = ({
   const isTodayWeekday = isWeekday(today);
 
   console.log(isTodayWeekday);
+
+  console.log("selectedPackages----------->", selectedPackages);
 
   Object.keys(selectedPackages).forEach((packageId) => {
     const packageData = selectedPackages[packageId];
@@ -189,6 +197,11 @@ const PackagesPage = ({
   console.log(
     "total totalAmountOfAllPackages-------->",
     totalAmountOfAllPackages
+  );
+
+  console.log(
+    "selectedPackages----------------------------------------->>>>",
+    selectedPackages
   );
 
   return (
@@ -296,20 +309,13 @@ const PackagesPage = ({
                       </div>
                     </div>
                   </div>
-
+                  {/* 
                   <div className="selected-packages row">
                     {Object.entries(selectedPackages).map(
                       ([packageName, counts], index) => (
-                        // <FinalPackage
-                        //   packageName={packageName}
-                        //   adults={counts.adults || 0}
-                        //   teens={counts.teens || 0}
-                        //   kids={counts.kids || 0}
-                        // />
-
                         <div className="card col-4 mt-4" key={index}>
                           <div className="card-body">
-                            <h5 className="card-title">{packageName}</h5>
+                            <h5 className="card-title">{packageName}hiii</h5>
                             <div className="row">
                               <div className="col">
                                 <p className="mb-0">
@@ -322,6 +328,32 @@ const PackagesPage = ({
                         </div>
                       )
                     )}
+                  </div> */}
+
+                  <div className="selected-packages row">
+                    <div className="card col-12 mt-4">
+                      <div className="card-body">
+                        <h5 className="card-title">Selected Packages</h5>
+                        {Object.entries(selectedPackages).map(
+                          ([index, item]) => (
+                            <div className="row" key={index}>
+                              <div className="col">
+                                <p className="mb-0">
+                                  <span className="detail">Package Name:</span>{" "}
+                                  {item.PackageName}
+                                </p>
+                              </div>
+                              <div className="col">
+                                <p className="mb-0">
+                                  <span className="detail">Adults:</span>{" "}
+                                  {item.adults}
+                                </p>
+                              </div>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    </div>
                   </div>
 
                   {/* <div class="row justify-content-center">

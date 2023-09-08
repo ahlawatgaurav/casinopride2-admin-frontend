@@ -23,6 +23,8 @@ import BookingList from "./Layouts/Pages/Booking/BookingList";
 import PackagesPage from "./Layouts/Pages/Packages/PackagePage";
 import DiscountOnPanel from "./Layouts/Pages/DiscountOnPanel/DiscountOnPanel";
 import AddDiscountOnPanel from "./Layouts/Components/AddDiscountOnPanel";
+import GenerateBill from "./Layouts/Pages/Booking/GenerateBill";
+import BillingDetails from "./Layouts/Pages/Billing/BillingDetails";
 
 function App() {
   return (
@@ -51,6 +53,24 @@ function App() {
           element={
             <Layout>
               <BookingList />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/GenerateBill"
+          element={
+            <Layout>
+              <GenerateBill />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/BillingDetails"
+          element={
+            <Layout>
+              <BillingDetails />
             </Layout>
           }
         />

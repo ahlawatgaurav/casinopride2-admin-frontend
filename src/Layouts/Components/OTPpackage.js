@@ -11,7 +11,7 @@ export const OTPpackage = ({
   selectedPackages,
   handleBookNow,
 }) => {
-  // console.log("packageDetail in OTP package", packageDetail);
+  console.log("packageDetail in OTP package", packageDetail);
 
   const [showModal, setShowModal] = useState(false);
 
@@ -150,7 +150,8 @@ export const OTPpackage = ({
                               "adults",
                               false,
                               packageDetail?.PackageWeekdayPrice,
-                              packageDetail?.PackageWeekendPrice
+                              packageDetail?.PackageWeekendPrice,
+                              packageDetail?.PackageName
                             )
                           }
                           style={{
@@ -194,7 +195,8 @@ export const OTPpackage = ({
                               "adults",
                               true,
                               packageDetail?.PackageWeekdayPrice,
-                              packageDetail?.PackageWeekendPrice
+                              packageDetail?.PackageWeekendPrice,
+                              packageDetail?.PackageName
                             )
                           }
                           style={{

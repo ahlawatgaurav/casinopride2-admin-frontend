@@ -17,6 +17,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "../../assets/global.css";
 import PackagesPage from "../Pages/Packages/PackagePage";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import { Link } from "react-router-dom";
 
 const NewBooking = () => {
   const location = useLocation();
@@ -59,6 +60,7 @@ const NewBooking = () => {
   const [usedCouponArr, setUsedCouponArr] = useState([]);
 
   const [remainingCoupons, setRemainingCoupons] = useState("");
+  const [bookingData, setBookingData] = useState("");
 
   const handleToggle = (field) => {
     // Toggle the state of the corresponding field
@@ -83,6 +85,8 @@ const NewBooking = () => {
       }
     }
   };
+
+  console.log("couponCode--------------->", couponCode);
 
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
@@ -132,6 +136,7 @@ const NewBooking = () => {
   }, [dispatch]);
 
   const separateInitials = () => {
+    console.log("couponCode---------------->", couponCode);
     if (!couponCode) {
       toast.error("Coupon code is empty.");
       return;
@@ -187,44 +192,7 @@ const NewBooking = () => {
 
   console.log("usedCouponArr-------------->", usedCouponArr);
 
-  const couponCodeAppend = () => {
-    const updatedCouponData = [...usedCouponArr, couponCode];
-    console.log(
-      "updatedCouponData***************************",
-      updatedCouponData
-    );
-
-    const dataArray = Array.from(
-      { length: updatedCouponData.length },
-      (_, index) => updatedCouponData[index]
-    );
-
-    // Convert the array to a string
-    const stringRepresentation = "[" + dataArray.join(",") + "]";
-
-    console.log(
-      "updatedCouponData***************************",
-      stringRepresentation
-    );
-
-    const couponData = {
-      couponId: couponId,
-      usedCoupons: stringRepresentation,
-      remainingCoupons: remainingCoupons,
-    };
-
-    dispatch(
-      EditUsedCoupon(couponData, loginDetails?.logindata?.Token, (callback) => {
-        if (callback.status) {
-          toast.success("Coupon used updated");
-          // navigate(-1);
-          toast.error(callback.error);
-        } else {
-          toast.error(callback.error);
-        }
-      })
-    );
-  };
+  const togeneratBill = () => {};
 
   const onsubmit = () => {
     if (guestName == "" || phone === "") {
@@ -271,10 +239,14 @@ const NewBooking = () => {
               callback?.response?.Details
             );
 
-            couponCodeAppend();
+            setBookingData(callback?.response?.Details);
 
             toast.success("Booking details success");
-            navigate(-1);
+            couponCodeAppend();
+            navigate("/GenerateBill", {
+              state: { userData: callback?.response?.Details },
+            });
+            // navigate(-1);
             toast.error(callback.error);
           } else {
             toast.error(callback.error);
@@ -282,6 +254,37 @@ const NewBooking = () => {
         })
       );
     }
+  };
+
+  const couponCodeAppend = () => {
+    console.log(
+      "<------------------------------|||||couponCodeAppend|||||------------->",
+      bookingData
+    );
+
+    const updatedCouponData = [...usedCouponArr, couponCode];
+    const dataArray = Array.from(
+      { length: updatedCouponData.length },
+      (_, index) => updatedCouponData[index]
+    );
+    const stringRepresentation = "[" + dataArray.join(",") + "]";
+    const couponData = {
+      couponId: couponId,
+      usedCoupons: stringRepresentation,
+      remainingCoupons: remainingCoupons,
+    };
+
+    dispatch(
+      EditUsedCoupon(couponData, loginDetails?.logindata?.Token, (callback) => {
+        if (callback.status) {
+          toast.success("Coupon used updated");
+          // navigate("/GenerateBill", { state: { userType: bookingData } });
+          toast.error(callback.error);
+        } else {
+          toast.error(callback.error);
+        }
+      })
+    );
   };
 
   const [selectedOption, setSelectedOption] = useState("");
