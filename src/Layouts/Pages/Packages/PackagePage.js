@@ -60,6 +60,10 @@ const PackagesPage = ({
   });
 
   const [selectedPackages, setSelectedPackages] = useState({});
+  console.log(
+    "selectedPackages length-------------->",
+    selectedPackages.length
+  );
 
   const handleCounterChange = (
     packageId,
@@ -330,31 +334,37 @@ const PackagesPage = ({
                     )}
                   </div> */}
 
-                  <div className="selected-packages row">
-                    <div className="card col-12 mt-4">
-                      <div className="card-body">
-                        <h5 className="card-title">Selected Packages</h5>
-                        {Object.entries(selectedPackages).map(
-                          ([index, item]) => (
-                            <div className="row" key={index}>
-                              <div className="col">
-                                <p className="mb-0">
-                                  <span className="detail">Package Name:</span>{" "}
-                                  {item.PackageName}
-                                </p>
+                  {Object.keys(selectedPackages).length > 0 ? (
+                    <div className="selected-packages row">
+                      <div className="card col-12 mt-4">
+                        <div className="card-body">
+                          <h5 className="card-title">Selected Packages</h5>
+                          {Object.entries(selectedPackages).map(
+                            ([index, item]) => (
+                              <div className="row" key={index}>
+                                <div className="col">
+                                  <p className="mb-0">
+                                    <span className="detail">
+                                      Package Name:
+                                    </span>{" "}
+                                    {item.PackageName}
+                                  </p>
+                                </div>
+                                <div className="col">
+                                  <p className="mb-0">
+                                    <span className="detail">Adults:</span>{" "}
+                                    {item.adults}
+                                  </p>
+                                </div>
                               </div>
-                              <div className="col">
-                                <p className="mb-0">
-                                  <span className="detail">Adults:</span>{" "}
-                                  {item.adults}
-                                </p>
-                              </div>
-                            </div>
-                          )
-                        )}
+                            )
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <></>
+                  )}
 
                   {/* <div class="row justify-content-center">
                   <div class="col-md-8" onClick={handleMultiply}>

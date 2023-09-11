@@ -281,7 +281,7 @@ const PackageList = () => {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={showViewMoreModal} onHide={handleCloseViewMore}>
+      <Modal show={showViewMoreModal} onHide={handleCloseViewMore} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>Package Details</Modal.Title>
         </Modal.Header>
@@ -325,7 +325,7 @@ const PackageList = () => {
                   className="manager-list"
                   style={{ fontSize: "14px", marginBottom: "5px" }}
                 >
-                  Item Tax: {item.ItemTax}
+                  Item Tax: {item.ItemTax} %
                 </p>
                 <p
                   className="manager-list"
@@ -344,24 +344,20 @@ const PackageList = () => {
                   className="manager-list"
                   style={{ fontSize: "14px", marginBottom: "5px" }}
                 >
-                  Item Weekday Price (tax): {item.ItemWeekdayRate}
+                  Item Weekday Rate (Exclusive of tax): {item.ItemWeekdayRate}
                 </p>
 
                 <p
                   className="manager-list"
                   style={{ fontSize: "14px", marginBottom: "5px" }}
                 >
-                  Item Weekend Price (tax): {item.ItemWeekendRate}
+                  Item Weekend Rate (Exclusive of tax): {item.ItemWeekendRate}
                 </p>
               </div>
             ))}
           </div>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseViewMore}>
-            Close
-          </Button>
-        </Modal.Footer>
+        <Modal.Footer></Modal.Footer>
       </Modal>
     </div>
   );

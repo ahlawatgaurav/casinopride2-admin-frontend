@@ -172,7 +172,7 @@ const GREList = () => {
                   {" "}
                   <Link
                     to="/AddUser"
-                    state={{ userData: item }}
+                    state={{ userData: item, userType: "3" }}
                     className="links"
                   >
                     <AiFillEdit

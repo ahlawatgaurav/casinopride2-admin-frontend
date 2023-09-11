@@ -172,7 +172,7 @@ const AccountsList = () => {
                 <td className="manager-list">
                   <Link
                     to="/AddUser"
-                    state={{ userData: item }}
+                    state={{ userData: item, userType: "7" }}
                     className="links"
                   >
                     <AiFillEdit

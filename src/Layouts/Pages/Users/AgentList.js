@@ -175,7 +175,7 @@ const AgentList = () => {
                 <td className="manager-list">
                   <Link
                     to="/AddUser"
-                    state={{ userData: item }}
+                    state={{ userData: item, userType: "5" }}
                     className="links"
                   >
                     <AiFillEdit

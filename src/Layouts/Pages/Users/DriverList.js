@@ -177,7 +177,7 @@ const DriverList = () => {
                   {" "}
                   <Link
                     to="/AddUser"
-                    state={{ userData: item }}
+                    state={{ userData: item, userType: "6" }}
                     className="links"
                   >
                     <AiFillEdit
