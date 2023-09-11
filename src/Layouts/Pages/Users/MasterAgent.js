@@ -178,7 +178,7 @@ const MasterAgent = () => {
                   {" "}
                   <Link
                     to="/AddUser"
-                    state={{ userData: item }}
+                    state={{ userData: item, userType: "4" }}
                     className="links"
                   >
                     <AiFillEdit

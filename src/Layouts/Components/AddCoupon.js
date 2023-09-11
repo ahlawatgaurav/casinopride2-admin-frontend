@@ -176,6 +176,7 @@ const AddCoupon = () => {
           <input
             class="form-control mt-2 "
             type="text"
+            disabled={userData ? true : false}
             placeholder="Coupon Title"
             onChange={(e) => setcouponTitle(e.target.value)}
             defaultValue={userData?.CouponTitle}
@@ -259,8 +260,11 @@ const AddCoupon = () => {
             class="form-control mt-2"
             type="text"
             placeholder="Coupon Discount"
-            onChange={(e) => setcouponDiscount(e.target.value)}
+            onChange={(e) => {
+              setcouponDiscount(Math.min(e.target.value, 99));
+            }}
             defaultValue={userData?.CouponDiscount}
+            maxLength={2}
           />
         </div>
 

@@ -192,7 +192,7 @@ const ManagerList = () => {
                     {" "}
                     <Link
                       to="/AddUser"
-                      state={{ userData: item }}
+                      state={{ userData: item, userType: "2" }}
                       className="links"
                     >
                       <AiFillEdit

@@ -112,6 +112,7 @@ const AddDiscountOnPanel = () => {
           <input
             class="form-control mt-2 "
             type="text"
+            disabled={userData ? true : false}
             placeholder="Discount Title"
             onChange={(e) => setDiscountTitle(e.target.value)}
             defaultValue={userData?.PanelDiscountTitle}

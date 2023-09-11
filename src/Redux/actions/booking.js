@@ -98,7 +98,7 @@ export const AddBookingFn = (token, data, callback) => async (dispatch) => {
 export const fetchUserbookings =
   (token, futuredate, callback) => async (dispatch) => {
     console.log(token);
-    console.log(futuredate);
+    console.log("type of date--->", typeof futuredate);
 
     api.BOOKING_PORT.get(`/booking/fetchBookings?futureDate=${futuredate}`, {
       headers: { AuthToken: token },

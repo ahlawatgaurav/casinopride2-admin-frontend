@@ -130,7 +130,7 @@ const DiscountOnPanel = () => {
               Discount Title
             </th>
             <th scope="col" className="text-center table_heading">
-              Discount
+              Discount %
             </th>
 
             <th scope="col" className="text-center table_heading">

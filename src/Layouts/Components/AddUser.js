@@ -15,7 +15,7 @@ const AddUser = () => {
   const { userType } = location.state;
   const { userData } = location.state;
 
-  console.log("<--------userData------->", userData);
+  console.log("<--------userType------->", userType);
 
   const loginDetails = useSelector(
     (state) => state.auth?.userDetailsAfterLogin.Details
@@ -43,7 +43,7 @@ const AddUser = () => {
   );
 
   const [isChecked, setIsChecked] = useState(
-    userData?.IsPackageEnabled ? userData?.IsPackageEnabled : 0
+    userData?.IsUserEnabled ? userData?.IsUserEnabled : 0
   );
 
   const isValidEmail = (email) => {
@@ -55,6 +55,11 @@ const AddUser = () => {
     const phonePattern = /^\d{1,10}$/;
     return phonePattern.test(phone);
   };
+
+  console.log(
+    "userData?.isUserEnabled-------------->",
+    userData?.IsUserEnabled
+  );
 
   const isValidPassword = (password) => {
     // At least one uppercase letter, one digit, and one special character
@@ -92,6 +97,7 @@ const AddUser = () => {
         userType: userType,
         discountPercent: discountPercent,
         monthlySettlement: monthlysettlement,
+        isUserEnabled: 1,
         isActive: 1,
       };
 
@@ -133,6 +139,7 @@ const AddUser = () => {
         discountPercent: discountPercent,
         monthlySettlement: monthlysettlement,
         userRef: userData?.Ref,
+        isUserEnabled: isChecked,
         isActive: 1,
       };
 
@@ -153,14 +160,51 @@ const AddUser = () => {
   const [disabled, setDisabled] = useState(true);
 
   const handleToggle = () => {
-    setIsChecked(!isChecked);
+    setIsChecked((prevValue) => (prevValue === 0 ? 1 : 0));
   };
+
+  console.log("isChecked---->", isChecked);
 
   return (
     <div>
       <ToastContainer />
       <div className="row">
-        <h3 className="mb-4">{userData ? "Edit User" : "Add User"}</h3>
+        {userType == 2 ? (
+          <h3 className="mb-4">{userData ? "Edit Manager" : "Add Manager"}</h3>
+        ) : (
+          <></>
+        )}
+        {userType == 3 ? (
+          <h3 className="mb-4">{userData ? "Edit GRE" : "Add GRE"}</h3>
+        ) : (
+          <></>
+        )}
+        {userType == 4 ? (
+          <h3 className="mb-4">
+            {userData ? "Edit Master Agent" : "Add Master Agent"}
+          </h3>
+        ) : (
+          <></>
+        )}
+
+        {userType == 5 ? (
+          <h3 className="mb-4">{userData ? "Edit Agent" : "Add Agent"}</h3>
+        ) : (
+          <></>
+        )}
+        {userType == 6 ? (
+          <h3 className="mb-4">{userData ? "Edit Driver" : "Add Driver"}</h3>
+        ) : (
+          <></>
+        )}
+
+        {userType == 7 ? (
+          <h3 className="mb-4">
+            {userData ? "Edit Accounts" : "Add Accounts"}
+          </h3>
+        ) : (
+          <></>
+        )}
 
         <div className="col-lg-6 mt-3 mt-3">
           <label for="formGroupExampleInput " className="form_text">
@@ -187,6 +231,7 @@ const AddUser = () => {
             placeholder="Enter phone"
             onChange={(e) => setPhone(e.target.value)}
             defaultValue={userData?.Phone}
+            maxLength="10"
           />
         </div>
         <div className="col-lg-6 mt-3">
@@ -255,7 +300,7 @@ const AddUser = () => {
             </label>
             <input
               class="form-control mt-2"
-              type="text"
+              type="number"
               placeholder="Discount Percentage"
               onChange={(e) => setDiscountPercent(e.target.value)}
               defaultValue={userData?.DiscountPercent}
@@ -288,13 +333,13 @@ const AddUser = () => {
         <div className="col-lg-6 mt-5">
           <div className="form-check form-switch">
             <label for="formGroupExampleInput " className="form_text">
-              Is user active?
+              Is user enabled?
             </label>
             <input
               className="form-check-input"
               type="checkbox"
               id="switch"
-              checked={isChecked}
+              checked={isChecked === 1}
               onChange={handleToggle}
             />
           </div>
@@ -308,7 +353,7 @@ const AddUser = () => {
             className="btn btn_colour mt-5 btn-lg"
             onClick={onsubmit}
           >
-            Add User
+            Submit
           </button>
         </div>
       ) : (
@@ -319,7 +364,7 @@ const AddUser = () => {
             className="btn btn_colour mt-5 btn-lg"
             onClick={onSubmitEdit}
           >
-            Edit User
+            Submit
           </button>
         </div>
       )}

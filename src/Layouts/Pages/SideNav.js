@@ -89,6 +89,16 @@ const SideNav = () => {
             ) : (
               <></>
             )}
+
+            {loginDetails?.logindata?.UserType == "1" ? (
+              <Nav.Item eventKey="6" icon={<DashboardIcon />}>
+                <Link to="/BillingList" className="links">
+                  Billing
+                </Link>
+              </Nav.Item>
+            ) : (
+              <></>
+            )}
             {loginDetails?.logindata?.UserType == "1" ? (
               <Nav.Menu
                 placement="rightStart"

@@ -248,6 +248,7 @@ const AddPackage = () => {
             class="form-control mt-2 "
             type="text"
             placeholder="Full Name"
+            disabled={userData ? true : false}
             onChange={(e) => setPackageName(e.target.value)}
             defaultValue={userData?.PackageName}
           />
@@ -353,7 +354,7 @@ const AddPackage = () => {
                   }
                 />
                 <label for="formGroupExampleInput " className="form_text">
-                  weekday Price
+                  Weekday Price
                 </label>
                 <input
                   type="number"
@@ -385,7 +386,7 @@ const AddPackage = () => {
                   }
                 />
                 <label for="formGroupExampleInput " className="form_text">
-                  Tax
+                  Tax %
                 </label>
                 <input
                   type="number"
@@ -402,7 +403,7 @@ const AddPackage = () => {
                 />
 
                 <label for="formGroupExampleInput " className="form_text">
-                  Tax to be deducted
+                  Discount to be deducted
                 </label>
                 <div className="form-check">
                   <input
@@ -434,13 +435,17 @@ const AddPackage = () => {
                   <div className="col-lg-6">
                     <h4 className="mb-3">Item {index + 1}</h4>
                   </div>
-                  <div className="col-lg-6 d-flex justify-content-end">
-                    <img
-                      src={cancel}
-                      className="cancel_img"
-                      onClick={() => handleRemoveItem(index)}
-                    />
-                  </div>
+                  {!userData ? (
+                    <div className="col-lg-6 d-flex justify-content-end">
+                      <img
+                        src={cancel}
+                        className="cancel_img"
+                        onClick={() => handleRemoveItem(index)}
+                      />
+                    </div>
+                  ) : (
+                    <></>
+                  )}
                 </div>
 
                 <label for="formGroupExampleInput " className="form_text">
@@ -506,7 +511,7 @@ const AddPackage = () => {
                 />
 
                 <label for="formGroupExampleInput " className="form_text">
-                  Tax to be deducted
+                  Discount to be deducted
                 </label>
                 <div className="form-check">
                   <input
@@ -559,13 +564,18 @@ const AddPackage = () => {
             </div>
           </div>
         ) : (
-          <button
-            type="submit"
-            className="btn btn-success mt-5"
-            onClick={handlePackageEdit}
-          >
-            Edit Package
-          </button>
+          <div className="row mx-auto">
+            <div className="col-lg-6 mb-2 btn-lg mx-auto d-flex justify-content-center ">
+              <button
+                style={{ paddingLeft: "150px", paddingRight: "150px" }}
+                type="submit"
+                className="btn btn_colour mt-5 btn-lg"
+                onClick={handlePackageEdit}
+              >
+                Submit
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </div>

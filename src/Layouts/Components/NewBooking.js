@@ -225,7 +225,7 @@ const NewBooking = () => {
         userId: loginDetails?.logindata?.userId,
         userTypeId: loginDetails?.logindata?.UserType,
         // futureDate:2023-10-25,
-        shiftId: 1,
+        shiftId: 2,
         actualAmount: amount,
         amountAfterDiscount: amount,
         isActive: 1,
@@ -533,7 +533,7 @@ const NewBooking = () => {
                 <option value="">Select an option</option>
                 {panelDiscounts.map((item, index) => (
                   <option key={index} value={item?.Id}>
-                    {item?.PanelDiscountTitle}
+                    {item?.Id} %
                   </option>
                 ))}
               </select>
