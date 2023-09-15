@@ -130,6 +130,10 @@ const NewBooking = () => {
       getPanelDiscounts(loginDetails?.logindata?.Token, (callback) => {
         if (callback.status) {
           setPanelDiscounts(callback?.response?.Details);
+          console.log(
+            "Panel Discounts----------------------->",
+            callback?.response?.Details
+          );
         }
       })
     );
@@ -203,7 +207,7 @@ const NewBooking = () => {
                 toast.success("Coupon code is available");
               }
             } else {
-              toast.error(callback.error);
+              toast.error("This Coupon does not exists");
             }
           }
         )
@@ -322,8 +326,15 @@ const NewBooking = () => {
   const handleSelectChange = (e) => {
     const selectedValue = e.target.value;
 
+    console.log("Discount valueeeeeeeeeee", e.target.value);
+
     const selectedPanelDiscount = panelDiscounts.find(
       (item) => item.Id == selectedValue
+    );
+
+    console.log(
+      "selectedPanelDiscount------------------------------------->",
+      selectedPanelDiscount
     );
 
     setSelectedOption(e.target.value);

@@ -24,10 +24,6 @@ const BillingDetails = () => {
   const { BookingDetails } = location.state;
 
   console.log("Booking Details------------------->", BookingDetails);
-  console.log(
-    "Booking Details Panel Discount------------------->",
-    BookingDetails[0]?.PanelDiscount
-  );
 
   const [qrCodeData, setQrCodeData] = useState("www.facebook.com");
 
@@ -370,7 +366,7 @@ const BillingDetails = () => {
                                     BookingDetails[0]?.PanelDiscount) /
                                     100) *
                                 (1 + item?.ItemDetails.ItemTax / 100)
-                              ).toFixed(2)
+                              ).toFixed(0)
                             )}
                           </span>
                         )}
@@ -410,7 +406,7 @@ const BillingDetails = () => {
                                     BookingDetails[0]?.PanelDiscount) /
                                     100) *
                                 (1 + item?.ItemDetails.ItemTax / 100)
-                              ).toFixed(2)
+                              ).toFixed(0)
                             )}
                           </span>
                         )}

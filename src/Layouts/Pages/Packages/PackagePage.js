@@ -118,13 +118,13 @@ const PackagesPage = ({
   function isWeekday(date) {
     const day = date.getDay();
 
-    return day >= 1 && day <= 5;
+    return day >= 1 && day <= 4;
   }
 
   function isWeekday(date) {
     const day = date.getDay();
 
-    return day >= 1 && day <= 5;
+    return day >= 1 && day <= 4;
   }
 
   const today = new Date();
@@ -422,34 +422,38 @@ const PackagesPage = ({
                               </div>
                             )
                           )}
-                          <div className="row package-item">
-                            <div className="col-4 ">
-                              <p className="mb-0 detail">
-                                <span className="detail">Teens:</span>{" "}
-                                {teensCount}
-                              </p>
+                          {teensCount > 0 ? (
+                            <div className="row package-item">
+                              <div className="col-4 ">
+                                <p className="mb-0 detail">
+                                  <span className="detail">Teens:</span>{" "}
+                                  {teensCount}
+                                </p>
+                              </div>
+                              <div className="col-4 ">
+                                <p
+                                  className="mb-0 detail"
+                                  style={{ textAlign: "center" }}
+                                >
+                                  <span className="detail">Teens count:</span>{" "}
+                                  {teensCount}
+                                </p>
+                              </div>
+                              <div className="col-4 ">
+                                <p
+                                  className="mb-0 detail"
+                                  style={{ textAlign: "right" }}
+                                >
+                                  <span className="detail">
+                                    Total Teens Price:
+                                  </span>
+                                  {totalTeensPrice}
+                                </p>
+                              </div>
                             </div>
-                            <div className="col-4 ">
-                              <p
-                                className="mb-0 detail"
-                                style={{ textAlign: "center" }}
-                              >
-                                <span className="detail">Teens count:</span>{" "}
-                                {teensCount}
-                              </p>
-                            </div>
-                            <div className="col-4 ">
-                              <p
-                                className="mb-0 detail"
-                                style={{ textAlign: "right" }}
-                              >
-                                <span className="detail">
-                                  Total Teens Price:
-                                </span>
-                                {totalTeensPrice}
-                              </p>
-                            </div>
-                          </div>
+                          ) : (
+                            <></>
+                          )}
 
                           <div className="row package-item">
                             <div className="col-4 "></div>

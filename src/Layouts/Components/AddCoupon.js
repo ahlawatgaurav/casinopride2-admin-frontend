@@ -17,6 +17,11 @@ const AddCoupon = () => {
   const { userType } = location.state;
   const { userData } = location.state;
 
+  console.log(
+    " userData?.StartDate---------->",
+    moment(userData?.StartDate).format("YYYY-MM-DD")
+  );
+
   const loginDetails = useSelector(
     (state) => state.auth?.userDetailsAfterLogin.Details
   );
@@ -62,7 +67,7 @@ const AddCoupon = () => {
   const addWeekToDate = (dateString) => {
     const parsedDate = moment(dateString);
     const newDate = parsedDate.add(7, "days");
-    return newDate.format("yyyy-mm-dd");
+    return newDate.format("YYYY-MM-DD");
   };
 
   const todayDate = moment().format("YYYY-MM-DD");
@@ -142,7 +147,7 @@ const AddCoupon = () => {
         usedCoupons: "[]",
         remainingCoupons: totalCoupons,
         isActive: 1,
-        isCouponEnabled: isChecked,
+        isCouponEnabled: isChecked === true ? 1 : 0,
       };
 
       console.log("dataaaaaaaaa-----", data);
@@ -161,14 +166,21 @@ const AddCoupon = () => {
     }
   };
 
+  console.log("isChecked", isChecked);
   const formattedDate = moment(startDate).format("YYYY-MM-DD");
+  const formattedEndDate = moment(endDate).format("YYYY-MM-DD");
 
   return (
     <div>
       {" "}
       <ToastContainer />{" "}
       <div className="row">
-        <h3 className="mb-4">Add Coupon</h3>
+        {userData ? (
+          <h3 className="mb-4">Edit Coupon</h3>
+        ) : (
+          <h3 className="mb-4">Add Coupon</h3>
+        )}
+
         <div className="col-lg-6 mt-3 mt-3">
           <label for="formGroupExampleInput " className="form_text">
             Coupon Title <span style={{ color: "red" }}>*</span>
@@ -205,7 +217,7 @@ const AddCoupon = () => {
             type="number"
             placeholder="Enter series Start"
             onChange={(e) => setseriesStart(e.target.value)}
-            defaultValue={initialDate}
+            defaultValue={userData?.SeriesStart}
           />
         </div>
         <div className="col-lg-6 mt-3">
@@ -230,7 +242,9 @@ const AddCoupon = () => {
             type="date"
             placeholder="Enter Start Date"
             onChange={(e) => setstartDate(e.target.value)}
-            defaultValue={addWeekToDate(userData?.StartDate)}
+            defaultValue={formattedDate}
+            // defaultValue={moment(userData?.StartDate).format("YYYY-MM-DD")}
+
             min={todayDate}
           />
         </div>
@@ -243,7 +257,7 @@ const AddCoupon = () => {
             type="date"
             placeholder=" End Date"
             onChange={(e) => setendDate(e.target.value)}
-            defaultValue={addWeekToDate(userData?.EndDate)}
+            defaultValue={formattedEndDate}
             min={startDate}
           />
         </div>
@@ -268,20 +282,24 @@ const AddCoupon = () => {
           />
         </div>
 
-        <div className="col-lg-6 mt-5">
-          <div className="form-check form-switch">
-            <label for="formGroupExampleInput " className="form_text">
-              Is Coupon active
-            </label>
-            <input
-              className="form-check-input"
-              type="checkbox"
-              id="switch"
-              checked={isChecked}
-              onChange={handleToggle}
-            />
+        {userData ? (
+          <div className="col-lg-6 mt-5">
+            <div className="form-check form-switch">
+              <label for="formGroupExampleInput " className="form_text">
+                Is Coupon active
+              </label>
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="switch"
+                checked={isChecked}
+                onChange={handleToggle}
+              />
+            </div>
           </div>
-        </div>
+        ) : (
+          <></>
+        )}
 
         {!userData ? (
           <div className="mt-5">
