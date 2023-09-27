@@ -26,6 +26,7 @@ import AddDiscountOnPanel from "./Layouts/Components/AddDiscountOnPanel";
 import GenerateBill from "./Layouts/Pages/Booking/GenerateBill";
 import BillingDetails from "./Layouts/Pages/Billing/BillingDetails";
 import BillingList from "./Layouts/Pages/Billing/BillingList";
+import Shifts from "./Layouts/Pages/Shifts/Shifts";
 
 function App() {
   return (
@@ -63,6 +64,15 @@ function App() {
           element={
             <Layout>
               <GenerateBill />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/Shifts"
+          element={
+            <Layout>
+              <Shifts />
             </Layout>
           }
         />

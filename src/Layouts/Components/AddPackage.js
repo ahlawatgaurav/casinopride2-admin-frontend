@@ -55,9 +55,24 @@ const AddPackage = () => {
     userData?.PackageTeensPrice ? userData?.PackageTeensPrice : ""
   );
 
+  const [packageTeensTax, setPackageTeensTax] = useState(
+    userData?.PackageTeensTaxName ? userData?.PackageTeensTaxName : ""
+  );
+
+  const [packageTeensPercentage, setPackageTeensPercentage] = useState(
+    userData?.PackageTeensTax ? userData?.PackageTeensTax : ""
+  );
+
   const [packageEnabled, setPackageEnabled] = useState(
     userData?.packageEnabled ? userData?.packageEnabled : 0
   );
+
+  const actualTeensRate =
+    packageTeensPrice / (1 + packageTeensPercentage / 100);
+
+  console.log("actualRate----------->", actualTeensRate);
+
+  console.log("PackageTeensTaxName--------------->", packageTeensTax);
 
   const [packageActive, setPackageActive] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
@@ -168,6 +183,9 @@ const AddPackage = () => {
         numOfItems: packageItems.length,
         packageItems: packageItems,
         packageTeensPrice: packageTeensPrice,
+        packageTeensRate: actualTeensRate,
+        packageTeensTax: packageTeensPercentage,
+        packageTeensTaxName: packageTeensTax,
         isPackageEnabled: 1,
       };
 
@@ -195,6 +213,9 @@ const AddPackage = () => {
       numOfItems: packageItems.length,
       packageItems: packageItems,
       packageTeensPrice: packageTeensPrice,
+      packageTeensRate: actualTeensRate,
+      packageTeensTax: packageTeensPercentage,
+      packageTeensTaxName: packageTeensTax,
       isPackageEnabled: isChecked == "1" ? 1 : 0,
     };
     console.log("dataaaaa------------>", data);
@@ -240,7 +261,7 @@ const AddPackage = () => {
           <input
             class="form-control mt-2 "
             type="text"
-            placeholder="Full Name"
+            placeholder="Package Name"
             disabled={userData ? true : false}
             onChange={(e) => setPackageName(e.target.value)}
             defaultValue={userData?.PackageName}
@@ -301,20 +322,50 @@ const AddPackage = () => {
           />
         </div>
 
-        <div className="col-lg-6 mt-5">
-          <div className="form-check form-switch">
-            <label for="formGroupExampleInput " className="form_text">
-              Is package active
-            </label>
-            <input
-              className="form-check-input"
-              type="checkbox"
-              id="switch"
-              checked={isChecked}
-              onChange={handleToggle}
-            />
-          </div>
+        <div className="col-lg-6 mt-3">
+          <label for="formGroupExampleInput " className="form_text">
+            Teens Tax Name
+          </label>
+          <input
+            class="form-control mt-2"
+            type="text"
+            placeholder="Teens Tax Name"
+            onChange={(e) => setPackageTeensTax(e.target.value)}
+            defaultValue={userData?.PackageTeensTaxName}
+          />
         </div>
+
+        <div className="col-lg-6 mt-3">
+          <label for="formGroupExampleInput " className="form_text">
+            Teens Tax %
+          </label>
+          <input
+            class="form-control mt-2"
+            type="text"
+            placeholder="Teens Tax %"
+            onChange={(e) => setPackageTeensPercentage(e.target.value)}
+            defaultValue={userData?.PackageTeensTax}
+          />
+        </div>
+
+        {userData ? (
+          <div className="col-lg-6 mt-5">
+            <div className="form-check form-switch">
+              <label for="formGroupExampleInput " className="form_text">
+                Is package active
+              </label>
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="switch"
+                checked={isChecked}
+                onChange={handleToggle}
+              />
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
 
         {!userData ? (
           <div className="row mt-4">

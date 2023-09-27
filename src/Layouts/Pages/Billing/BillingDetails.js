@@ -408,11 +408,7 @@ const BillingDetails = () => {
                                       );
                                     },
                                     0
-                                  ) *
-                                    (!BookingDetails[0]?.PanelDiscount == 0
-                                      ? BookingDetails[0]?.PanelDiscount / 100
-                                      : BookingDetails[0]?.CouponDiscount /
-                                        100)) *
+                                  )) *
                                 (1 + item?.ItemDetails.ItemTax / 100)
                               ).toFixed(0)
                             )}
