@@ -80,6 +80,11 @@ const SideNav = () => {
       <Sidenav expanded={expanded} defaultOpenKeys={["3", "4"]}>
         <Sidenav.Body>
           <Nav activeKey={activeKey} onSelect={setActiveKey}>
+            <Nav.Item eventKey="10" icon={<DashboardIcon />}>
+              <Link to="/Shifts" className="links">
+                Shifts
+              </Link>
+            </Nav.Item>
             {loginDetails?.logindata?.UserType == "1" ? (
               <Nav.Item eventKey="1" icon={<DashboardIcon />}>
                 <Link to="/BookingList" className="links">

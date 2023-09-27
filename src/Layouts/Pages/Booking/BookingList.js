@@ -110,6 +110,7 @@ const BookingList = () => {
       <div className="container">
         <div className="row">
           <div className="col-md-6 col-lg-6 mb-3">
+            <p style={{ fontWeight: "bold" }}>Search By Full Name</p>
             <div className="input-group">
               <input
                 type="text"
@@ -124,6 +125,7 @@ const BookingList = () => {
           </div>
 
           <div className="col-md-2 col-lg-2 mb-2">
+            <p style={{ fontWeight: "bold" }}>Search By Date</p>
             <div className="input-group">
               <input
                 type="date"

@@ -184,6 +184,7 @@ const BillingList = () => {
       <div className="container">
         <div className="row">
           <div className="col-md-4 col-lg-3 mb-3">
+            <p style={{ fontWeight: "bold" }}>Search By Bill Id</p>
             <div className="input-group">
               <input
                 type="number"
@@ -197,6 +198,7 @@ const BillingList = () => {
           </div>
 
           <div className="col-md-3 col-lg-2 mb-2">
+            <p style={{ fontWeight: "bold" }}>Search By Date</p>
             <div className="input-group">
               <input
                 type="date"
@@ -208,6 +210,7 @@ const BillingList = () => {
             </div>
           </div>
           <div className="col-lg-2 col-md-4 col-sm-6">
+            <p style={{ fontWeight: "bold" }}>Search By Shift</p>
             <div className="input-group">
               <Select
                 className="custom-select"
@@ -218,6 +221,7 @@ const BillingList = () => {
           </div>
 
           <div className="col-lg-2 col-md-4 col-sm-6">
+            <p style={{ fontWeight: "bold" }}>Search By User</p>
             <div className="input-group">
               <Select
                 className="custom-select"

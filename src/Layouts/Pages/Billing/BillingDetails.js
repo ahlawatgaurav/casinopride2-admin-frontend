@@ -290,7 +290,9 @@ const BillingDetails = () => {
                               },
                               0
                             ) *
-                            (BookingDetails[0]?.PanelDiscount / 100)
+                            (!BookingDetails[0]?.PanelDiscount == 0
+                              ? BookingDetails[0]?.PanelDiscount / 100
+                              : BookingDetails[0]?.CouponDiscount / 100)
                           ).toFixed(2)
                         )}
                       </span>
@@ -314,7 +316,9 @@ const BillingDetails = () => {
                           },
                           0
                         ) *
-                          (BookingDetails[0]?.PanelDiscount / 100))
+                          (!BookingDetails[0]?.PanelDiscount == 0
+                            ? BookingDetails[0]?.PanelDiscount / 100
+                            : BookingDetails[0]?.CouponDiscount / 100))
                     ).toFixed(2)}
                   </h6>
 
@@ -354,7 +358,7 @@ const BillingDetails = () => {
                                   },
                                   0
                                 ) -
-                                  (item?.ItemDetails?.packageGuestCount.reduce(
+                                  item?.ItemDetails?.packageGuestCount.reduce(
                                     (acc, count, index) => {
                                       return (
                                         acc +
@@ -363,8 +367,10 @@ const BillingDetails = () => {
                                     },
                                     0
                                   ) *
-                                    BookingDetails[0]?.PanelDiscount) /
-                                    100) *
+                                    (!BookingDetails[0]?.PanelDiscount == 0
+                                      ? BookingDetails[0]?.PanelDiscount / 100
+                                      : BookingDetails[0]?.CouponDiscount /
+                                        100)) *
                                 (1 + item?.ItemDetails.ItemTax / 100)
                               ).toFixed(0)
                             )}
@@ -394,7 +400,7 @@ const BillingDetails = () => {
                                   },
                                   0
                                 ) -
-                                  (item?.ItemDetails?.packageGuestCount.reduce(
+                                  item?.ItemDetails?.packageGuestCount.reduce(
                                     (acc, count, index) => {
                                       return (
                                         acc +
@@ -402,9 +408,7 @@ const BillingDetails = () => {
                                       );
                                     },
                                     0
-                                  ) *
-                                    BookingDetails[0]?.PanelDiscount) /
-                                    100) *
+                                  )) *
                                 (1 + item?.ItemDetails.ItemTax / 100)
                               ).toFixed(0)
                             )}
