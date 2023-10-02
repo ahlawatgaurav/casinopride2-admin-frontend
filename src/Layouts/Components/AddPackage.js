@@ -188,6 +188,7 @@ const AddPackage = () => {
         packageTeensTaxName: packageTeensTax,
         isPackageEnabled: 1,
       };
+      console.log("Data-------->", data);
 
       dispatch(
         AddPackageDetails(data, loginDetails?.logindata?.Token, (callback) => {
@@ -289,7 +290,9 @@ const AddPackage = () => {
           </label>
           <input
             class="form-control mt-2"
+            onWheel={(e) => e.target.blur()}
             type="number"
+            min={0}
             placeholder="Package Weekdays Price"
             onChange={(e) => setPackageWeekdayPrice(e.target.value)}
             defaultValue={userData?.PackageWeekdayPrice}
@@ -303,6 +306,8 @@ const AddPackage = () => {
           <input
             class="form-control mt-2"
             type="number"
+            onWheel={(e) => e.target.blur()}
+            min={0}
             placeholder="Package Weekend Price"
             onChange={(e) => setPackageWeekendPrice(e.target.value)}
             defaultValue={userData?.PackageWeekendPrice}
@@ -315,7 +320,9 @@ const AddPackage = () => {
           </label>
           <input
             class="form-control mt-2"
-            type="text"
+            type="number"
+            min={0}
+            onWheel={(e) => e.target.blur()}
             placeholder="Package Weekend Price"
             onChange={(e) => setPackageTeensPrice(e.target.value)}
             defaultValue={userData?.PackageTeensPrice}
@@ -340,6 +347,8 @@ const AddPackage = () => {
             Teens Tax %
           </label>
           <input
+            min={0}
+            onWheel={(e) => e.target.blur()}
             class="form-control mt-2"
             type="text"
             placeholder="Teens Tax %"
@@ -401,9 +410,11 @@ const AddPackage = () => {
                   Weekday Price
                 </label>
                 <input
+                  onWheel={(e) => e.target.blur()}
                   type="number"
                   className="form-control mb-2"
                   placeholder="Item Weekday Price"
+                  min={0}
                   value={item.itemWeekdayPrice}
                   onChange={(e) =>
                     handleItemInputChange(
@@ -418,6 +429,8 @@ const AddPackage = () => {
                 </label>
                 <input
                   type="number"
+                  min={0}
+                  onWheel={(e) => e.target.blur()}
                   className="form-control mb-2"
                   placeholder="Item Weekend Price"
                   value={item.itemWeekendPrice}
@@ -446,6 +459,7 @@ const AddPackage = () => {
                   Tax %
                 </label>
                 <input
+                  onWheel={(e) => e.target.blur()}
                   type="number"
                   className="form-control mb-2"
                   placeholder="Item Tax"

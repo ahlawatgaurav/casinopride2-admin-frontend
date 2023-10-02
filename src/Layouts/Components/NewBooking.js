@@ -18,6 +18,8 @@ import "../../assets/global.css";
 import PackagesPage from "../Pages/Packages/PackagePage";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { Link } from "react-router-dom";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 
 const NewBooking = () => {
   const location = useLocation();
@@ -37,6 +39,7 @@ const NewBooking = () => {
   const [address, setAddress] = useState(
     userData?.Address ? userData?.Address : ""
   );
+
   const [totalGuestCount, settoalGuestCount] = useState("");
   const [dateofbirth, setDateofbirth] = useState("");
   const [numberofteens, setNumberofteens] = useState("");
@@ -64,7 +67,16 @@ const NewBooking = () => {
   const [couponDiscount, setCouponDiscout] = useState("");
   const [totalteensPrice, setTotalTeensPrice] = useState("");
 
-  const [teenpackageId, setTeenPackageId] = useState("");
+  const [teenpackageId, setTeenPackageId] = useState([]);
+
+  console.log("teenpackageId------------------>", teenpackageId);
+
+  const [totalTeensRate, setTotalTeensRate] = useState();
+  const [totalTeensTax, setTotalTeensTax] = useState("");
+  const [teenstaxPercentage, setTeensTaxPercentage] = useState("");
+  const [teensTaxName, setTeensTaxName] = useState("");
+
+  console.log("phone--------------->", phone);
 
   const handleToggle = (field) => {
     // Toggle the state of the corresponding field
@@ -224,10 +236,15 @@ const NewBooking = () => {
   // setamountAfterDiscount
 
   const onsubmit = () => {
-    if (guestName == "" || phone === "") {
+    console.log("Package ID ------->", [teenpackageId]);
+    console.log("Package ID ------->", packageIds);
+    const teenpackageIdArray = [];
+
+    teenpackageIdArray.push(teenpackageId);
+    if (guestName == "" || phone === "" || address == "") {
       toast.warning("Please fill all the fields");
-    } else if (phone.length > 10 || phone.length < 10) {
-      toast.warning("Please enter a valid phone number (up to 10 digits)");
+    } else if (paymentOption == "") {
+      toast.warning("Please select the payment option");
     } else if (!isValidEmail(email)) {
       toast.warning("Please enter a valid email address");
     } else {
@@ -245,14 +262,17 @@ const NewBooking = () => {
         totalGuestCount: totalGuestCount,
         numOfTeens: numberofteens,
         teensPrice: totalteensPrice,
+        teensRate: totalTeensRate,
+        teensTax: teenstaxPercentage,
+        teensTaxName: teensTaxName,
         // discountId:2,
         panelDiscountId: selectedOption,
         couponId: couponId,
         referredBy: referredBy,
         settledByCompany: 0,
         packageId:
-          packageIds == []
-            ? JSON.stringify(teenpackageId)
+          packageIds.length == 0
+            ? JSON.stringify(teenpackageIdArray)
             : JSON.stringify(packageIds),
         packageGuestCount: JSON.stringify(packageGuestCount),
         userId: loginDetails?.logindata?.userId,
@@ -263,6 +283,8 @@ const NewBooking = () => {
         amountAfterDiscount: amountAfterDiscount,
         isActive: 1,
       };
+
+      console.log("Data from booking ------->", data);
 
       dispatch(
         AddBookingFn(loginDetails?.logindata?.Token, data, (callback) => {
@@ -323,6 +345,8 @@ const NewBooking = () => {
 
   const [selectedOption, setSelectedOption] = useState("");
 
+  const [paymentOption, setPaymentOption] = useState("");
+
   const handleSelectChange = (e) => {
     const selectedValue = e.target.value;
 
@@ -347,6 +371,13 @@ const NewBooking = () => {
 
   console.log("amountAfterDiscount-------->", amountAfterDiscount);
 
+  const handlePaymentSelection = (event) => {
+    // Update the selected option when the user makes a selection
+    setPaymentOption(event.target.value);
+  };
+
+  console.log("paymentOption---------------->", paymentOption);
+
   return (
     <div>
       <ToastContainer />
@@ -363,6 +394,10 @@ const NewBooking = () => {
           couponDiscount={couponDiscount}
           setTotalTeensPrice={setTotalTeensPrice}
           setTeenPackageId={setTeenPackageId}
+          setTotalTeensRate={setTotalTeensRate}
+          setTotalTeensTax={setTotalTeensTax}
+          setTeensTaxName={setTeensTaxName}
+          setTeensTaxPercentage={setTeensTaxPercentage}
         />
         <div className="col-lg-6 mt-3 mt-3">
           <label for="formGroupExampleInput " className="form_text">
@@ -381,12 +416,19 @@ const NewBooking = () => {
           <label for="formGroupExampleInput " className="form_text">
             Phone <span style={{ color: "red" }}>*</span>
           </label>
-          <input
+          {/* <input
             class="form-control mt-2"
             type="number"
             placeholder="Enter phone"
             onChange={(e) => setPhone(e.target.value)}
             defaultValue={userData?.Phone}
+          /> */}
+
+          <PhoneInput
+            className="form-control mt-2 "
+            placeholder="Enter phone number"
+            defaultValue={userData?.Phone}
+            onChange={setPhone}
           />
         </div>
         <div className="col-lg-6 mt-3">
@@ -460,7 +502,7 @@ const NewBooking = () => {
 
         <div className="col-lg-6 mt-3">
           <label for="formGroupExampleInput " className="form_text">
-            Address
+            Address <span style={{ color: "red" }}>*</span>
           </label>
           <input
             class="form-control mt-2"
@@ -507,6 +549,27 @@ const NewBooking = () => {
             onChange={(e) => setDateofbirth(e.target.value)}
             // defaultValue={userData?.StartDate}
           />
+        </div>
+
+        <div className="col-lg-6 mt-3">
+          <label for="formGroupExampleInput " className="form_text">
+            Payment Option <span style={{ color: "red" }}>*</span>
+          </label>
+          <select
+            id="dropdown"
+            class="form-control mt-2"
+            value={paymentOption} // Set the selected option based on the state
+            onChange={handlePaymentSelection} // Handle changes to the dropdown
+          >
+            <option value="">Select...</option>
+            <option value="Cash">Cash </option>
+            <option value="Card">Card </option>
+            <option value="Half card / Half Cash">
+              Half Card / Half Cash{" "}
+            </option>
+            <option value="Online (UPI)">Online(UPI)</option>
+            <option value="Company Settlement">Company Settlement </option>
+          </select>
         </div>
         <div className="row mt-3">
           <div className="col-lg-6 mt-3">

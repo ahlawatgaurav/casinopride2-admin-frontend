@@ -19,6 +19,10 @@ const PackagesPage = ({
   couponDiscount,
   setTotalTeensPrice,
   setTeenPackageId,
+  setTotalTeensTax,
+  setTotalTeensRate,
+  setTeensTaxPercentage,
+  setTeensTaxName,
 }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
@@ -53,6 +57,11 @@ const PackagesPage = ({
     fetchPackageDetails();
   }, [dispatch]);
 
+  console.log(
+    "Package Detailsnew ------------------------------------>",
+    packageDetails
+  );
+
   const groupedData = packageDetails.map((packageDetail) => {
     const matchingPackageItems = itemDetails.filter(
       (itemDetail) => itemDetail.PackageId === packageDetail.Id
@@ -63,6 +72,10 @@ const PackagesPage = ({
     };
   });
 
+  console.log(
+    "********************groupedData***************************",
+    groupedData[0]?.Id
+  );
   const [selectedPackages, setSelectedPackages] = useState({});
   // console.log("selectedPackages -------------->", selectedPackages);
 
@@ -145,11 +158,6 @@ const PackagesPage = ({
     );
 
     if (groupedData) {
-      console.log(
-        "<<<<<<<<<<<<<<<<<-packageData---------------->",
-        packageData
-      );
-
       const packagePrice =
         (packageData.adults || 0) *
         (!isTodayWeekday
@@ -195,18 +203,34 @@ const PackagesPage = ({
 
   const totalTeensPrice = teensCount * groupedData[0]?.PackageTeensPrice;
 
+  const totalTeensRate = teensCount * groupedData[0]?.PackageTeensRate;
+
+  console.log(
+    "teensCount * groupedData[0]?.PackageTeensRate----------->",
+    groupedData[0]
+  );
+
+  const teensTaxPercentage = groupedData[0]?.PackageTeensTax;
+
+  const teensTaxName = groupedData[0]?.PackageTeensTaxName;
+
   const totalAmountOfAllPackages = totalTeensPrice + TotalAmount;
 
   const totalCountofCustomer = teensCount + TotalAdultGustCount;
 
   useEffect(() => {
+    console.log("totalTeensRate------------------>", totalTeensRate);
     setamount(totalAmountOfAllPackages);
     setPackageIds(formattedData.packageId);
     setPackageGuestCount(formattedData.packageGuestCount);
     settoalGuestCount(totalCountofCustomer);
     setNumberofteens(teensCount);
     setTotalTeensPrice(totalTeensPrice);
-    setTeenPackageId(groupedData[0]?.PackageId);
+    setTeenPackageId(groupedData[0]?.Id);
+    setTotalTeensTax();
+    setTotalTeensRate(totalTeensRate);
+    setTeensTaxPercentage(teensTaxPercentage);
+    setTeensTaxName(teensTaxName);
   }, [TotalAmount, teensCount]);
 
   console.log("total amount-------->", TotalAmount);

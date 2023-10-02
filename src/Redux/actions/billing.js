@@ -3,6 +3,7 @@ import api from "../../Service/api";
 
 export const AddBillingDetails =
   (token, data, callback) => async (dispatch) => {
+    console.log("Data for add billing details---------->", data);
     api.BILLING_PORT.post("/billing/addBillingDetails", data, {
       headers: { AuthToken: token },
     })

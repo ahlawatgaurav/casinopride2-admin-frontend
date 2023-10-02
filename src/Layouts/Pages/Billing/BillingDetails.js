@@ -23,16 +23,41 @@ const BillingDetails = () => {
   const { userData } = location.state;
   const { BookingDetails } = location.state;
 
+  const [totalDiscount, setTotalDiscount] = useState(0);
+
+  useEffect(() => {
+    let calculatedDiscount = 0;
+
+    BookingDetails.forEach((bill) => {
+      let billDiscount = 0;
+
+      bill.ItemDetails.Price.forEach((itemPrice, index) => {
+        const teensPrice = bill.TeensPrice || 0;
+        const numOfTeens = bill.NumOfTeens || 0;
+        const totalItemPrice = itemPrice + teensPrice * numOfTeens;
+
+        const discountPercentage = bill.PanelDiscount / 100;
+        const itemDiscount = totalItemPrice * discountPercentage;
+
+        billDiscount += itemDiscount;
+      });
+
+      calculatedDiscount += billDiscount;
+    });
+
+    console.log("calculatedDiscount------------->", calculatedDiscount);
+    setTotalDiscount(calculatedDiscount);
+  }, [BookingDetails]);
+
   console.log("Booking Details------------------->", BookingDetails);
+
+  console.log("totalDiscount------------------->", totalDiscount);
 
   const [qrCodeData, setQrCodeData] = useState("www.facebook.com");
 
   const [qrCodeImage, setQRCodeImage] = useState(null);
 
-  // Your data array (assuming it's named 'data')
-
   useEffect(() => {
-    // Generate the QR code
     QRCode.toCanvas(
       document.createElement("canvas"),
       qrCodeData,
@@ -40,10 +65,7 @@ const BillingDetails = () => {
         if (error) {
           console.error("QR code generation error:", error);
         } else {
-          // Convert the canvas to a data URL
           const qrCodeDataURL = canvas.toDataURL("image/png");
-
-          // Set the QR code image in the state
           setQRCodeImage(qrCodeDataURL);
         }
       }
@@ -60,10 +82,6 @@ const BillingDetails = () => {
       console.error("QR code image is not available yet.");
     }
   };
-
-  // useEffect(() => {
-  //   downloadQRCode();
-  // }, []);
 
   const generatePDF = async () => {
     const elements = document.querySelectorAll(".thermal-bill");
@@ -160,7 +178,7 @@ const BillingDetails = () => {
                   )}
 
                   <p>
-                    NO OF GUESTS :{" "}
+                    Total Number of Guests :{" "}
                     <span style={{ fontWeight: "bold" }}>
                       {item.TotalGuestCount}
                     </span>
@@ -209,10 +227,7 @@ const BillingDetails = () => {
                       </td>
 
                       <td style={{ textAlign: "center" }}>
-                        {item?.ItemDetails &&
-                          item?.ItemDetails?.packageGuestCount.map((item) => (
-                            <p>{item}</p>
-                          ))}
+                        {item?.TotalGuestCount - item?.NumOfTeens}
                       </td>
 
                       <td style={{ textAlign: "right" }}>
@@ -235,16 +250,42 @@ const BillingDetails = () => {
                           )}
                       </td>
                     </tr>
+
+                    {item?.ItemDetails?.ItemTaxName[0] === "GST" &&
+                      item?.TeensPrice > 0 && (
+                        <tr>
+                          <td style={{ textAlign: "center" }}>
+                            {item?.ItemDetails &&
+                              item?.ItemDetails?.ItemName.map((item) => (
+                                <p>Teens</p>
+                              ))}
+                          </td>
+
+                          <td style={{ textAlign: "center" }}>
+                            {item?.NumOfTeens}
+                          </td>
+
+                          <td style={{ textAlign: "right" }}>
+                            {item?.TeensRate.toFixed(2)}
+                          </td>
+
+                          <td style={{ textAlign: "right" }}>
+                            {item?.TeensRate.toFixed(2)}
+                          </td>
+                        </tr>
+                      )}
                   </tbody>
                 </table>
 
                 <div className="totals" style={{ textAlign: "right" }}>
-                  {/* <h6>
-                      Total Amount:
-                      {item?.ItemDetails && (
+                  {item?.ItemDetails?.ItemTaxName[0] === "GST" &&
+                  item?.TeensPrice > 0 ? (
+                    <h6>
+                      Total Amount:{" "}
+                      {item?.ItemDetails && item?.TeensRate && (
                         <span>
-                          {parseFloat(
-                            (
+                          {(
+                            parseFloat(
                               item?.ItemDetails?.packageGuestCount.reduce(
                                 (acc, count, index) => {
                                   return (
@@ -252,99 +293,87 @@ const BillingDetails = () => {
                                   );
                                 },
                                 0
-                              ) + parseFloat(BookingDetails[0]?.TeensPrice)
-                            ).toFixed(2)
-                          )}
+                              )
+                            ) + item?.TeensRate
+                          ).toFixed(2)}
                         </span>
                       )}
-                    </h6> */}
-
-                  <h6>
-                    Total Amount:
-                    {item?.ItemDetails && (
-                      <span>
-                        {parseFloat(
-                          item?.ItemDetails?.packageGuestCount
-                            .reduce((acc, count, index) => {
-                              return (
-                                acc + count * item?.ItemDetails?.Rate[index]
-                              );
-                            }, 0)
-                            .toFixed(2)
-                        )}
-                      </span>
-                    )}
-                  </h6>
-
-                  <h6>
-                    Discount:
-                    {item?.ItemDetails && (
-                      <span>
-                        {parseFloat(
-                          (
-                            item?.ItemDetails?.packageGuestCount.reduce(
-                              (acc, count, index) => {
+                    </h6>
+                  ) : (
+                    <h6>
+                      Total Amount:
+                      {item?.ItemDetails && (
+                        <span>
+                          {parseFloat(
+                            item?.ItemDetails?.packageGuestCount
+                              .reduce((acc, count, index) => {
                                 return (
                                   acc + count * item?.ItemDetails?.Rate[index]
                                 );
-                              },
-                              0
-                            ) *
-                            (!BookingDetails[0]?.PanelDiscount == 0
-                              ? BookingDetails[0]?.PanelDiscount / 100
-                              : BookingDetails[0]?.CouponDiscount / 100)
-                          ).toFixed(2)
+                              }, 0)
+                              .toFixed(2)
+                          )}
+                        </span>
+                      )}
+                    </h6>
+                  )}
+
+                  {item?.ItemDetails?.ItemTaxName[0] === "GST" &&
+                  item?.TeensPrice > 0 ? (
+                    <>
+                      {item?.PackageName === null ? (
+                        <></>
+                      ) : (
+                        <>
+                          <h6>CGST: {item?.ItemDetails.ItemTax / 2} %</h6>
+                          <h6>SGST: {item?.ItemDetails.ItemTax / 2} %</h6>{" "}
+                        </>
+                      )}
+                      <h6>Teens CGST: {item?.TeensTax / 2} %</h6>
+                      <h6>Teens SGST: {item?.TeensTax / 2} %</h6>
+                      <h6>
+                        Bill Amount:{" "}
+                        {item?.ItemDetails && (
+                          <span>
+                            {(
+                              parseFloat(
+                                (item?.ItemDetails?.packageGuestCount.reduce(
+                                  (acc, count, index) => {
+                                    return (
+                                      acc +
+                                      count * item?.ItemDetails?.Rate[index]
+                                    );
+                                  },
+                                  0
+                                ) -
+                                  item?.ItemDetails?.packageGuestCount.reduce(
+                                    (acc, count, index) => {
+                                      return (
+                                        acc +
+                                        count * item?.ItemDetails?.Rate[index]
+                                      );
+                                    },
+                                    0
+                                  ) *
+                                    (!BookingDetails[0]?.PanelDiscount == 0
+                                      ? BookingDetails[0]?.PanelDiscount / 100
+                                      : BookingDetails[0]?.CouponDiscount /
+                                        100)) *
+                                  (1 + item?.ItemDetails.ItemTax / 100)
+                              ) +
+                              ((item?.TeensRate * item?.TeensTax) / 100 +
+                                item?.TeensRate)
+                            ).toFixed(2)}
+                          </span>
                         )}
-                      </span>
-                    )}
-                  </h6>
-
-                  <h6>
-                    Amount After Discount:{" "}
-                    {(
-                      item?.ItemDetails?.packageGuestCount.reduce(
-                        (acc, count, index) => {
-                          return acc + count * item?.ItemDetails?.Rate[index];
-                        },
-                        0
-                      ) +
-                      parseFloat(BookingDetails[0]?.TeensPrice) -
-                      (item?.ItemDetails &&
-                        item?.ItemDetails?.packageGuestCount.reduce(
-                          (acc, count, index) => {
-                            return acc + count * item?.ItemDetails?.Rate[index];
-                          },
-                          0
-                        ) *
-                          (!BookingDetails[0]?.PanelDiscount == 0
-                            ? BookingDetails[0]?.PanelDiscount / 100
-                            : BookingDetails[0]?.CouponDiscount / 100))
-                    ).toFixed(2)}
-                  </h6>
-
-                  {/* <h6>
-                    Amount After Discount:{" "}
-                    {item?.ItemDetails && (
-                      <span>
-                        {parseFloat(
-                          item?.ItemDetails?.packageGuestCount
-                            .reduce((acc, count, index) => {
-                              return (
-                                acc + count * item?.ItemDetails?.Rate[index]
-                              );
-                            }, 0)
-                            .toFixed(2)
-                        )}
-                      </span>
-                    )}
-                  </h6> */}
-
-                  {item?.ItemDetails?.ItemTaxName[0] === "GST" ? (
+                      </h6>
+                    </>
+                  ) : (
                     <>
                       <h6>CGST: {item?.ItemDetails.ItemTax / 2} %</h6>
                       <h6>SGST: {item?.ItemDetails.ItemTax / 2} %</h6>
                       <h6>
-                        Bill Amount:{" "}
+                        Bill Amountt:{" "}
                         {item?.ItemDetails && (
                           <span>
                             {parseFloat(
@@ -378,11 +407,9 @@ const BillingDetails = () => {
                         )}
                       </h6>
                     </>
-                  ) : (
-                    <></>
                   )}
 
-                  {item?.ItemDetails?.ItemTaxName[0] == "VAT" ? (
+                  {item?.ItemDetails?.ItemTaxName[0] === "VAT" ? (
                     <>
                       <h6>VAT: {item?.ItemDetails.ItemTax} %</h6>
                       <h6>
@@ -391,7 +418,7 @@ const BillingDetails = () => {
                           <span>
                             {parseFloat(
                               (
-                                (item?.ItemDetails?.packageGuestCount.reduce(
+                                item?.ItemDetails?.packageGuestCount.reduce(
                                   (acc, count, index) => {
                                     return (
                                       acc +
@@ -399,16 +426,7 @@ const BillingDetails = () => {
                                     );
                                   },
                                   0
-                                ) -
-                                  item?.ItemDetails?.packageGuestCount.reduce(
-                                    (acc, count, index) => {
-                                      return (
-                                        acc +
-                                        count * item?.ItemDetails?.Rate[index]
-                                      );
-                                    },
-                                    0
-                                  )) *
+                                ) *
                                 (1 + item?.ItemDetails.ItemTax / 100)
                               ).toFixed(0)
                             )}
@@ -449,8 +467,6 @@ const BillingDetails = () => {
             </div>
           ))}
       </div>
-
-      {/* <button onClick={generatePDF}>Generate PDF</button> */}
 
       <div className="col-lg-6 mb-2 btn-lg mx-auto d-flex justify-content-center ">
         <button

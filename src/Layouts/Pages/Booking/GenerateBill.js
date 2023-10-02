@@ -37,7 +37,6 @@ const GenerateBill = () => {
   console.log("Todays date--->", today);
 
   const onsubmit = () => {
-    console.log("loginDetails-------------->", loginDetails?.logindata?.Token);
     const data = {
       bookingId: userData?.Id,
       packageId: userData?.PackageId,
