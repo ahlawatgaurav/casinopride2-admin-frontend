@@ -44,3 +44,97 @@
   font-weight: 600;
   margin-top: 10px;
 }
+
+.confirmbtn {
+  width: 100%;
+  background-color: #106f26;
+  color: white;
+  margin-bottom: 10 !important;
+  border: none;
+}
+
+.confirmbtn:hover,
+.confirmbtn:focus,
+.confirmbtn:active {
+  background-color: #106f26;
+  color: white;
+}
+
+.cancelBtn {
+  width: 100%;
+  background-color: #edfff1 !important;
+  color: #106f26;
+
+  border: none;
+  margin-top: 20px;
+}
+
+.cancelBtn:hover,
+.cancelBtn:focus,
+.cancelBtn:active {
+  background-color: #edfff1 !important;
+  color: #106f26;
+}
+
+.outletTex {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.outletTitle {
+  text-align: center;
+  font-size: 25px !important;
+  font-weight: bold;
+
+  margin-bottom: 20px;
+}
+
+.check-circle {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+  display: block;
+  object-fit: contain;
+}
+
+.closeConfirmBtn {
+  width: 100%;
+  background-color: #f06a6b;
+  color: white;
+  margin-bottom: 10 !important;
+  border: none;
+}
+
+.closeConfirmBtn:hover,
+.closeConfirmBtn:focus,
+.closeConfirmBtn:active {
+  background-color: #f06a6b;
+  color: white;
+}
+
+.closecancelBtn {
+  width: 100%;
+  background-color: #ffeae8 !important;
+  color: #f06a6b;
+
+  border: none;
+  margin-top: 20px;
+}
+
+.closecancelBtn:hover,
+.closecancelBtn:focus,
+.closecancelBtn:active {
+  background-color: #ffeae8 !important;
+  color: #f06a6b;
+}
+
+.Shiftcard {
+  border: 1px solid #ccc;
+  padding: 5px;
+  width: 100%;
+  background-color: white;
+  margin-bottom: 10px;
+}
