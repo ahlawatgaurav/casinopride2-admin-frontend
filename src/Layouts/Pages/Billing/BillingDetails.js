@@ -23,6 +23,15 @@ const BillingDetails = () => {
   const { userData } = location.state;
   const { BookingDetails } = location.state;
 
+  console.log(
+    "AMount after discount---------------------->",
+    BookingDetails[0]?.AmountAfterDiscount
+  );
+  console.log(
+    "Actual amount---------------------->",
+    BookingDetails[0]?.AmountAfterDiscount
+  );
+
   const [totalDiscount, setTotalDiscount] = useState(0);
 
   useEffect(() => {
@@ -53,7 +62,9 @@ const BillingDetails = () => {
 
   console.log("totalDiscount------------------->", totalDiscount);
 
-  const [qrCodeData, setQrCodeData] = useState("www.facebook.com");
+  const [qrCodeData, setQrCodeData] = useState(
+    "https://smartkhoj.nyc3.digitaloceanspaces.com/Module/BillFile_04-10-2023_09-42-14_combined_bill_%2854%29.pdf"
+  );
 
   const [qrCodeImage, setQRCodeImage] = useState(null);
 
@@ -138,23 +149,34 @@ const BillingDetails = () => {
                   className="logo-image"
                 />
               </div>
+              <p
+                style={{
+                  marginBottom: "20px",
+                }}
+                className="BillPrintFont"
+              >
+                A unit of Goa Coastal Resorts & Recreation Pvt.Ltd
+              </p>
               <div className="row">
                 <div className="col-6 bill-details">
-                  <p>
+                  <p className="BillPrintFont">
                     GUEST NAME :
                     <span style={{ fontWeight: "bold" }}>{item.GuestName}</span>{" "}
                   </p>
                   {item.guestGSTIN ? (
-                    <p>
+                    <p className="BillPrintFont">
                       GUEST GSTIN :{" "}
-                      <span style={{ fontWeight: "bold" }}>
+                      <span
+                        style={{ fontWeight: "bold" }}
+                        className="BillPrintFont"
+                      >
                         {item.guestGSTIN}
                       </span>
                     </p>
                   ) : (
                     <></>
                   )}
-                  <p>
+                  <p className="BillPrintFont">
                     GUEST Mobile :
                     <span
                       className="guest-mobile"
@@ -164,10 +186,10 @@ const BillingDetails = () => {
                     </span>
                   </p>
                   {item.guestState ? (
-                    <p>
+                    <p className="BillPrintFont">
                       GUEST STATE :
                       <span
-                        className="guest-state"
+                        className="guest-state BillPrintFont"
                         style={{ fontWeight: "bold" }}
                       >
                         {item.guestState}
@@ -177,9 +199,12 @@ const BillingDetails = () => {
                     <></>
                   )}
 
-                  <p>
+                  <p className="BillPrintFont">
                     Total Number of Guests :{" "}
-                    <span style={{ fontWeight: "bold" }}>
+                    <span
+                      style={{ fontWeight: "bold" }}
+                      className="BillPrintFont"
+                    >
                       {item.TotalGuestCount}
                     </span>
                   </p>
@@ -196,48 +221,85 @@ const BillingDetails = () => {
               </div>
               <div className="bill-details">
                 <div className="date-time-bill-row">
-                  <p>
+                  <p className="BillPrintFont">
                     Date :
-                    <span style={{ fontWeight: "bold" }}>
+                    <span
+                      style={{ fontWeight: "bold" }}
+                      className="BillPrintFont"
+                    >
                       {" "}
                       {moment(item?.BillingDate).format("YYYY-MM-DD")}
                     </span>
                   </p>
 
-                  <p className="bill-number">BILL#: {item.BillNumber}</p>
+                  <p className="bill-number BillPrintFont">
+                    BILL#: {item.BillNumber}
+                  </p>
                 </div>
                 <hr />
                 <table className="table table-bordered">
                   <thead>
                     <tr>
-                      <th style={{ textAlign: "center" }}>ITEM NAME</th>
-                      <th style={{ textAlign: "center" }}>Guest Count</th>
+                      <th
+                        style={{ textAlign: "center" }}
+                        className="BillPrintFont"
+                      >
+                        ITEM NAME
+                      </th>
+                      <th
+                        style={{ textAlign: "center" }}
+                        className="BillPrintFont"
+                      >
+                        Guest Count
+                      </th>
 
-                      <th style={{ textAlign: "center" }}>RATE</th>
-                      <th style={{ textAlign: "center" }}>VALUE</th>
+                      <th
+                        style={{ textAlign: "center" }}
+                        className="BillPrintFont"
+                      >
+                        RATE
+                      </th>
+                      <th
+                        style={{ textAlign: "center" }}
+                        className="BillPrintFont"
+                      >
+                        VALUE
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td style={{ textAlign: "center" }}>
+                      <td
+                        style={{ textAlign: "center" }}
+                        className="BillPrintFont"
+                      >
                         {item?.ItemDetails &&
                           item?.ItemDetails?.ItemName.map((item) => (
                             <p>{item}</p>
                           ))}
                       </td>
 
-                      <td style={{ textAlign: "center" }}>
+                      <td
+                        style={{ textAlign: "center" }}
+                        className="BillPrintFont"
+                      >
                         {item?.TotalGuestCount - item?.NumOfTeens}
                       </td>
 
-                      <td style={{ textAlign: "right" }}>
+                      <td
+                        style={{ textAlign: "right" }}
+                        className="BillPrintFont"
+                      >
                         {item?.ItemDetails &&
                           item?.ItemDetails?.Rate.map((item) => (
                             <p>{parseFloat(item).toFixed(2)}</p>
                           ))}
                       </td>
 
-                      <td style={{ textAlign: "right" }}>
+                      <td
+                        style={{ textAlign: "right" }}
+                        className="BillPrintFont"
+                      >
                         {item?.ItemDetails &&
                           item?.ItemDetails?.packageGuestCount.map(
                             (count, index) => (
@@ -254,22 +316,34 @@ const BillingDetails = () => {
                     {item?.ItemDetails?.ItemTaxName[0] === "GST" &&
                       item?.TeensPrice > 0 && (
                         <tr>
-                          <td style={{ textAlign: "center" }}>
+                          <td
+                            style={{ textAlign: "center" }}
+                            className="BillPrintFont"
+                          >
                             {item?.ItemDetails &&
                               item?.ItemDetails?.ItemName.map((item) => (
                                 <p>Teens</p>
                               ))}
                           </td>
 
-                          <td style={{ textAlign: "center" }}>
+                          <td
+                            style={{ textAlign: "center" }}
+                            className="BillPrintFont"
+                          >
                             {item?.NumOfTeens}
                           </td>
 
-                          <td style={{ textAlign: "right" }}>
+                          <td
+                            style={{ textAlign: "right" }}
+                            className="BillPrintFont"
+                          >
                             {item?.TeensRate.toFixed(2)}
                           </td>
 
-                          <td style={{ textAlign: "right" }}>
+                          <td
+                            style={{ textAlign: "right" }}
+                            className="BillPrintFont"
+                          >
                             {item?.TeensRate.toFixed(2)}
                           </td>
                         </tr>
@@ -280,10 +354,10 @@ const BillingDetails = () => {
                 <div className="totals" style={{ textAlign: "right" }}>
                   {item?.ItemDetails?.ItemTaxName[0] === "GST" &&
                   item?.TeensPrice > 0 ? (
-                    <h6>
+                    <h6 className="BillPrintFont">
                       Total Amount:{" "}
                       {item?.ItemDetails && item?.TeensRate && (
-                        <span>
+                        <span className="BillPrintFont">
                           {(
                             parseFloat(
                               item?.ItemDetails?.packageGuestCount.reduce(
@@ -300,10 +374,10 @@ const BillingDetails = () => {
                       )}
                     </h6>
                   ) : (
-                    <h6>
+                    <h6 className="BillPrintFont">
                       Total Amount:
                       {item?.ItemDetails && (
-                        <span>
+                        <span className="BillPrintFont">
                           {parseFloat(
                             item?.ItemDetails?.packageGuestCount
                               .reduce((acc, count, index) => {
@@ -321,17 +395,25 @@ const BillingDetails = () => {
                   {item?.ItemDetails?.ItemTaxName[0] === "GST" &&
                   item?.TeensPrice > 0 ? (
                     <>
-                      {item?.PackageName === null ? (
+                      {!item?.PackageName === null ? (
                         <></>
                       ) : (
                         <>
-                          <h6>CGST: {item?.ItemDetails.ItemTax / 2} %</h6>
-                          <h6>SGST: {item?.ItemDetails.ItemTax / 2} %</h6>{" "}
+                          <h6 className="BillPrintFont">
+                            CGST: {item?.ItemDetails.ItemTax / 2} %
+                          </h6>
+                          <h6 className="BillPrintFont">
+                            SGST: {item?.ItemDetails.ItemTax / 2} %
+                          </h6>{" "}
                         </>
                       )}
-                      <h6>Teens CGST: {item?.TeensTax / 2} %</h6>
-                      <h6>Teens SGST: {item?.TeensTax / 2} %</h6>
-                      <h6>
+                      <h6 className="BillPrintFont">
+                        Teens CGST: {item?.TeensTax / 2} %
+                      </h6>
+                      <h6 className="BillPrintFont">
+                        Teens SGST: {item?.TeensTax / 2} %
+                      </h6>
+                      {/* <h6 className="BillPrintFont">
                         Bill Amount:{" "}
                         {item?.ItemDetails && (
                           <span>
@@ -366,14 +448,61 @@ const BillingDetails = () => {
                             ).toFixed(2)}
                           </span>
                         )}
-                      </h6>
+                      </h6> */}
+
+                      {item?.AmountAfterDiscount == 0 ? (
+                        <h6 className="BillPrintFont">
+                          Bill Amount :{" "}
+                          {item?.ItemDetails && (
+                            <span>
+                              {parseFloat(
+                                item?.ItemDetails?.packageGuestCount.reduce(
+                                  (acc, count, index) => {
+                                    return (
+                                      acc +
+                                      count * item?.ItemDetails?.Price[index]
+                                    );
+                                  },
+                                  0
+                                ) + (item?.TeensPrice || 0)
+                              ).toFixed(2)}
+                            </span>
+                          )}
+                        </h6>
+                      ) : (
+                        <h6 className="BillPrintFont">
+                          Bill Amount :{" "}
+                          {item?.ItemDetails && (
+                            <span>
+                              {parseFloat(
+                                item?.ItemDetails?.packageGuestCount.reduce(
+                                  (acc, count, index) => {
+                                    return (
+                                      acc +
+                                      count * item?.ItemDetails?.Price[index]
+                                    );
+                                  },
+                                  0
+                                ) +
+                                  (item?.TeensPrice || 0) -
+                                  (item?.ActualAmount -
+                                    item?.AmountAfterDiscount)
+                              ).toFixed(2)}
+                            </span>
+                          )}
+                        </h6>
+                      )}
                     </>
                   ) : (
                     <>
-                      <h6>CGST: {item?.ItemDetails.ItemTax / 2} %</h6>
-                      <h6>SGST: {item?.ItemDetails.ItemTax / 2} %</h6>
-                      <h6>
-                        Bill Amountt:{" "}
+                      {/* <h6 className="BillPrintFont">
+                        CGST: {item?.ItemDetails.ItemTax / 2} %
+                      </h6>
+                      <h6 className="BillPrintFont">
+                        SGST: {item?.ItemDetails.ItemTax / 2} %
+                      </h6>
+                      <h6 className="BillPrintFont">
+                        Bill Amountt idk:{" "}
                         {item?.ItemDetails && (
                           <span>
                             {parseFloat(
@@ -405,15 +534,23 @@ const BillingDetails = () => {
                             )}
                           </span>
                         )}
-                      </h6>
+                      </h6> */}
                     </>
                   )}
 
                   {item?.ItemDetails?.ItemTaxName[0] === "VAT" ? (
                     <>
-                      <h6>VAT: {item?.ItemDetails.ItemTax} %</h6>
-                      <h6>
-                        Bill Amount:{" "}
+                      <h6 className="BillPrintFont">
+                        VAT: {item?.ItemDetails.ItemTax} %
+                      </h6>
+                      <h6 className="BillPrintFont">
+                        CGST: {item?.ItemDetails.ItemTax / 2} %
+                      </h6>
+                      <h6 className="BillPrintFont">
+                        SGST: {item?.ItemDetails.ItemTax / 2} %
+                      </h6>
+                      <h6 className="BillPrintFont">
+                        Bill Amount :{" "}
                         {item?.ItemDetails && (
                           <span>
                             {parseFloat(
@@ -442,22 +579,28 @@ const BillingDetails = () => {
                   className="terms"
                   style={{ marginTop: "20px", textAlign: "center" }}
                 >
-                  <h6 style={{ textAlign: "center", fontSize: "16px" }}>
+                  <h6
+                    style={{
+                      textAlign: "center",
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                    }}
+                  >
                     TERMS AND CONDITIONS
                   </h6>
-                  <p style={{ fontSize: "12px" }}>
+                  <p style={{ fontSize: "14px", fontWeight: "bold" }}>
                     (1) BUFFET IS OPEN FROM 1:30PM TO 3:30PM AND FROM 8:00PM TO
                     1:30AM DURING WEEKDAYS.
                   </p>
-                  <p style={{ fontSize: "12px" }}>
+                  <p style={{ fontSize: "14px", fontWeight: "bold" }}>
                     (2) BUFFET IS OPEN FROM 1:30PM TO 4:00PM AND FROM 8:00PM TO
                     2:00AM DURING WEEKEND.
                   </p>
-                  <p style={{ fontSize: "12px" }}>
+                  <p style={{ fontSize: "14px", fontWeight: "bold" }}>
                     (3) ANY PERSON ABOVE 21 YEARS OLD INTEND TO PLAY MAY ENTER
                     GAMING AREA & PURCHASE CHIPS SEPARATELY.
                   </p>
-                  <p style={{ fontSize: "12px" }}>
+                  <p style={{ fontSize: "14px", fontWeight: "bold" }}>
                     (4) THIS INVOICE DOES NOT ENTITLE ANY LIQUOR, GAMING CHIPS
                     OR ANY OTHER SERVICES. HOWEVER, LIMITED COUPONS APPLIED ON
                     SELECTIVE LIQUOR PACKAGES.

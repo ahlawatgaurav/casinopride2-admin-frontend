@@ -597,3 +597,278 @@ export const EditUsedCoupon = (data, token, callback) => async (dispatch) => {
       }
     });
 };
+
+export const AddFutureBookingDatesFn =
+  (data, token, callback) => async (dispatch) => {
+    api.CORE_PORT.post("/core/futureBookingDate", data, {
+      headers: { AuthToken: token },
+    })
+      .then((response) => {
+        console.log("Add future booking Details ->", response.data);
+        if (response.data?.Details) {
+          console.log(response.data?.Details);
+          callback({
+            status: true,
+            response: response?.data,
+          });
+        } else if (response.data?.Error) {
+          callback({
+            status: false,
+            error: response.data?.Error?.ErrorMessage,
+          });
+        }
+      })
+      .catch((err) => {
+        {
+          console.log("error", err);
+        }
+      });
+  };
+
+export const getFutureBookingDatesDetails =
+  (token, callback) => async (dispatch) => {
+    api.CORE_PORT.get("/core/futureBookingDate", {
+      headers: { AuthToken: token },
+    })
+      .then((response) => {
+        console.log(" Get future Booking Date ->", response.data);
+        if (response.data?.Details) {
+          console.log(response.data?.Details);
+          callback({
+            status: true,
+            response: response?.data,
+          });
+        } else if (response.data?.Error) {
+          callback({
+            status: false,
+            error: response.data?.Error?.ErrorMessage,
+          });
+        }
+      })
+      .catch((err) => {
+        {
+          console.log("error", err);
+        }
+      });
+  };
+
+export const openOutletFunction =
+  (data, token, callback) => async (dispatch) => {
+    api.CORE_PORT.post("/core/openOutlet", data, {
+      headers: { AuthToken: token },
+    })
+      .then((response) => {
+        console.log("Open outlet details ->", response.data);
+        if (response.data?.Details) {
+          console.log(response.data?.Details);
+          callback({
+            status: true,
+            response: response?.data,
+          });
+        } else if (response.data?.Error) {
+          callback({
+            status: false,
+            error: response.data?.Error?.ErrorMessage,
+          });
+        }
+      })
+      .catch((err) => {
+        {
+          console.log("error", err);
+        }
+      });
+  };
+
+export const checkCurrentOutletFn =
+  (token, date, callback) => async (dispatch) => {
+    api.CORE_PORT.get(`/core/checkCurrentOutlet?outletDate=${date}`, {
+      headers: { AuthToken: token },
+    })
+      .then((response) => {
+        console.log(" Get future Booking Date ->", response.data);
+        if (response.data?.Details) {
+          console.log(response.data?.Details);
+          callback({
+            status: true,
+            response: response?.data,
+          });
+        } else if (response.data?.Error) {
+          callback({
+            status: false,
+            error: response.data?.Error?.ErrorMessage,
+          });
+        }
+      })
+      .catch((err) => {
+        {
+          console.log("error", err);
+        }
+      });
+  };
+
+export const checkShiftForUser =
+  (date, userId, userType, token, callback) => async (dispatch) => {
+    api.CORE_PORT.get(
+      `/core/checkShiftForUser?outletDate=${date}&userId=${userId}&userType=${userType}`,
+      {
+        headers: { AuthToken: token },
+      }
+    )
+      .then((response) => {
+        console.log(" CHeck shift for user ->", response.data);
+        if (response.data) {
+          console.log(response.data);
+          callback({
+            status: true,
+            response: response?.data,
+          });
+        } else if (response.data?.Error) {
+          callback({
+            status: false,
+            error: response.data?.Error?.ErrorMessage,
+          });
+        }
+      })
+      .catch((err) => {
+        {
+          console.log("error", err);
+        }
+      });
+  };
+
+export const recentShiftForOutlet =
+  (date, token, callback) => async (dispatch) => {
+    api.CORE_PORT.get(`/core/recentShiftForOutlet?outletDate=${date}`, {
+      headers: { AuthToken: token },
+    })
+      .then((response) => {
+        console.log("Recent shift for outlet------- ->", response.data);
+        if (response.data) {
+          console.log(response.data);
+          callback({
+            status: true,
+            response: response?.data,
+          });
+        } else if (response.data?.Error) {
+          callback({
+            status: false,
+            error: response.data?.Error?.ErrorMessage,
+          });
+        }
+      })
+      .catch((err) => {
+        {
+          console.log("error", err);
+        }
+      });
+  };
+
+export const openShiftFn = (data, token, callback) => async (dispatch) => {
+  console.log("DATA------------------------>", data);
+
+  console.log("Called here ---->");
+  api.CORE_PORT.post("/core/openShift", data, {
+    headers: { AuthToken: token },
+  })
+    .then((response) => {
+      console.log("Open shift----------------------------->", response.data);
+      if (response.data?.Details) {
+        console.log(response.data?.Details);
+        callback({
+          status: true,
+          response: response?.data,
+        });
+      } else if (response.data?.Error) {
+        callback({
+          status: false,
+          error: response.data?.Error?.ErrorMessage,
+        });
+      }
+    })
+    .catch((err) => {
+      {
+        console.log("error", err);
+      }
+    });
+};
+
+export const closeShiftFn = (data, token, callback) => async (dispatch) => {
+  console.log("close shift data----------------------->", data);
+  api.CORE_PORT.post("/core/closeShift", data, {
+    headers: { AuthToken: token },
+  })
+    .then((response) => {
+      console.log("Close shift----------------------------->", response.data);
+      if (response.data?.Details) {
+        console.log(response.data?.Details);
+        callback({
+          status: true,
+          response: response?.data,
+        });
+      } else if (response.data?.Error) {
+        callback({
+          status: false,
+          error: response.data?.Error?.ErrorMessage,
+        });
+      }
+    })
+    .catch((err) => {
+      {
+        console.log("error", err);
+      }
+    });
+};
+
+export const closeOutletFunction =
+  (data, token, callback) => async (dispatch) => {
+    api.CORE_PORT.post("/core/closeOutlet", data, {
+      headers: { AuthToken: token },
+    })
+      .then((response) => {
+        console.log("Close outlet details ->", response.data);
+        if (response.data?.Details) {
+          console.log(response.data?.Details);
+          callback({
+            status: true,
+            response: response?.data,
+          });
+        } else if (response.data?.Error) {
+          callback({
+            status: false,
+            error: response.data?.Error?.ErrorMessage,
+          });
+        }
+      })
+      .catch((err) => {
+        {
+          console.log("error", err);
+        }
+      });
+  };
+
+export const reopenShiftFunction =
+  (data, token, callback) => async (dispatch) => {
+    api.CORE_PORT.post("/core/reopenShift", data, {
+      headers: { AuthToken: token },
+    })
+      .then((response) => {
+        console.log("Reopen shift details ->", response.data);
+        if (response.data?.Details) {
+          console.log(response.data?.Details);
+          callback({
+            status: true,
+            response: response?.data,
+          });
+        } else if (response.data?.Error) {
+          callback({
+            status: false,
+            error: response.data?.Error?.ErrorMessage,
+          });
+        }
+      })
+      .catch((err) => {
+        {
+          console.log("error", err);
+        }
+      });
+  };

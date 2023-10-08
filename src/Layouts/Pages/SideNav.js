@@ -167,6 +167,16 @@ const SideNav = () => {
             )}
 
             {loginDetails?.logindata?.UserType == "1" ? (
+              <Nav.Item eventKey="7" icon={<DashboardIcon />}>
+                <Link to="/FutureBookingDates" className="links">
+                  Future Bookin gDates
+                </Link>
+              </Nav.Item>
+            ) : (
+              <></>
+            )}
+
+            {loginDetails?.logindata?.UserType == "1" ? (
               <Nav.Menu
                 placement="rightStart"
                 eventKey="10"

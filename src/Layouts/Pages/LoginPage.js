@@ -29,7 +29,7 @@ function LoginPage() {
       Login(data, (callback) => {
         if (callback.status) {
           toast.success("Welcome to casino pride");
-          navigate("HomePage");
+          navigate("NewBooking");
         } else {
           toast.error(callback.error);
         }

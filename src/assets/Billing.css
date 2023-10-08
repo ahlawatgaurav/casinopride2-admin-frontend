@@ -63,3 +63,8 @@ td {
   vertical-align: middle;
   margin-bottom: 20px; /* Vertically center the image */
 }
+
+.BillPrintFont {
+  font-size: 18px;
+  font-weight: bold;
+}

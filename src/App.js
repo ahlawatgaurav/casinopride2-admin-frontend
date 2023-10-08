@@ -27,6 +27,9 @@ import GenerateBill from "./Layouts/Pages/Booking/GenerateBill";
 import BillingDetails from "./Layouts/Pages/Billing/BillingDetails";
 import BillingList from "./Layouts/Pages/Billing/BillingList";
 import Shifts from "./Layouts/Pages/Shifts/Shifts";
+import TeensBilling from "./Layouts/Pages/Billing/TeensBilling";
+import FutureBookingDates from "./Layouts/Pages/FutureBookingDates/FutureBookingDates";
+import AddFutureBookingDates from "./Layouts/Components/AddFutureBookingDates";
 
 function App() {
   return (
@@ -46,6 +49,24 @@ function App() {
           element={
             <Layout>
               <CrudDemoPage />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/FutureBookingDates"
+          element={
+            <Layout>
+              <FutureBookingDates />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/AddFutureBookingDates"
+          element={
+            <Layout>
+              <AddFutureBookingDates />
             </Layout>
           }
         />
@@ -73,6 +94,15 @@ function App() {
           element={
             <Layout>
               <Shifts />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/TeensBilling"
+          element={
+            <Layout>
+              <TeensBilling />
             </Layout>
           }
         />

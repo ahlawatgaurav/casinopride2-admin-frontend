@@ -44,6 +44,7 @@ const GenerateBill = () => {
       totalGuestCount: userData?.TotalGuestCount,
       bookingDate: bookingdate,
       billingDate: today,
+      teensCount: userData?.NumOfTeens,
     };
 
     console.log("data------------>", data);
@@ -53,11 +54,23 @@ const GenerateBill = () => {
         if (callback.status) {
           console.log(
             "Generate Bill --------------?",
-            callback?.response?.Details
+            callback?.response?.Details[0]?.NumOfTeens,
+            callback?.response?.Details[0]?.TotalGuestCount
           );
-          navigate("/BillingDetails", {
-            state: { BookingDetails: callback?.response?.Details },
-          });
+
+          if (
+            callback?.response?.Details[0]?.NumOfTeens -
+              callback?.response?.Details[0]?.TotalGuestCount ==
+            0
+          ) {
+            navigate("/TeensBilling", {
+              state: { BookingDetails: callback?.response?.Details },
+            });
+          } else {
+            navigate("/BillingDetails", {
+              state: { BookingDetails: callback?.response?.Details },
+            });
+          }
 
           toast.error(callback.error);
         } else {

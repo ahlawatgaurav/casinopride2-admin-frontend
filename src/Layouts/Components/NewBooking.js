@@ -25,20 +25,21 @@ const NewBooking = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { userType } = location.state;
-  const { userData } = location.state;
+  // const { userType } = location.state;
 
   const loginDetails = useSelector(
     (state) => state.auth?.userDetailsAfterLogin.Details
   );
   console.log("loginDetails-------------->", loginDetails);
 
+  const outletOpenDetails = useSelector((state) => state.auth?.outeltDetails);
+
+  console.log("outlet open Details------------------->", outletOpenDetails);
+
   const [guestName, setGuestName] = useState("");
-  const [email, setEmail] = useState(userData?.Email ? userData?.Email : "");
-  const [phone, setPhone] = useState(userData?.Phone ? userData?.Phone : "");
-  const [address, setAddress] = useState(
-    userData?.Address ? userData?.Address : ""
-  );
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
 
   const [totalGuestCount, settoalGuestCount] = useState("");
   const [dateofbirth, setDateofbirth] = useState("");
@@ -280,6 +281,7 @@ const NewBooking = () => {
         // futureDate:2023-10-25,
         shiftId: 2,
         actualAmount: amount,
+        paymentMode: paymentOption,
         amountAfterDiscount: amountAfterDiscount,
         isActive: 1,
       };
@@ -408,7 +410,6 @@ const NewBooking = () => {
             type="text"
             placeholder="Full Name"
             onChange={(e) => setGuestName(e.target.value)}
-            // defaultValue={userData?.Name}
           />
         </div>
 
@@ -421,13 +422,12 @@ const NewBooking = () => {
             type="number"
             placeholder="Enter phone"
             onChange={(e) => setPhone(e.target.value)}
-            defaultValue={userData?.Phone}
+      
           /> */}
 
           <PhoneInput
             className="form-control mt-2 "
             placeholder="Enter phone number"
-            defaultValue={userData?.Phone}
             onChange={setPhone}
           />
         </div>
@@ -444,7 +444,6 @@ const NewBooking = () => {
             type="text"
             placeholder="Enter Email"
             onChange={(e) => setEmail(e.target.value)}
-            defaultValue={userData?.Email}
           />
         </div>
 
@@ -496,7 +495,6 @@ const NewBooking = () => {
             type="text"
             placeholder="Enter your city"
             onChange={(e) => setSelectedCity(e.target.value)}
-            // defaultValue={userData?.Address}
           />
         </div>
 
@@ -509,7 +507,6 @@ const NewBooking = () => {
             type="text"
             placeholder="Enter your address"
             onChange={(e) => setAddress(e.target.value)}
-            defaultValue={userData?.Address}
           />
         </div>
 
@@ -522,7 +519,6 @@ const NewBooking = () => {
             type="text"
             placeholder="Enter GST number"
             onChange={(e) => setAddress(e.target.value)}
-            defaultValue={userData?.Address}
           />
         </div>
 
@@ -547,7 +543,6 @@ const NewBooking = () => {
             type="date"
             placeholder="Enter Start Date"
             onChange={(e) => setDateofbirth(e.target.value)}
-            // defaultValue={userData?.StartDate}
           />
         </div>
 

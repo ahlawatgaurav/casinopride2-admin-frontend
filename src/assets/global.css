@@ -138,3 +138,25 @@
   background-color: white;
   margin-bottom: 10px;
 }
+
+@media print {
+  /* Apply styles for thermal paper */
+  @page {
+    size: 80mm 80mm; /* Set the paper size to match thermal paper */
+  }
+
+  body {
+    width: 80mm; /* Set the content width to match thermal paper */
+    margin: 0; /* Remove default margins */
+    padding: 5mm; /* Adjust padding as needed */
+  }
+
+  /* Adjust font sizes and styles for better readability */
+  p {
+    font-size: 8pt; /* Adjust font size as needed */
+  }
+}
+
+.page-break {
+  page-break-after: always;
+}

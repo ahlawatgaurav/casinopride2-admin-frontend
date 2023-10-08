@@ -100,3 +100,34 @@ export const GetBillingDetails =
         }
       });
   };
+
+export const uploadBillFile = (token, data, callback) => async (dispatch) => {
+  console.log("Data for add billing details---------->", data);
+  api.BILLING_PORT.post("/billing/uploadBillFile", data, {
+    headers: { AuthToken: token, "Content-Type": "application/pdf" },
+  })
+    .then((response) => {
+      console.log(" PDF   Billin Details ---------->", response.data);
+      if (response.data?.Details) {
+        console.log(response.data?.Details);
+        callback({
+          status: true,
+          response: response?.data,
+        });
+      } else if (response.data?.Error) {
+        callback({
+          status: false,
+          error: response.data?.Error?.ErrorMessage,
+        });
+      }
+    })
+    .catch((err) => {
+      {
+        console.log("error", err);
+      }
+    });
+};
+
+export const senSms = (token, data, callback) => async (dispatch) => {
+  console.log("Data for add billing details---------->", data);
+};

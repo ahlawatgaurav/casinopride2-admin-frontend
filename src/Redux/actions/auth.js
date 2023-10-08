@@ -1,17 +1,20 @@
 import api from "../../Service/api";
 import { saveLoginData } from "../reducers/auth";
+import { saveValidateData } from "../reducers/auth";
+import { saveOutletDetails } from "../reducers/auth";
+import moment from "moment";
 
 console.log("Log from apin ", api);
 
+const today = moment().format("YYYY-MM-DD");
+
 export const Login = (data, callback) => async (dispatch) => {
-  console.log(
-    "Validate user URL ->",
-    api.AUTH_PORT.defaults.baseURL + "/auth/validateuser"
-  );
   api.AUTH_PORT.post("/auth/validateuser", data)
     .then((response) => {
       console.log("Validate user data ->", response.data);
+
       if (response.data?.Details) {
+        dispatch(saveValidateData(response.data));
         api.AUTH_PORT.post("/auth/login", {
           UserId: response.data?.Details?.Id,
           UserType: response.data?.Details?.UserType,
@@ -23,6 +26,24 @@ export const Login = (data, callback) => async (dispatch) => {
               status: true,
               response: response?.data,
             });
+            if (response?.data) {
+              console.log("Reached Hereeeee");
+
+              api.CORE_PORT.get(
+                `/core/checkCurrentOutlet?outletDate=${today}`,
+                {
+                  headers: {
+                    AuthToken: response?.data?.Details?.logindata?.Token, // Replace with your actual token
+                  },
+                }
+              ).then((response) => {
+                console.log(
+                  "checkCurrentOutlet-------------------------------------------------->>>>>> -->",
+                  response.data
+                );
+                dispatch(saveOutletDetails(response.data));
+              });
+            }
           })
           .catch((err) => {
             {
