@@ -108,9 +108,9 @@ export const OTPpackage = ({
           </div>
           <div className="d-block d-md-flex justify-content-around">
             <div className="pricing-item">
-              <p className="text-uppercase mb-1 text-center ">
+              <h5 className="text-uppercase mb-1 text-center ">
                 {packageDetail?.PackageWeekdayPrice}
-              </p>
+              </h5>
               <h6 className="primary-color text-uppercase font-weight-bold text-center ">
                 weekdays
               </h6>
@@ -119,9 +119,9 @@ export const OTPpackage = ({
               </h6>
             </div>
             <div className="pricing-item">
-              <p className="text-uppercase mb-1 text-center ">
+              <h5 className="text-uppercase mb-1 text-center ">
                 {packageDetail?.PackageWeekendPrice}
-              </p>
+              </h5>
               <h6 className="primary-color text-uppercase font-weight-bold text-center ">
                 weekends
               </h6>

@@ -23,6 +23,7 @@ const PackagesPage = ({
   setTotalTeensRate,
   setTeensTaxPercentage,
   setTeensTaxName,
+  setPackageName,
 }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
@@ -147,6 +148,8 @@ const PackagesPage = ({
 
   console.log("selectedPackages----------->", selectedPackages);
 
+  const packageNames = [];
+
   Object.keys(selectedPackages).forEach((packageId) => {
     const packageData = selectedPackages[packageId];
     packageIds.push(parseInt(packageId));
@@ -165,12 +168,15 @@ const PackagesPage = ({
           : groupedData.PackageWeekdayPrice || 0);
 
       packagePrices.push(packagePrice);
+
+      packageNames.push(packageData.PackageName);
     }
   });
 
   const formattedData = {
     packageId: packageIds,
     packageGuestCount: packageGuestCounts,
+    packageNames: packageNames,
   };
 
   const handleBookNow = () => {
@@ -231,6 +237,7 @@ const PackagesPage = ({
     setTotalTeensRate(totalTeensRate);
     setTeensTaxPercentage(teensTaxPercentage);
     setTeensTaxName(teensTaxName);
+    setPackageName(formattedData?.packageNames);
   }, [TotalAmount, teensCount]);
 
   console.log("total amount-------->", TotalAmount);
@@ -242,6 +249,11 @@ const PackagesPage = ({
   console.log(
     "selectedPackages----------------------------------------->>>>",
     selectedPackages
+  );
+
+  console.log(
+    "Formatted date-------------------|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||**********************>",
+    formattedData
   );
 
   return (
@@ -288,7 +300,55 @@ const PackagesPage = ({
                     ))}
                   </div>
 
-                  <div className="card col-4 mt-4">
+                  <div className="p-4 col-lg-4 col-sm-10 col-md-8 mt-4 family-box">
+                    <div className="row align-items-center justify-content-center ">
+                      <div className="col-md-12 col-lg-3">
+                        <div className="image-container d-flex flex-column align-items-center">
+                          <img
+                            src="https://www.casinoprideofficial.com/assets/images/red-carpet.png"
+                            alt="Image 1"
+                            className="img-fluid package_card_image"
+                          />
+                          <p
+                            className="text-center"
+                            style={{
+                              fontSize: "8px",
+                            }}
+                          >
+                            Events & Live Entertainment
+                          </p>
+                        </div>
+                      </div>
+                      <div className="col-md-6 col-lg-4">
+                        <div className="image-container d-flex flex-column align-items-center">
+                          <img
+                            src="https://www.casinoprideofficial.com/assets/images/buffet.png"
+                            alt="Image 2"
+                            className="img-fluid package_card_image"
+                          />
+                          <p
+                            className="text-center  "
+                            style={{
+                              fontSize: "8px",
+                              lineHeight: "initial",
+                            }}
+                          >
+                            Unlimited Food & Drinks
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="d-flex justify-content-center mt-4">
+                      <div className="pricing-item">
+                        <h5 className="text-uppercase mb-1 text-center ">
+                          {groupedData[0]?.PackageTeensPrice}
+                        </h5>
+                        <h6 className="primary-color text-uppercase font-weight-bold text-center ">
+                          All Days
+                        </h6>
+                      </div>
+                    </div>
                     <div className="card-body">
                       <div className="row">
                         <div className="text-center col-lg-3 col-md-3 col-sm-3 col-3">
@@ -538,15 +598,15 @@ const PackagesPage = ({
                   ) : (
                     <></>
                   )}
-
-                  {/* <div class="row justify-content-center">
-                  <div class="col-md-8" onClick={handleMultiply}>
-                    <p class="primary-btn gradient-btn d-block mb-4">
-                      <Link to="/bookingpage"> Book now</Link>
-                      Book Now
-                    </p>
-                  </div>
-                </div> */}
+                  {/* 
+                  <div class="row justify-content-center">
+                    <div class="col-md-8" onClick={handleMultiply}>
+                      <p class="primary-btn gradient-btn d-block mb-4">
+                        <Link to="/bookingpage"> Book now</Link>
+                        Book Now
+                      </p>
+                    </div>
+                  </div> */}
                 </div>
               </div>
             </div>

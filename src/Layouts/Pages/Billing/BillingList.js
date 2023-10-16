@@ -28,7 +28,7 @@ const BillingList = () => {
   const [billingDetails, setBillingDetails] = useState([]);
   const [userName, setUserName] = useState([]);
   const [searchQuery, setSearchQuery] = useState(0);
-  const [searchBillId, setSearhBillId] = useState(0);
+  const [searchBillId, setSearhBillId] = useState("");
   const [loading, setLoading] = useState(true);
 
   const [disableInput, setDisableInput] = useState(false);
@@ -50,6 +50,8 @@ const BillingList = () => {
   const [billId, setBillId] = useState(0);
 
   const [queryParams, setQueryParams] = useState(false);
+
+  console.log("searchBillId----------------------->", searchBillId);
 
   const fetchBillingDetailsFn = () => {
     dispatch(
@@ -140,7 +142,7 @@ const BillingList = () => {
   }));
 
   const shiftOptions = [
-    { value: "0", label: "Select a shift" },
+    { value: "", label: "Select a shift" },
     { value: "1", label: "Shift 1" },
     { value: "2", label: "Shift 2" },
     { value: "3", label: "Shift 3" },
@@ -162,6 +164,10 @@ const BillingList = () => {
       fetchBillingDetailsFn();
     }
   };
+
+  useEffect(() => {
+    searchBtn();
+  }, [searchBillId, futureDate, userId, shiftId]);
 
   useEffect(() => {
     setDisableInput(true);
@@ -191,24 +197,28 @@ const BillingList = () => {
                 className="form-control"
                 placeholder="Search Bill Id"
                 onChange={(e) => {
-                  setSearhBillId(parseInt(e.target.value));
+                  setSearhBillId(e.target.value);
                 }}
               />
             </div>
           </div>
 
-          <div className="col-md-3 col-lg-2 mb-2">
-            <p style={{ fontWeight: "bold" }}>Search By Date</p>
-            <div className="input-group">
-              <input
-                type="date"
-                className="form-control"
-                placeholder="Search name"
-                onChange={(e) => setFutureDate(e.target.value)}
-                value={futureDate}
-              />
+          {searchBillId == 0 ? (
+            <div className="col-md-3 col-lg-2 mb-2">
+              <p style={{ fontWeight: "bold" }}>Search By Date</p>
+              <div className="input-group">
+                <input
+                  type="date"
+                  className="form-control"
+                  placeholder="Search name"
+                  onChange={(e) => setFutureDate(e.target.value)}
+                  value={futureDate}
+                />
+              </div>
             </div>
-          </div>
+          ) : (
+            <></>
+          )}
           <div className="col-lg-2 col-md-4 col-sm-6">
             <p style={{ fontWeight: "bold" }}>Search By Shift</p>
             <div className="input-group">
@@ -231,12 +241,12 @@ const BillingList = () => {
             </div>
           </div>
 
-          <div className="col-md-1 col-lg-1 d-flex justify-content-end mb-3">
+          {/* <div className="col-md-1 col-lg-1 d-flex justify-content-end mb-3">
             <button className="btn btn-primary" onClick={searchBtn}>
               Search
             </button>
-          </div>
-          {/* <div className="col-md-1 col-lg-1 d-flex justify-content-end mb-3">
+          </div> */}
+          {/* <div className="col-md-3 col-lg-3 d-flex justify-content-end mb-3">
             <button className="btn btn-primary" onClick={clearFilters}>
               Clear
             </button>

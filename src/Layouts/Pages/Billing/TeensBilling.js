@@ -15,7 +15,7 @@ import "../../../assets/global.css";
 import { uploadBillFile } from "../../../Redux/actions/billing";
 import { toPng } from "html-to-image";
 import htmlToImage from "html-to-image";
-
+import { Oval } from "react-loader-spinner";
 import QRCode from "qrcode";
 import { PDFDocument, rgb } from "pdf-lib";
 
@@ -38,44 +38,107 @@ const TeensBilling = () => {
 
   const [qrCodeImage, setQRCodeImage] = useState(null);
 
-  const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState(true);
 
-  const generatePDFAndSend = async () => {
-    const elements = document.querySelectorAll(".thermal-bill");
+  // const generatePDFAndSend = async () => {
+  //   const elements = document.querySelectorAll(".thermal-bill");
 
-    if (elements.length === 0) {
-      console.log("No elements found with the class 'thermal-bill'");
+  //   if (elements.length === 0) {
+  //     console.log("No elements found with the class 'thermal-bill'");
+  //     return;
+  //   }
+
+  //   // Create a container div and clone the elements into it
+  //   const container = document.createElement("div");
+  //   elements.forEach((element) => {
+  //     container.appendChild(element.cloneNode(true));
+  //   });
+
+  //   const opt = {
+  //     margin: [10, 0, 0, 0],
+  //     filename: "bill.pdf", // Change the filename as needed
+  //     image: { type: "jpeg", quality: 0.98 },
+  //     html2canvas: { scale: 2 },
+  //     jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+  //   };
+
+  //   try {
+  //     const pdfBlob = await html2pdf().from(container).set(opt).outputPdf();
+
+  //     console.log("PDF Blob:::::::::::::::::::", pdfBlob);
+
+  //     const formData = new FormData();
+  //     formData.append(
+  //       "File",
+  //       new Blob([pdfBlob], { type: "application/pdf" }),
+  //       "bill.pdf"
+  //     );
+  //     formData.append("bookingId", BookingDetails[0]?.BookingId);
+
+  //     const callback = await new Promise((resolve, reject) => {
+  //       dispatch(
+  //         uploadBillFile(
+  //           loginDetails?.logindata?.Token,
+  //           formData,
+  //           (callback) => {
+  //             if (callback.status) {
+  //               console.log(
+  //                 "Callback pdf details---->",
+  //                 callback?.response?.Details
+  //               );
+  //               resolve(callback);
+  //             } else {
+  //               toast.error(callback.error);
+  //               reject(callback);
+  //             }
+  //           }
+  //         )
+  //       );
+  //     });
+
+  //     if (callback.status) {
+  //       console.log("Upload successful.");
+  //     } else {
+  //       console.error("Upload failed:", callback.error);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error generating or uploading PDF:", error);
+  //   }
+  // };
+
+  const elementRef = useRef(null);
+
+  const [updatedQrcodeImage, setUpatedQrcodeImage] = useState("");
+
+  const onButtonClick = useCallback(() => {
+    setLoader(true);
+    if (elementRef.current === null) {
       return;
     }
 
-    // Create a container div and clone the elements into it
-    const container = document.createElement("div");
-    elements.forEach((element) => {
-      container.appendChild(element.cloneNode(true));
-    });
+    toPng(elementRef.current, { cacheBust: true })
+      .then(async (dataUrl) => {
+        // Convert the data URL to a blob
+        const imageBlob = await dataURLtoBlob(dataUrl);
 
-    const opt = {
-      margin: [10, 0, 0, 0],
-      filename: "bill.pdf", // Change the filename as needed
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-    };
+        function dataURLtoBlob(dataURL) {
+          const arr = dataURL.split(",");
+          const mime = arr[0].match(/:(.*?);/)[1];
+          const bstr = atob(arr[1]);
+          let n = bstr.length;
+          const u8arr = new Uint8Array(n);
+          while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+          }
+          return new Blob([u8arr], { type: mime });
+        }
 
-    try {
-      const pdfBlob = await html2pdf().from(container).set(opt).outputPdf();
+        // Create a FormData object and append the image blob
+        const formData = new FormData();
+        formData.append("File", imageBlob, "billing.png");
+        formData.append("bookingId", BookingDetails[0]?.BookingId);
 
-      console.log("PDF Blob:::::::::::::::::::", pdfBlob);
-
-      const formData = new FormData();
-      formData.append(
-        "File",
-        new Blob([pdfBlob], { type: "application/pdf" }),
-        "bill.pdf"
-      );
-      formData.append("bookingId", BookingDetails[0]?.BookingId);
-
-      const callback = await new Promise((resolve, reject) => {
+        // Make a POST request to your server to upload the image
         dispatch(
           uploadBillFile(
             loginDetails?.logindata?.Token,
@@ -86,6 +149,11 @@ const TeensBilling = () => {
                   "Callback pdf details---->",
                   callback?.response?.Details
                 );
+                setUpatedQrcodeImage(
+                  callback?.response?.Details[0]?.BillingFile
+                );
+                setLoader(false);
+
                 resolve(callback);
               } else {
                 toast.error(callback.error);
@@ -94,23 +162,19 @@ const TeensBilling = () => {
             }
           )
         );
+
+        if (response.ok) {
+          console.log("Image upload successful.");
+        } else {
+          console.error("Image upload failed:", response.statusText);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
       });
+  }, [elementRef]);
 
-      if (callback.status) {
-        console.log("Upload successful.");
-      } else {
-        console.error("Upload failed:", callback.error);
-      }
-    } catch (error) {
-      console.error("Error generating or uploading PDF:", error);
-    }
-  };
-
-  const elementRef = useRef(null);
-
-  const [updatedQrcodeImage, setUpatedQrcodeImage] = useState("");
-
-  const onButtonClick = useCallback(() => {
+  const SendDetailsToUser = useCallback(() => {
     setLoader(true);
     if (elementRef.current === null) {
       return;
@@ -207,9 +271,58 @@ const TeensBilling = () => {
       }
     );
   }, [updatedQrcodeImage]);
+  const generateAndPrintPDF = async () => {
+    const elements = document.querySelectorAll(".thermal-bill");
+    const container = document.createElement("div");
+
+    elements.forEach((element) => {
+      container.appendChild(element.cloneNode(true));
+    });
+
+    document.body.appendChild(container);
+
+    const opt = {
+      margin: [10, 0, 0, 0],
+      filename: "combined_bill.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+    };
+
+    const pdf = await html2pdf().from(container).set(opt).outputPdf();
+
+    // Create a jsPDF instance and print the PDF
+    const jsPDFInstance = new jsPDF();
+    jsPDFInstance.output("datauristring", pdf);
+
+    document.body.removeChild(container);
+  };
 
   return (
     <div>
+      {loader ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+          }}
+        >
+          <Oval
+            height={80}
+            width={50}
+            color="#4fa94d"
+            visible={true}
+            ariaLabel="oval-loading"
+            secondaryColor="#4fa94d"
+            strokeWidth={2}
+            strokeWidthSecondary={2}
+          />
+        </div>
+      ) : (
+        <></>
+      )}
       <div className="container-fluid" ref={elementRef}>
         {BookingDetails && BookingDetails.length > 0 ? (
           BookingDetails?.map((item) => (
@@ -218,24 +331,52 @@ const TeensBilling = () => {
               style={{
                 backgroundColor: "white",
                 width: "100%",
-                padding: "5%",
+                padding: "2%",
               }}
             >
-              <div className="text-center">
-                <img
-                  src={logo}
-                  alt="Casino Pride Logo"
-                  className="logo-image"
-                />
+              <div className="row">
+                <div className="col-lg-4">
+                  <h5 style={{ textAlign: "left", fontSize: "12px" }}>
+                    CIN No: U55101GA2005PTC004274{" "}
+                  </h5>
+                  <h5 style={{ textAlign: "left", fontSize: "12px" }}>
+                    PAN No: BACCG7450R
+                  </h5>
+                </div>
+                <div className="col-lg-4">
+                  <div className="text-center">
+                    <img
+                      src={logo}
+                      alt="Casino Pride Logo"
+                      className="logo-image"
+                    />
+                  </div>
+                </div>
+                <div className="col-lg-4">
+                  <h5 style={{ textAlign: "right", fontSize: "12px" }}>
+                    TIN No : 30220106332
+                  </h5>
+                  <h5 style={{ textAlign: "right", fontSize: "12px" }}>
+                    GSTIN : 30AACCG7450R1ZO
+                  </h5>
+                </div>
               </div>
               <p
                 style={{
-                  marginBottom: "20px",
+                  marginBottom: "5px",
                 }}
                 className="BillPrintFont"
               >
                 A unit of Goa Coastal Resorts & Recreation Pvt.Ltd
               </p>
+              <h5 style={{ fontSize: "15px" }}>
+                Hotel Neo Majestic, Plot No. 104/14, Porvorim, Barder, Gos - 403
+                521 <br></br>Tel. + 91 9158885000
+              </h5>
+              <h5 style={{ fontSize: "15px" }}>
+                Email : casinopride2020@gmail.com
+              </h5>
+              <h3>TAX INVOICE</h3>
               <div className="row">
                 <div className="col-6 bill-details">
                   <p className="BillPrintFont">
@@ -287,10 +428,13 @@ const TeensBilling = () => {
               <div className="bill-details">
                 <div className="date-time-bill-row">
                   <p className="BillPrintFont">
-                    Date :
-                    <span className="BillPrintFont">
+                    Date & Time:
+                    <span
+                      style={{ fontWeight: "bold" }}
+                      className="BillPrintFont"
+                    >
                       {" "}
-                      {moment(item?.BillingDate).format("YYYY-MM-DD")}
+                      {moment.utc(item?.BillingDate).format("DD/MM/YYYY HH:mm")}
                     </span>
                   </p>
 
@@ -352,8 +496,8 @@ const TeensBilling = () => {
                 <div className="totals" style={{ textAlign: "right" }}>
                   <h6>Total Amount: {item?.TeensRate.toFixed(2)}</h6>
 
-                  <h6>Teens CGST: {item?.TeensTax / 2} %</h6>
-                  <h6>Teens SGST: {item?.TeensTax / 2} %</h6>
+                  <h6> CGST: {item?.TeensTax / 2} %</h6>
+                  <h6> SGST: {item?.TeensTax / 2} %</h6>
 
                   {item?.AmountAfterDiscount == 0 ? (
                     <h4>Bill Amountt: {item?.TeensPrice}</h4>
@@ -404,16 +548,30 @@ const TeensBilling = () => {
           <></>
         )}
       </div>
+      <div className="row">
+        <div className="col-lg-6 mb-2 btn-lg mx-auto d-flex justify-content-center ">
+          <button
+            style={{ paddingLeft: "100px", paddingRight: "100px" }}
+            type="submit"
+            className="btn btn_colour mt-5 btn-lg"
+            onClick={SendDetailsToUser}
+            disabled={loader}
+          >
+            Send to user
+          </button>
+        </div>
 
-      <div className="col-lg-6 mb-2 btn-lg mx-auto d-flex justify-content-center ">
-        <button
-          style={{ paddingLeft: "100px", paddingRight: "100px" }}
-          type="submit"
-          className="btn btn_colour mt-5 btn-lg"
-          onClick={onButtonClick}
-        >
-          Complete Booking
-        </button>
+        <div className="col-lg-6 mb-2 btn-lg mx-auto d-flex justify-content-center ">
+          <button
+            style={{ paddingLeft: "100px", paddingRight: "100px" }}
+            type="submit"
+            className="btn btn_colour mt-5 btn-lg"
+            onClick={generateAndPrintPDF}
+            disabled={loader}
+          >
+            Generate Pdf
+          </button>
+        </div>
       </div>
     </div>
   );

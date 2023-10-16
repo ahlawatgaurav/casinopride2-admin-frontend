@@ -122,6 +122,11 @@ const AddPackage = () => {
 
       updatedItems[index].itemWeekdayRate = (calculatedWeekdayRate * 100) / 100;
       updatedItems[index].itemWeekendRate = (calculatedWeekendRate * 100) / 100;
+
+      updatedItems[index].taxDiffWeekday =
+        itemWeekdayPrice - calculatedWeekdayRate;
+      updatedItems[index].taxDiffWeekend =
+        itemWeekendPrice - calculatedWeekendRate;
     }
     console.log("updatedItems------------->", updatedItems);
     setPackageItems(updatedItems);

@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
+import logo from "../../assets/Images/logo.png";
 
 function LoginPage() {
   const dispatch = useDispatch();
@@ -55,13 +56,14 @@ function LoginPage() {
       </Navbar> */}
 
       <div className="container-fluid vh-100 d-flex justify-content-center align-items-center">
-        <div className="col-lg-4 col-md-6 col-sm-8">
+        <div className="col-lg-4 col-md-6 col-sm-8 text-center">
+          <img src={logo} alt="Website Logo" className="logo" />
           <h2 className="text-center title mb-4">SIGN IN</h2>
-          <div className="p-4 bg-light rounded ">
+          <div className="p-4 bg-light rounded">
             <h2 className="text-center subtitle mb-2">
               WELCOME BACK TO CASINO PRIDE{" "}
             </h2>
-            <h3 className="text-center description mb-4">Have a great day</h3>
+            {/* <h3 className="text-center description mb-4">Have a great day</h3> */}
             <div className="form-group">
               <input
                 type="text"
@@ -111,10 +113,6 @@ function LoginPage() {
                 )}
               </button>
             </div>
-            <h3 className="text-center description mb-2">Forgot Password?</h3>
-            <h3 className="text-center description ">
-              Please contact your outlet administrator
-            </h3>
           </div>
         </div>
         <ToastContainer />

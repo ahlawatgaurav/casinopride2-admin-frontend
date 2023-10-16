@@ -72,7 +72,9 @@ export const GetBillingDetails =
     console.log("searchBillId--->", parseInt(searchBillId));
 
     api.BILLING_PORT.get(
-      `/billing/getBillingDetails?billId=${parseInt(searchBillId)}&userId=${
+      `/billing/getBillingDetails?billId=${parseInt(
+        searchBillId ? searchBillId : 0
+      )}&userId=${
         userId ? parseInt(userId) : 0
       }&billingDate=${futureDate}&shiftId=${shiftId ? parseInt(shiftId) : 0}`,
       {

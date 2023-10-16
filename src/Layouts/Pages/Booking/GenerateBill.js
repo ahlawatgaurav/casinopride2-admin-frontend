@@ -45,6 +45,11 @@ const GenerateBill = () => {
       bookingDate: bookingdate,
       billingDate: today,
       teensCount: userData?.NumOfTeens,
+      actualAmount: userData?.ActualAmount,
+      amountAfterDiscount: userData?.AmountAfterDiscount,
+      discount: userData?.PanelDiscount
+        ? userData?.PanelDiscount
+        : userData?.CouponDiscount,
     };
 
     console.log("data------------>", data);

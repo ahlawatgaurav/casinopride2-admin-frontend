@@ -1182,7 +1182,7 @@ footer {
   font-family: "Merriweather", sans-serif;
   padding: 15px 0;
   font-size: 16px;
-  border-bottom: 2px solid #cbb883;
+  border-bottom: 2px solid #cbb883 !important;
   margin-bottom: 25px;
 }
 
@@ -1811,6 +1811,10 @@ footer {
 .card-title {
   font-size: 24px;
   margin-bottom: 20px;
+}
+
+.card_title_shifts {
+  font-size: 18px;
 }
 
 .package-item {

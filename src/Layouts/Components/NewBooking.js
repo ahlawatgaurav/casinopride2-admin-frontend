@@ -22,12 +22,21 @@ import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { checkShiftForUser } from "../../Redux/actions/users";
 import moment from "moment";
+import logo from "../../assets/Images/icone-fleche-droite-verte.png";
+import { Button, Modal } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import checkcircle from "../../assets/Images/checkcircle.png";
 
 const NewBooking = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // const { userType } = location.state;
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const loginDetails = useSelector(
     (state) => state.auth?.userDetailsAfterLogin.Details
@@ -116,6 +125,7 @@ const NewBooking = () => {
   const [amountAfterDiscount, setamountAfterDiscount] = useState("");
   const [referredBy, setreferredBy] = useState("");
   const [couponId, setCouponId] = useState("");
+  const [packageName, setPackageName] = useState("");
 
   const [discountToggle, setDiscountToggle] = useState(false);
   const [couponToggle, setCouponToggle] = useState(false);
@@ -183,6 +193,8 @@ const NewBooking = () => {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
+  const [partCash, setPartCash] = useState("");
+  const [partCard, setPartCard] = useState("");
 
   useEffect(() => {
     console.log(selectedCountry);
@@ -310,6 +322,10 @@ const NewBooking = () => {
       toast.warning("Please select the payment option");
     } else if (!isValidEmail(email)) {
       toast.warning("Please enter a valid email address");
+    } else if (guestName.length > 80) {
+      toast.warning("Guest name is too long");
+    } else if (guestName.address > 100) {
+      toast.warning("Guest name is too long");
     } else {
       const data = {
         guestName: guestName,
@@ -351,8 +367,14 @@ const NewBooking = () => {
             : 0,
         actualAmount: amount,
         paymentMode: paymentOption,
-        amountAfterDiscount: amountAfterDiscount,
+        amountAfterDiscount: amountAfterDiscount
+          ? amountAfterDiscount
+          : couponDiscount,
+        packageName: JSON.stringify(packageName),
         isActive: 1,
+        partCash: partCash,
+        partCard: partCard,
+        isBookingWebsite: 0,
       };
 
       console.log("Data from booking ------->", data);
@@ -452,6 +474,8 @@ const NewBooking = () => {
   console.log("Shift All details----------------->", shiftDetails?.ShiftOpen);
   console.log("Shift All details----------------->", shiftDetails?.ShiftTypeId);
 
+  const [isOutletOpen, setIsOutletOpen] = useState(true); // Initialize button state
+
   const getShiftStatusMessage = () => {
     if (shiftDetails?.ShiftOpen === 1) {
       switch (shiftDetails?.ShiftTypeId) {
@@ -467,16 +491,38 @@ const NewBooking = () => {
     } else if (shiftDetails?.ShiftOpen === 0) {
       switch (shiftDetails?.ShiftTypeId) {
         case 1:
-          return "Shift 1 is closed";
+          return (
+            <div>
+              Shift 1 is closed.
+              <br />
+              <p style={{ fontSize: "15px", color: "red" }}>
+                Open next shift to create a new booking
+              </p>
+            </div>
+          );
         case 2:
-          return "Shift 2 is closed";
+          return (
+            <div>
+              Shift 2 is closed.
+              <br />
+              <p style={{ fontSize: "15px", color: "red" }}>
+                Open next shift to create a new booking
+              </p>
+            </div>
+          );
         case 3:
-          return "Shift 3 is closed";
+          return <div>Shift 3 is closed.</div>;
         default:
           return "Unknown shift is closed";
       }
     } else {
-      return "Open the outlet";
+      return (
+        <div>
+          <p style={{ fontSize: "15px", color: "red" }}>
+            Open the outlet to create new booking
+          </p>
+        </div>
+      );
     }
   };
 
@@ -484,20 +530,57 @@ const NewBooking = () => {
     navigate("/Shifts");
   };
 
+  console.log("Shift type ShiftOpen---------->", shiftDetails);
+  console.log("Shift type ShiftTypeId---------->", shiftDetails);
+
   return (
     <div>
       <ToastContainer />
       <div className="row">
-        <h3
-          className="mb-4"
-          style={{ backgroundColor: "green", textAlign: "center" }}
-        >
-          {getShiftStatusMessage()}
-        </h3>
-        <button onClick={shiftPageFn}>Go to shifts</button>
+        <div className="container-fluid vh-20 d-flex justify-content-end align-items-center">
+          <button
+            className="col-lg-3 col-md-6 col-sm-8 text-right"
+            onClick={shiftPageFn}
+            disabled={
+              (shiftDetails?.ShiftOpen == 1 &&
+                shiftDetails?.ShiftTypeId == 1) ||
+              (shiftDetails?.ShiftOpen == 1 &&
+                shiftDetails?.ShiftTypeId == 2) ||
+              (shiftDetails?.ShiftOpen == 1 &&
+                shiftDetails?.ShiftTypeId == 3) ||
+              (shiftDetails == null && !outletOpenDetails?.Details[0] == null)
+            }
+          >
+            <div className="card p-4">
+              <div className="d-flex align-items-center justify-content-between">
+                <h6 className="card-title">Go to Shifts</h6>
+                <img
+                  src={logo}
+                  alt="Right Arrow"
+                  style={{
+                    height: "40px",
+                    width: "40px",
 
-        <h3 className="mb-4">New Booking</h3>
+                    marginBottom: "15px",
+                  }}
+                  className="ml-auto"
+                />
+              </div>
+              <p className="card_title_shifts">{getShiftStatusMessage()}</p>
+            </div>
+          </button>
+        </div>
 
+        {/* <h3 className="mb-4">Create Booking</h3> */}
+
+        <div className="container-fluid vh-5 d-flex justify-content-center align-items-center">
+          <div className="col-lg-4 col-md-6 col-sm-8 text-center">
+            <div className="card p-4">
+              <h3>Create Booking</h3>
+            </div>
+          </div>
+          <ToastContainer />
+        </div>
         <PackagesPage
           setamount={setamount}
           setPackageIds={setPackageIds}
@@ -512,6 +595,7 @@ const NewBooking = () => {
           setTotalTeensTax={setTotalTeensTax}
           setTeensTaxName={setTeensTaxName}
           setTeensTaxPercentage={setTeensTaxPercentage}
+          setPackageName={setPackageName}
         />
         <div className="col-lg-6 mt-3 mt-3">
           <label for="formGroupExampleInput " className="form_text">
@@ -524,7 +608,6 @@ const NewBooking = () => {
             onChange={(e) => setGuestName(e.target.value)}
           />
         </div>
-
         <div className="col-lg-6 mt-3">
           <label for="formGroupExampleInput " className="form_text">
             Phone <span style={{ color: "red" }}>*</span>
@@ -541,6 +624,7 @@ const NewBooking = () => {
             className="form-control mt-2 "
             placeholder="Enter phone number"
             onChange={setPhone}
+            defaultCountry="IN"
           />
         </div>
         <div className="col-lg-6 mt-3">
@@ -558,7 +642,6 @@ const NewBooking = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-
         <div className="col-lg-6 mt-3">
           <label for="formGroupExampleInput " className="form_text mb-2">
             Country
@@ -609,7 +692,6 @@ const NewBooking = () => {
             onChange={(e) => setSelectedCity(e.target.value)}
           />
         </div>
-
         <div className="col-lg-6 mt-3">
           <label for="formGroupExampleInput " className="form_text">
             Address <span style={{ color: "red" }}>*</span>
@@ -621,7 +703,6 @@ const NewBooking = () => {
             onChange={(e) => setAddress(e.target.value)}
           />
         </div>
-
         <div className="col-lg-6 mt-3">
           <label for="formGroupExampleInput " className="form_text">
             GST Details
@@ -633,7 +714,6 @@ const NewBooking = () => {
             onChange={(e) => setAddress(e.target.value)}
           />
         </div>
-
         {/* <div className="col-lg-6 mt-3">
           <label for="formGroupExampleInput " className="form_text">
             Refrrred by
@@ -645,7 +725,6 @@ const NewBooking = () => {
             onChange={(e) => settoalGuestCount(e.target.value)}
           />
         </div> */}
-
         <div className="col-lg-6 mt-3">
           <label for="formGroupExampleInput " className="form_text">
             Date of birth
@@ -657,7 +736,6 @@ const NewBooking = () => {
             onChange={(e) => setDateofbirth(e.target.value)}
           />
         </div>
-
         <div className="col-lg-6 mt-3">
           <label for="formGroupExampleInput " className="form_text">
             Payment Option <span style={{ color: "red" }}>*</span>
@@ -671,13 +749,40 @@ const NewBooking = () => {
             <option value="">Select...</option>
             <option value="Cash">Cash </option>
             <option value="Card">Card </option>
-            <option value="Half card / Half Cash">
-              Half Card / Half Cash{" "}
-            </option>
+            <option value="Part Card / Part Cash">Part Card / Part Cash</option>
             <option value="Online (UPI)">Online(UPI)</option>
             <option value="Company Settlement">Company Settlement </option>
           </select>
         </div>
+
+        {paymentOption == "Part Card / Part Cash" ? (
+          <div className="row">
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text">
+                Part Card
+              </label>
+              <input
+                class="form-control mt-2"
+                type="text"
+                placeholder="Enter the amount"
+                onChange={(e) => setPartCard(e.target.value)}
+              />
+            </div>
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text">
+                Part Cash
+              </label>
+              <input
+                class="form-control mt-2"
+                type="text"
+                placeholder="Enter the amount"
+                onChange={(e) => setPartCash(e.target.value)}
+              />
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
         <div className="row mt-3">
           <div className="col-lg-6 mt-3">
             <div className="row">
@@ -801,10 +906,46 @@ const NewBooking = () => {
           style={{ paddingLeft: "100px", paddingRight: "100px" }}
           type="submit"
           className="btn btn_colour mt-5 btn-lg"
-          onClick={onsubmit}
+          onClick={handleShow}
+          disabled={
+            (shiftDetails?.ShiftOpen == 0 && shiftDetails?.ShiftTypeId == 1) ||
+            (shiftDetails?.ShiftOpen == 0 && shiftDetails?.ShiftTypeId == 2) ||
+            (shiftDetails?.ShiftOpen == 0 && shiftDetails?.ShiftTypeId == 3) ||
+            shiftDetails == null
+          }
         >
           To payments
         </button>
+      </div>
+
+      <div>
+        <Modal show={show} onHide={handleClose} centered>
+          <Modal.Body>
+            <div className="row">
+              <img
+                src={checkcircle}
+                alt="Check Circle"
+                className="check-circle"
+              />
+              <p className="outletTitle">Confirm Booking </p>
+              <p className="outletTex">
+                Are you sure you want to confirm the booking ?
+              </p>
+            </div>
+            <div className="row">
+              <div>
+                <Button onClick={onsubmit} className="confirmbtn">
+                  Yes
+                </Button>
+              </div>
+              <div>
+                <Button onClick={handleClose} className="cancelBtn">
+                  No
+                </Button>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
       </div>
     </div>
   );

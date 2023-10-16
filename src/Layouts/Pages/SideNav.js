@@ -80,12 +80,20 @@ const SideNav = () => {
       <Sidenav expanded={expanded} defaultOpenKeys={["3", "4"]}>
         <Sidenav.Body>
           <Nav activeKey={activeKey} onSelect={setActiveKey}>
-            <Nav.Item eventKey="10" icon={<DashboardIcon />}>
-              <Link to="/Shifts" className="links">
-                Shifts
-              </Link>
-            </Nav.Item>
-            {loginDetails?.logindata?.UserType == "1" ? (
+            {loginDetails?.logindata?.UserType == "1" ||
+            loginDetails?.logindata?.UserType == "3" ||
+            loginDetails?.logindata?.UserType == "2" ? (
+              <Nav.Item eventKey="10" icon={<DashboardIcon />}>
+                <Link to="/Shifts" className="links">
+                  Shifts
+                </Link>
+              </Nav.Item>
+            ) : (
+              <></>
+            )}
+            {loginDetails?.logindata?.UserType == "1" ||
+            loginDetails?.logindata?.UserType == "3" ||
+            loginDetails?.logindata?.UserType == "2" ? (
               <Nav.Item eventKey="1" icon={<DashboardIcon />}>
                 <Link to="/BookingList" className="links">
                   Bookings
@@ -95,7 +103,9 @@ const SideNav = () => {
               <></>
             )}
 
-            {loginDetails?.logindata?.UserType == "1" ? (
+            {loginDetails?.logindata?.UserType == "1" ||
+            loginDetails?.logindata?.UserType == "7" ||
+            loginDetails?.logindata?.UserType == "3" ? (
               <Nav.Item eventKey="6" icon={<DashboardIcon />}>
                 <Link to="/BillingList" className="links">
                   Billing
@@ -146,7 +156,8 @@ const SideNav = () => {
             ) : (
               <></>
             )}
-            {loginDetails?.logindata?.UserType == "1" ? (
+            {loginDetails?.logindata?.UserType == "1" ||
+            loginDetails?.logindata?.UserType == "4" ? (
               <Nav.Item eventKey="6" icon={<DashboardIcon />}>
                 <Link to="/CouponsList" className="links">
                   Coupons
@@ -156,7 +167,8 @@ const SideNav = () => {
               <></>
             )}
 
-            {loginDetails?.logindata?.UserType == "1" ? (
+            {loginDetails?.logindata?.UserType == "1" ||
+            loginDetails?.logindata?.UserType == "4" ? (
               <Nav.Item eventKey="7" icon={<DashboardIcon />}>
                 <Link to="/PackageList" className="links">
                   Packages
@@ -166,7 +178,8 @@ const SideNav = () => {
               <></>
             )}
 
-            {loginDetails?.logindata?.UserType == "1" ? (
+            {loginDetails?.logindata?.UserType == "1" ||
+            loginDetails?.logindata?.UserType == "4" ? (
               <Nav.Item eventKey="7" icon={<DashboardIcon />}>
                 <Link to="/FutureBookingDates" className="links">
                   Future Booking Dates
@@ -183,11 +196,16 @@ const SideNav = () => {
                 title="Discounts"
                 icon={<MagicIcon />}
               >
-                <Nav.Item eventKey="3-1">
-                  <Link to="/Discountonwebsite" className="links">
-                    Website Discounts
-                  </Link>
-                </Nav.Item>
+                {loginDetails?.logindata?.UserType == "4" ||
+                loginDetails?.logindata?.UserType == "1" ? (
+                  <Nav.Item eventKey="3-1">
+                    <Link to="/Discountonwebsite" className="links">
+                      Website Discounts
+                    </Link>
+                  </Nav.Item>
+                ) : (
+                  <></>
+                )}
                 <Nav.Item eventKey="3-2">
                   <Link to="/DiscountOnPanel" className="links">
                     Panel Discounts
@@ -198,17 +216,9 @@ const SideNav = () => {
               <></>
             )}
 
-            {loginDetails?.logindata?.UserType == "1" ? (
-              <Nav.Item
-                eventKey="6"
-                icon={<DashboardIcon />}
-                onClick={logoutFn}
-              >
-                Logout
-              </Nav.Item>
-            ) : (
-              <></>
-            )}
+            <Nav.Item eventKey="6" icon={<DashboardIcon />} onClick={logoutFn}>
+              Logout
+            </Nav.Item>
           </Nav>
           <ToastContainer />
         </Sidenav.Body>

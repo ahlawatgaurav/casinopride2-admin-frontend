@@ -68,3 +68,10 @@ td {
   font-size: 18px;
   font-weight: bold;
 }
+
+.BillPrintFontAmount {
+  font-size: 18px;
+  font-weight: bold;
+  width: 300px;
+  text-align: right;
+}
