@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { AddUserDetails, EditUserDetails } from "../../Redux/actions/users";
 import { useSelector } from "react-redux";
@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../../assets/global.css";
+import QRCode from "qrcode";
 
 const AddUser = () => {
   const location = useLocation();
@@ -169,6 +170,24 @@ const AddUser = () => {
     "userData?.UserType--------------------------->",
     userData?.UserType
   );
+
+  const [qrCodeImage, setQRCodeImage] = useState(null);
+  const [updatedQrcodeImage, setUpatedQrcodeImage] = useState("");
+
+  useEffect(() => {
+    QRCode.toCanvas(
+      document.createElement("canvas"),
+      updatedQrcodeImage,
+      (error, canvas) => {
+        if (error) {
+          console.error("QR code generation error:", error);
+        } else {
+          const qrCodeDataURL = canvas.toDataURL("image/png");
+          setQRCodeImage(qrCodeDataURL);
+        }
+      }
+    );
+  }, [updatedQrcodeImage]);
 
   return (
     <div>

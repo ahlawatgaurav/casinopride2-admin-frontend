@@ -864,7 +864,7 @@ const NewBooking = () => {
             )}
           </div>
 
-          {discountToggle ? (
+          {discountToggle || referredByToggle ? (
             <div className="col-lg-6 mt-3">
               <label for="formGroupExampleInput mt-3" className="form_text">
                 Discount

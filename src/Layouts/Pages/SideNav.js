@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import { Sidenav, Nav, Toggle } from "rsuite";
 import DashboardIcon from "@rsuite/icons/legacy/Dashboard";
+import AdminIcon from "@rsuite/icons/Admin";
 import GroupIcon from "@rsuite/icons/legacy/Group";
 import MagicIcon from "@rsuite/icons/legacy/Magic";
+import PageIcon from "@rsuite/icons/Page";
+import CouponIcon from "@rsuite/icons/Coupon";
+import ExitIcon from "@rsuite/icons/Exit";
 import GearCircleIcon from "@rsuite/icons/legacy/GearCircle";
+import CalendarIcon from "@rsuite/icons/Calendar";
+import TagNumberIcon from "@rsuite/icons/TagNumber";
 import logo from "../../assets/Images/logo.png";
 import onlylogo from "../../assets/Images/onlylogo.png";
 import { FaTimes } from "react-icons/fa"; // Import icons
@@ -12,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { Logout } from "../../Redux/actions/auth";
 import { ToastContainer, toast } from "react-toastify";
+import ThreeColumnsIcon from "@rsuite/icons/ThreeColumns";
 import "react-toastify/dist/ReactToastify.css";
 import "../../assets/NavBar.css";
 import { Link } from "react-router-dom";
@@ -83,7 +90,7 @@ const SideNav = () => {
             {loginDetails?.logindata?.UserType == "1" ||
             loginDetails?.logindata?.UserType == "3" ||
             loginDetails?.logindata?.UserType == "2" ? (
-              <Nav.Item eventKey="10" icon={<DashboardIcon />}>
+              <Nav.Item eventKey="10" icon={<TagNumberIcon />}>
                 <Link to="/Shifts" className="links">
                   Shifts
                 </Link>
@@ -94,7 +101,7 @@ const SideNav = () => {
             {loginDetails?.logindata?.UserType == "1" ||
             loginDetails?.logindata?.UserType == "3" ||
             loginDetails?.logindata?.UserType == "2" ? (
-              <Nav.Item eventKey="1" icon={<DashboardIcon />}>
+              <Nav.Item eventKey="1" icon={<PageIcon />}>
                 <Link to="/BookingList" className="links">
                   Bookings
                 </Link>
@@ -106,7 +113,7 @@ const SideNav = () => {
             {loginDetails?.logindata?.UserType == "1" ||
             loginDetails?.logindata?.UserType == "7" ||
             loginDetails?.logindata?.UserType == "3" ? (
-              <Nav.Item eventKey="6" icon={<DashboardIcon />}>
+              <Nav.Item eventKey="6" icon={<PageIcon />}>
                 <Link to="/BillingList" className="links">
                   Billing
                 </Link>
@@ -119,7 +126,7 @@ const SideNav = () => {
                 placement="rightStart"
                 eventKey="3"
                 title="Users"
-                icon={<MagicIcon />}
+                icon={<AdminIcon />}
               >
                 <Nav.Item eventKey="3-1">
                   <Link to="/ManagerList" className="links">
@@ -158,7 +165,7 @@ const SideNav = () => {
             )}
             {loginDetails?.logindata?.UserType == "1" ||
             loginDetails?.logindata?.UserType == "4" ? (
-              <Nav.Item eventKey="6" icon={<DashboardIcon />}>
+              <Nav.Item eventKey="6" icon={<CouponIcon />}>
                 <Link to="/CouponsList" className="links">
                   Coupons
                 </Link>
@@ -169,7 +176,7 @@ const SideNav = () => {
 
             {loginDetails?.logindata?.UserType == "1" ||
             loginDetails?.logindata?.UserType == "4" ? (
-              <Nav.Item eventKey="7" icon={<DashboardIcon />}>
+              <Nav.Item eventKey="7" icon={<ThreeColumnsIcon />}>
                 <Link to="/PackageList" className="links">
                   Packages
                 </Link>
@@ -180,7 +187,7 @@ const SideNav = () => {
 
             {loginDetails?.logindata?.UserType == "1" ||
             loginDetails?.logindata?.UserType == "4" ? (
-              <Nav.Item eventKey="7" icon={<DashboardIcon />}>
+              <Nav.Item eventKey="7" icon={<CalendarIcon />}>
                 <Link to="/FutureBookingDates" className="links">
                   Future Booking Dates
                 </Link>
@@ -216,7 +223,7 @@ const SideNav = () => {
               <></>
             )}
 
-            <Nav.Item eventKey="6" icon={<DashboardIcon />} onClick={logoutFn}>
+            <Nav.Item eventKey="6" icon={<ExitIcon />} onClick={logoutFn}>
               Logout
             </Nav.Item>
           </Nav>

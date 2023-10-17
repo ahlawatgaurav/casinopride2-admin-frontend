@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import check from "../../../assets/Images/check.png";
 import { AddBillingDetails } from "../../../Redux/actions/billing";
 import moment from "moment";
@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Oval } from "react-loader-spinner";
 
 const GenerateBill = () => {
   const location = useLocation();
@@ -36,7 +37,10 @@ const GenerateBill = () => {
 
   console.log("Todays date--->", today);
 
+  const [loader, setLoader] = useState(false);
+
   const onsubmit = () => {
+    setLoader(true);
     const data = {
       bookingId: userData?.Id,
       packageId: userData?.PackageId,
@@ -71,15 +75,18 @@ const GenerateBill = () => {
             navigate("/TeensBilling", {
               state: { BookingDetails: callback?.response?.Details },
             });
+            setLoader(false);
           } else {
             navigate("/BillingDetails", {
               state: { BookingDetails: callback?.response?.Details },
             });
+            setLoader(false);
           }
 
           toast.error(callback.error);
         } else {
           toast.error(callback.error);
+          setLoader(false);
         }
       })
     );
@@ -119,8 +126,22 @@ const GenerateBill = () => {
             type="submit"
             className="btn btn_colour mt-5 btn-lg"
             onClick={onsubmit}
+            disabled={loader}
           >
-            Generate Bill
+            {!loader ? (
+              "Generate Bill"
+            ) : (
+              <Oval
+                height={20}
+                width={20}
+                color="black"
+                visible={true}
+                ariaLabel="oval-loading"
+                secondaryColor="black"
+                strokeWidth={2}
+                strokeWidthSecondary={2}
+              />
+            )}
           </button>
         </div>
       </div>
