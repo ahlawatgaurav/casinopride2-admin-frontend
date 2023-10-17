@@ -237,54 +237,52 @@ const BillingList = () => {
       <h3 className="mb-4">Billing List</h3>
 
       <div className="row mt-3">
-        <div className="col-lg-6 mt-3">
-          <div className="row">
-            <div className="col-4">
-              <label for="formGroupExampleInput " className="form_text">
-                Display All Bills
-              </label>
+        <div className="row">
+          <div className="col-lg-4">
+            <label for="formGroupExampleInput " className="form_text">
+              Display All Bills
+            </label>
 
-              <div className="form-check form-switch">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id="discountSwitch"
-                  checked={allBill}
-                  onChange={() => handleToggle("allBill")}
-                />
-              </div>
+            <div className="form-check form-switch">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="discountSwitch"
+                checked={allBill}
+                onChange={() => handleToggle("allBill")}
+              />
             </div>
+          </div>
 
-            <div className="col-4">
-              <label for="formGroupExampleInput " className="form_text">
-                Display Void Bills
-              </label>
+          <div className="col-lg-4">
+            <label for="formGroupExampleInput " className="form_text">
+              Display Void Bills
+            </label>
 
-              <div className="form-check form-switch">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id="couponSwitch"
-                  checked={voidBillList}
-                  onChange={() => handleToggle("voidBillList")}
-                />
-              </div>
+            <div className="form-check form-switch">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="couponSwitch"
+                checked={voidBillList}
+                onChange={() => handleToggle("voidBillList")}
+              />
             </div>
+          </div>
 
-            <div className="col-4">
-              <label for="formGroupExampleInput " className="form_text">
-                Display No Show Guest List
-              </label>
+          <div className="col-lg-4">
+            <label for="formGroupExampleInput " className="form_text">
+              Display No Show Guest List
+            </label>
 
-              <div className="form-check form-switch">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id="referredBySwitch"
-                  checked={noShowGuestList}
-                  onChange={() => handleToggle("noShowGuestList")}
-                />
-              </div>
+            <div className="form-check form-switch">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="referredBySwitch"
+                checked={noShowGuestList}
+                onChange={() => handleToggle("noShowGuestList")}
+              />
             </div>
           </div>
         </div>
