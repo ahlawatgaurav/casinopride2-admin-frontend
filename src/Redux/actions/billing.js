@@ -186,33 +186,64 @@ export const getVoidBillingList = (token, callback) => async (dispatch) => {
     });
 };
 export const getNoShowGuestList =
-  (token, eventDate, callback) => async (dispatch) => {
-    api.BILLING_PORT.get(
-      `/billing/noShowGuestLis?eventDate=${
-        eventDate != null ? eventDate : null
-      }`,
-      {
-        headers: { AuthToken: token },
-      }
-    )
-      .then((response) => {
-        console.log("Get No show guest list Details -> ->", response.data);
-        if (response.data?.Details) {
-          console.log(response.data?.Details);
-          callback({
-            status: true,
-            response: response?.data,
-          });
-        } else if (response.data?.Error) {
-          callback({
-            status: false,
-            error: response.data?.Error?.ErrorMessage,
-          });
-        }
-      })
-      .catch((err) => {
+  (token,eventDate, callback) => async (dispatch) => {
+    if (eventDate === null) {
+      api.BILLING_PORT.get(
+        `/billing/noShowGuestList`,
         {
-          console.log("error", err);
+          headers: { AuthToken: token },
         }
-      });
+      )
+        .then((response) => {
+          console.log("Get No show guest list Details -> ->", response.data);
+          if (response.data?.Details) {
+            console.log(response.data?.Details);
+            callback({
+              status: true,
+              response: response?.data,
+            });
+          } else if (response.data?.Error) {
+            callback({
+              status: false,
+              error: response.data?.Error?.ErrorMessage,
+            });
+          }
+        })
+        .catch((err) => {
+          {
+            console.log("error", err);
+          }
+        });
+    }
+    else{
+      api.BILLING_PORT.get(
+        `/billing/noShowGuestList?eventDate=${eventDate}`,
+        {
+          headers: { AuthToken: token },
+        }
+      )
+        .then((response) => {
+          console.log("Get No show guest list Details -> ->", response.data);
+          if (response.data?.Details) {
+            console.log(response.data?.Details);
+            callback({
+              status: true,
+              response: response?.data,
+            });
+          } else if (response.data?.Error) {
+            callback({
+              status: false,
+              error: response.data?.Error?.ErrorMessage,
+            });
+          }
+        })
+        .catch((err) => {
+          {
+            console.log("error", err);
+          }
+        });
+    }
+
+
+    
   };
