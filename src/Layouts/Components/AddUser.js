@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { AddUserDetails, EditUserDetails } from "../../Redux/actions/users";
+import {
+  AddUserDetails,
+  EditUserDetails,
+  addQrCodeLink,
+} from "../../Redux/actions/users";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -69,24 +73,21 @@ const AddUser = () => {
     return passwordPattern.test(password);
   };
   const onsubmit = () => {
-    if (
-      fullName == "" ||
-      address == "" ||
-      email == "" ||
-      phone == "" ||
-      userName == "" ||
-      password == ""
-    ) {
+    if (fullName == "" || address == "" || phone == "") {
       toast.warning("Please fill all the fields");
-    } else if (!isValidEmail(email)) {
-      toast.warning("Please enter a valid email address");
-    } else if (phone.length > 10 || phone.length < 10) {
+    }
+    //  else if (!isValidEmail(email)) {
+    //   toast.warning("Please enter a valid email address");
+    // }
+    else if (phone.length > 10 || phone.length < 10) {
       toast.warning("Please enter a valid phone number (up to 10 digits)");
-    } else if (!isValidPassword(password)) {
-      toast.warning(
-        "Password must contain at least one uppercase letter, one digit, and one special character"
-      );
-    } else {
+    }
+    // else if (!isValidPassword(password)) {
+    //   toast.warning(
+    //     "Password must contain at least one uppercase letter, one digit, and one special character"
+    //   );
+    // }
+    else {
       const data = {
         firebaseUUID: "9876590",
         name: fullName,
@@ -105,6 +106,28 @@ const AddUser = () => {
       dispatch(
         AddUserDetails(data, loginDetails?.logindata?.Token, (callback) => {
           if (callback.status) {
+            console.log(
+              "User Details------------------>",
+              callback?.response?.Details
+            );
+
+            if (callback?.response?.Details?.UserType == 6) {
+              dispatch(
+                addQrCodeLink(
+                  loginDetails?.logindata?.Token,
+                  callback?.response?.Details?.Id,
+                  (callback) => {
+                    if (callback.status) {
+                      console.log(
+                        "Callback from QR CODE ---------------------->",
+                        callback?.response
+                      );
+                      navigate(-1);
+                    }
+                  }
+                )
+              );
+            }
             toast.success("User Added");
             navigate(-1);
             toast.error(callback.error);
@@ -117,14 +140,7 @@ const AddUser = () => {
   };
 
   const onSubmitEdit = () => {
-    if (
-      fullName == "" ||
-      address == "" ||
-      email == "" ||
-      phone == "" ||
-      userName == "" ||
-      password == ""
-    ) {
+    if (fullName == "" || address == "" || phone == "") {
       toast.warning("Please fill all the fields");
     } else {
       const data = {

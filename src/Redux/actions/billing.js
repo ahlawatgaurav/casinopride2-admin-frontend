@@ -130,6 +130,31 @@ export const uploadBillFile = (token, data, callback) => async (dispatch) => {
     });
 };
 
+export const sendEmail = (data, callback) => async (dispatch) => {
+  console.log("Data for Email---------->", data);
+  api.BILLING_PORT.post("/billing/sendBillMail", data)
+    .then((response) => {
+      console.log("Send By Email---------->", response.data);
+      if (response.data?.Details) {
+        console.log(response.data?.Details);
+        callback({
+          status: true,
+          response: response?.data,
+        });
+      } else if (response.data?.Error) {
+        callback({
+          status: false,
+          error: response.data?.Error?.ErrorMessage,
+        });
+      }
+    })
+    .catch((err) => {
+      {
+        console.log("error", err);
+      }
+    });
+};
+
 export const senSms = (token, data, callback) => async (dispatch) => {
   console.log("Data for add billing details---------->", data);
 };

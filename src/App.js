@@ -32,6 +32,7 @@ import FutureBookingDates from "./Layouts/Pages/FutureBookingDates/FutureBooking
 import AddFutureBookingDates from "./Layouts/Components/AddFutureBookingDates";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AgentSettlementList from "./Layouts/Pages/AgentSettlement/AgentSettlementList";
 function App() {
   return (
     <Router>
@@ -78,6 +79,15 @@ function App() {
           element={
             <Layout>
               <BookingList />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/AgentSettlementList"
+          element={
+            <Layout>
+              <AgentSettlementList />
             </Layout>
           }
         />

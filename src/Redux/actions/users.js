@@ -43,6 +43,32 @@ export const EditUserDetails = (data, token, callback) => async (dispatch) => {
     });
 };
 
+export const addQrCodeLink = (token, userId, callback) => async (dispatch) => {
+  api.CORE_PORT.get(`/core/addQRLink?userId=${userId}`, {
+    headers: { AuthToken: token },
+  })
+    .then((response) => {
+      console.log("Add QR details ->", response.data);
+      if (response.data?.Details) {
+        console.log(response.data?.Details);
+        callback({
+          status: true,
+          response: response?.data,
+        });
+      } else if (response.data?.Error) {
+        callback({
+          status: false,
+          error: response.data?.Error?.ErrorMessage,
+        });
+      }
+    })
+    .catch((err) => {
+      {
+        console.log("error", err);
+      }
+    });
+};
+
 export const getUserDetails =
   (token, usertype, callback) => async (dispatch) => {
     console.log(token);
@@ -240,6 +266,36 @@ export const getCouponDetails =
       });
   };
 
+export const fetchAgentSettlement =
+  (token, date, callback) => async (dispatch) => {
+    console.log(token);
+    console.log(date);
+
+    api.CORE_PORT.get(`/core/getAgentSettlements?bookingDate=${date}`, {
+      headers: { AuthToken: token },
+    })
+      .then((response) => {
+        console.log("Agent Settlement details ->", response.data);
+        if (response.data?.Details) {
+          console.log(response.data?.Details);
+          callback({
+            status: true,
+            response: response?.data,
+          });
+        } else if (response.data?.Error) {
+          callback({
+            status: false,
+            error: response.data?.Error?.ErrorMessage,
+          });
+        }
+      })
+      .catch((err) => {
+        {
+          console.log("error", err);
+        }
+      });
+  };
+
 export const deleteCoupon =
   (token, packageId, callback) => async (dispatch) => {
     console.log(token);
@@ -293,6 +349,33 @@ export const AddCouponDetails = (data, token, callback) => async (dispatch) => {
       }
     });
 };
+
+export const updateAgentSettlement =
+  (data, token, callback) => async (dispatch) => {
+    api.CORE_PORT.put("/core/agentMonthlySettlement", data, {
+      headers: { AuthToken: token },
+    })
+      .then((response) => {
+        console.log("Update agent settlement ->", response.data);
+        if (response.data?.Details) {
+          console.log(response.data?.Details);
+          callback({
+            status: true,
+            response: response?.data,
+          });
+        } else if (response.data?.Error) {
+          callback({
+            status: false,
+            error: response.data?.Error?.ErrorMessage,
+          });
+        }
+      })
+      .catch((err) => {
+        {
+          console.log("error", err);
+        }
+      });
+  };
 
 export const EditCouponDetails =
   (data, token, callback) => async (dispatch) => {

@@ -958,7 +958,7 @@ import jsPDF from "jspdf";
 import { usePDF } from "react-to-pdf";
 import moment from "moment";
 import { toPng } from "html-to-image";
-import { uploadBillFile } from "../../../Redux/actions/billing";
+import { uploadBillFile, sendEmail } from "../../../Redux/actions/billing";
 import { Oval } from "react-loader-spinner";
 import QRCode from "qrcode";
 import { PDFDocument, rgb } from "pdf-lib";
@@ -979,8 +979,8 @@ const BillingDetails = () => {
   );
 
   console.log(
-    "Actual amount---------------------->",
-    BookingDetails[0]?.AmountAfterDiscount > 0 ? true : false
+    "Actual amount-----------OHHHHHHH HEEEEEEEEEEEEEEEEEELLLLLLLLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOo----------->",
+    BookingDetails[0]?.Email
   );
 
   console.log(
@@ -1121,6 +1121,11 @@ const BillingDetails = () => {
 
   const [updatedQrcodeImage, setUpatedQrcodeImage] = useState("");
 
+  console.log(
+    "updatedQrcodeImage----------------------------------------------->",
+    updatedQrcodeImage
+  );
+
   const onButtonClick = useCallback(() => {
     setLoader(true);
     if (elementRef.current === null) {
@@ -1218,6 +1223,7 @@ const BillingDetails = () => {
         formData.append("bookingId", BookingDetails[0]?.BookingId);
 
         // Make a POST request to your server to upload the image
+
         dispatch(
           uploadBillFile(
             loginDetails?.logindata?.Token,
@@ -1257,6 +1263,29 @@ const BillingDetails = () => {
               }
             }
           )
+        );
+
+        console.log(
+          "bllling file------------------------{{{{{{{{}}}}}}}}}}}}}}}}}----->",
+          updatedQrcodeImage
+        );
+
+        const data = {
+          receiverMail: JSON.stringify(BookingDetails[0]?.Email),
+          amount: BookingDetails[0]?.ActualAmount,
+          billFile: updatedQrcodeImage,
+        };
+
+        dispatch(
+          sendEmail(data, (callback) => {
+            if (callback.status) {
+              toast.success("Email sent");
+
+              toast.error(callback.error);
+            } else {
+              toast.error(callback.error);
+            }
+          })
         );
 
         if (response.ok) {
@@ -1371,7 +1400,7 @@ const BillingDetails = () => {
                 <></>
               )}
               {item?.ItemDetails?.ItemTaxName[0] === "GST" ? (
-                <h5 style={{ fontSize: "12px" }}>GSTIN : 30AACCG7450R1ZO</h5>
+                <h5 style={{ fontSize: "12px" }}>GSTIN : 30AACCG7450R1ZC</h5>
               ) : (
                 <></>
               )}

@@ -185,6 +185,16 @@ const SideNav = () => {
               <></>
             )}
 
+            {loginDetails?.logindata?.UserType == "1" ? (
+              <Nav.Item eventKey="71" icon={<ThreeColumnsIcon />}>
+                <Link to="/AgentSettlementList" className="links">
+                  Agent Settlement
+                </Link>
+              </Nav.Item>
+            ) : (
+              <></>
+            )}
+
             {loginDetails?.logindata?.UserType == "1" ||
             loginDetails?.logindata?.UserType == "4" ? (
               <Nav.Item eventKey="7" icon={<CalendarIcon />}>

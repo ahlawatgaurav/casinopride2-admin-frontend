@@ -28,7 +28,6 @@ export const Login = (data, callback) => async (dispatch) => {
                 response.data?.Details &&
                 response.data?.Details?.result === "IPs do not match"
               ) {
-                alert("IPS do not match");
                 toast.error("IPS do not match");
               } else {
                 api.AUTH_PORT.post("/auth/login", {
