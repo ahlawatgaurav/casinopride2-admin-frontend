@@ -196,6 +196,11 @@ const NewBooking = () => {
   const [partCash, setPartCash] = useState("");
   const [partCard, setPartCard] = useState("");
 
+  console.log(
+    "Selected city-------------------------------------------->",
+    selectedCity
+  );
+
   useEffect(() => {
     console.log(selectedCountry);
     console.log(selectedCountry?.isoCode);
@@ -306,10 +311,6 @@ const NewBooking = () => {
 
   console.log("usedCouponArr-------------->", usedCouponArr);
 
-  const togeneratBill = () => {};
-
-  // setamountAfterDiscount
-
   const onsubmit = () => {
     console.log("Package ID ------->", [teenpackageId]);
     console.log("Package ID ------->", packageIds);
@@ -335,7 +336,7 @@ const NewBooking = () => {
         dob: dateofbirth,
         country: selectedCountry?.name,
         state: selectedState?.name,
-        city: selectedCity?.name,
+        city: selectedCity,
         GSTNumber: gstNumber,
         governmentId: governmentId,
         totalGuestCount: totalGuestCount,
@@ -713,7 +714,7 @@ const NewBooking = () => {
             class="form-control mt-2"
             type="text"
             placeholder="Enter GST number"
-            onChange={(e) => setAddress(e.target.value)}
+            onChange={(e) => setgstNumber(e.target.value)}
           />
         </div>
         {/* <div className="col-lg-6 mt-3">

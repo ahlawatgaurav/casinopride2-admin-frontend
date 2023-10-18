@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import {
   GetBillingDetails,
   getVoidBillingList,
-  getNoShowGuestList
+  getNoShowGuestList,
 } from "../../../Redux/actions/billing";
 import { getUserDetails } from "../../../Redux/actions/users";
 import { useSelector } from "react-redux";
@@ -20,12 +20,18 @@ import { Button, Modal } from "react-bootstrap";
 import more from "../../../assets/Images/more.png";
 import PackagesPage from "../Packages/PackagePage";
 import Select from "react-select";
+import moment from "moment";
 
 const BillingList = () => {
   const dispatch = useDispatch();
 
   const loginDetails = useSelector(
     (state) => state.auth?.userDetailsAfterLogin.Details
+  );
+
+  console.log(
+    "loginDetails--------------{{{{{{{{{{{}}}}}}}}}}}}}}-------->",
+    loginDetails?.logindata?.UserType
   );
 
   const [userBookings, setUserBookings] = useState([]);
@@ -38,10 +44,18 @@ const BillingList = () => {
   const [disableInput, setDisableInput] = useState(false);
 
   const [itemDetails, setItemDetails] = useState([]);
-  const [futureDate, setFutureDate] = useState("");
 
   const [filteredUserBookings, setFilteredUserBookings] = useState([]);
   const [filteredBillingList, setFilteredBillingList] = useState([]);
+
+  const todayDate = moment().format("YYYY-MM-DD");
+
+  const [futureDate, setFutureDate] = useState(
+    loginDetails?.logindata?.UserType == "2" ||
+      loginDetails?.logindata?.UserType == "3"
+      ? todayDate
+      : ""
+  );
 
   console.log(
     "<------------------filtered Billing List-------------->",
@@ -52,9 +66,12 @@ const BillingList = () => {
   const [userId, setUserId] = useState(0);
   const [billId, setBillId] = useState(0);
   const [showViewMoreModal, setShowViewMoreModal] = useState(false);
-  const [showViewMoreNoShowListModal, setShowViewMoreNoShowListModal] = useState(false);
+  const [showViewMoreNoShowListModal, setShowViewMoreNoShowListModal] =
+    useState(false);
   const [selectedUserDetails, setSelectedUserDetails] = useState({});
-  const [selectedNoShowListDetails, setSelectedNoShowListDetails] = useState({});
+  const [selectedNoShowListDetails, setSelectedNoShowListDetails] = useState(
+    {}
+  );
   const [allBill, setAllBill] = useState(true);
   const [voidBillList, setVoidBillList] = useState(false);
   const [noShowGuestList, setNoShowGuestList] = useState(false);
@@ -79,7 +96,7 @@ const BillingList = () => {
             setBillingDetails(callback?.response?.Details);
             setFilteredBillingList(callback?.response?.Details);
           } else {
-            console.log("Callback---------get billings--error",callback.error);
+            console.log("Callback---------get billings--error", callback.error);
             toast.error(callback.error);
           }
         }
@@ -107,20 +124,23 @@ const BillingList = () => {
     fetchBillingDetailsFn();
     fetchUsersDetails();
     fetchVoidBillList();
-    fetchNoShowGuestList()
+    fetchNoShowGuestList();
+    if (loginDetails?.logindata?.UserType == "1") {
+      const today = moment().format("YYYY-MM-DD");
+      setFutureDate(today);
+    }
   }, [dispatch]);
 
   const handleShiftChange = (selectedOption) => {
     setShitId(selectedOption?.value);
   };
 
-
   const handleViewMore = (item) => {
     setSelectedUserDetails(item);
     setShowViewMoreModal(true);
   };
   const handleNoShowListViewMore = (item) => {
-    console.log('handleNoShowListViewMore-->',item);
+    console.log("handleNoShowListViewMore-->", item);
     setSelectedNoShowListDetails(item);
     setShowViewMoreNoShowListModal(true);
   };
@@ -187,15 +207,15 @@ const BillingList = () => {
     setDisableInput(true);
   }, [futureDate, handleSelectChange, handleShiftChange]);
 
-  const clearFilters = () => {
-    console.log("All clear");
-    setFutureDate("");
-    setShitId(0);
-    setUserId(0);
-    setBillId(0);
-    setSearhBillId(0);
-    fetchBillingDetailsFn();
-  };
+  // const clearFilters = () => {
+  //   console.log("All clear");
+  //   setFutureDate("");
+  //   setShitId(0);
+  //   setUserId(0);
+  //   setBillId(0);
+  //   setSearhBillId(0);
+  //   fetchBillingDetailsFn();
+  // };
 
   const fetchVoidBillList = () => {
     dispatch(
@@ -209,7 +229,10 @@ const BillingList = () => {
           setVoidBillingList(callback?.response?.Details);
           // setFilteredBillingList(callback?.response?.Details);
         } else {
-          console.log("Callback---------getVoidBillingList>>error",callback.error);
+          console.log(
+            "Callback---------getVoidBillingList>>error",
+            callback.error
+          );
           toast.error(callback.error);
         }
       })
@@ -217,20 +240,27 @@ const BillingList = () => {
   };
   const fetchNoShowGuestList = () => {
     dispatch(
-      getNoShowGuestList(loginDetails?.logindata?.Token,eventDate, (callback) => {
-        if (callback.status) {
-          setLoading(false);
-          console.log(
-            "Callback---------getNoShowGuestList",
-            callback?.response
-          );
-          setDisplayNoShowGuestList(callback?.response?.Details);
-          // setFilteredBillingList(callback?.response?.Details);
-        } else {
-          console.log("Callback---------getNoShowGuestList>>error",callback.error);
-          toast.error(callback.error);
+      getNoShowGuestList(
+        loginDetails?.logindata?.Token,
+        eventDate,
+        (callback) => {
+          if (callback.status) {
+            setLoading(false);
+            console.log(
+              "Callback---------getNoShowGuestList",
+              callback?.response
+            );
+            setDisplayNoShowGuestList(callback?.response?.Details);
+            // setFilteredBillingList(callback?.response?.Details);
+          } else {
+            console.log(
+              "Callback---------getNoShowGuestList>>error",
+              callback.error
+            );
+            toast.error(callback.error);
+          }
         }
-      })
+      )
     );
   };
 
@@ -254,32 +284,49 @@ const BillingList = () => {
   const getCurrentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const day = (today.getDate()-1).toString().padStart(2, '0');
+    const month = (today.getMonth() + 1).toString().padStart(2, "0");
+    const day = (today.getDate() - 1).toString().padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
 
-  useEffect(()=>{
-      fetchNoShowGuestList()
-  },[eventDate])
+  useEffect(() => {
+    fetchNoShowGuestList();
+  }, [eventDate]);
 
-  useEffect(()=>{
-    if (allBill=== false && voidBillList === false && noShowGuestList === false) {
-      setAllBill(true)
+  useEffect(() => {
+    if (
+      allBill === false &&
+      voidBillList === false &&
+      noShowGuestList === false
+    ) {
+      setAllBill(true);
     }
-  },[allBill])
+  }, [allBill]);
 
-  useEffect(()=>{
-    if (allBill=== false && voidBillList === false && noShowGuestList === false) {
-      setAllBill(true)
+  useEffect(() => {
+    if (
+      allBill === false &&
+      voidBillList === false &&
+      noShowGuestList === false
+    ) {
+      setAllBill(true);
     }
-  },[voidBillList])
+  }, [voidBillList]);
 
-  useEffect(()=>{
-    if (allBill=== false && voidBillList === false && noShowGuestList === false) {
-      setAllBill(true)
+  useEffect(() => {
+    if (
+      allBill === false &&
+      voidBillList === false &&
+      noShowGuestList === false
+    ) {
+      setAllBill(true);
     }
-  },[noShowGuestList])
+  }, [noShowGuestList]);
+
+  console.log(
+    "Hi --------------> Welcome to the future dateeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    futureDate
+  );
 
   return (
     <div>
@@ -482,8 +529,12 @@ const BillingList = () => {
                       <td className="manager-list">{item.BillingId}</td>
                       <td className="manager-list ">{item.GuestName}</td>
                       <td className="manager-list">{item.Phone}</td>
-                      <td className="manager-list">{item.UsersName ? item.UsersName : "-"}</td>
-                      <td className="manager-list">{item.ShiftId === 0 ? "-" : item.ShiftId}</td>
+                      <td className="manager-list">
+                        {item.UsersName ? item.UsersName : "-"}
+                      </td>
+                      <td className="manager-list">
+                        {item.ShiftId === 0 ? "-" : item.ShiftId}
+                      </td>
                       <td
                         className="manager-list"
                         onClick={() => handleViewMore(item)}
@@ -569,7 +620,12 @@ const BillingList = () => {
                     <td className="manager-list">{item.Phone}</td>
                     <td className="manager-list">{item.UsersName}</td>
                     <td className="manager-list">{item.ShiftId}</td>
-                    <td className="manager-list" style={{ color: item.IsVoid === 1 ? "red" : "green" }}>{item.IsVoid == 1 ? "Void" : "Active"}</td>
+                    <td
+                      className="manager-list"
+                      style={{ color: item.IsVoid === 1 ? "red" : "green" }}
+                    >
+                      {item.IsVoid == 1 ? "Void" : "Active"}
+                    </td>
                     <td
                       className="manager-list"
                       onClick={() => handleViewMore(item)}
@@ -585,88 +641,87 @@ const BillingList = () => {
       {allBill === false &&
         voidBillList === false &&
         noShowGuestList === true && ( //show no show guest list
-        <>
-          <div className="col-md-3 col-lg-2 mb-2">
-          <p style={{ fontWeight: "bold" }}>Search By Event Date</p>
-          <div className="input-group">
-          <input
-            type="date"
-            className="form-control"
-            placeholder="Search name"
-            onChange={(e) => {
-              if (e.target.value === '') {
-                setEventDate(null)
-              }
-              else{
-                setEventDate(e.target.value)
-              }
-              }}
-            value={eventDate}
-            max={getCurrentDate()} // Set the max attribute to disable dates after today
-          />
-          </div>
-          </div>
-        <table class="table">
-        <thead>
-          <tr>
-            <th scope="col" className="text-center table_heading">
-              Guest Name
-            </th>
-            <th scope="col" className="text-center table_heading">
-              Phone
-            </th>
-            <th scope="col" className="text-center table_heading">
-              Total Amount
-            </th>
-            <th scope="col" className="text-center table_heading">
-              Total Guest Count
-            </th>
-
-            <th scope="col" className="text-center table_heading">
-              View more
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {loading ? (
-            <tr>
-              <td colSpan="6" className="text-center">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: "100%",
+          <>
+            <div className="col-md-3 col-lg-2 mb-2">
+              <p style={{ fontWeight: "bold" }}>Search By Event Date</p>
+              <div className="input-group">
+                <input
+                  type="date"
+                  className="form-control"
+                  placeholder="Search name"
+                  onChange={(e) => {
+                    if (e.target.value === "") {
+                      setEventDate(null);
+                    } else {
+                      setEventDate(e.target.value);
+                    }
                   }}
-                >
-                  <Oval
-                    height={80}
-                    width={50}
-                    color="#4fa94d"
-                    visible={true}
-                    ariaLabel="oval-loading"
-                    secondaryColor="#4fa94d"
-                    strokeWidth={2}
-                    strokeWidthSecondary={2}
-                  />
-                </div>
-              </td>
-            </tr>
-          ) : displayNoShowGuestList.length === 0 ? (
-            <tr>
-              <td colSpan="6" className="text-center">
-                No data found.
-              </td>
-            </tr>
-          ) : (
-            displayNoShowGuestList.map((item) => (
-              <tr key={item.id}>
-                <td className="manager-list ">{item.GuestName}</td>
-                <td className="manager-list">{item.Phone}</td>
-                <td className="manager-list">{item.ActualAmount}</td>
-                <td className="manager-list">{item.TotalGuestCount}</td>
+                  value={eventDate}
+                  max={getCurrentDate()} // Set the max attribute to disable dates after today
+                />
+              </div>
+            </div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col" className="text-center table_heading">
+                    Guest Name
+                  </th>
+                  <th scope="col" className="text-center table_heading">
+                    Phone
+                  </th>
+                  <th scope="col" className="text-center table_heading">
+                    Total Amount
+                  </th>
+                  <th scope="col" className="text-center table_heading">
+                    Total Guest Count
+                  </th>
 
-                {/* <td className="manager-list">
+                  <th scope="col" className="text-center table_heading">
+                    View more
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan="6" className="text-center">
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%",
+                        }}
+                      >
+                        <Oval
+                          height={80}
+                          width={50}
+                          color="#4fa94d"
+                          visible={true}
+                          ariaLabel="oval-loading"
+                          secondaryColor="#4fa94d"
+                          strokeWidth={2}
+                          strokeWidthSecondary={2}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ) : displayNoShowGuestList.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="text-center">
+                      No data found.
+                    </td>
+                  </tr>
+                ) : (
+                  displayNoShowGuestList.map((item) => (
+                    <tr key={item.id}>
+                      <td className="manager-list ">{item.GuestName}</td>
+                      <td className="manager-list">{item.Phone}</td>
+                      <td className="manager-list">{item.ActualAmount}</td>
+                      <td className="manager-list">{item.TotalGuestCount}</td>
+
+                      {/* <td className="manager-list">
                   <Link
                     to="/AddPackage"
                     state={{ userData: item }}
@@ -678,18 +733,18 @@ const BillingList = () => {
                   </Link>
                 </td> */}
 
-                <td
-                  className="manager-list"
-                  onClick={() => handleNoShowListViewMore(item)}
-                >
-                  <img src={more} className="more_img" />
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-        </table>
-        </>
+                      <td
+                        className="manager-list"
+                        onClick={() => handleNoShowListViewMore(item)}
+                      >
+                        <img src={more} className="more_img" />
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </>
         )}
       <ToastContainer />
 
@@ -803,7 +858,11 @@ const BillingList = () => {
         <Modal.Footer></Modal.Footer>
       </Modal>
 
-      <Modal show={showViewMoreNoShowListModal} onHide={handleCloseNoShowListViewMore} size="lg">
+      <Modal
+        show={showViewMoreNoShowListModal}
+        onHide={handleCloseNoShowListViewMore}
+        size="lg"
+      >
         <Modal.Header closeButton>
           <Modal.Title>Booking Details</Modal.Title>
         </Modal.Header>
@@ -843,7 +902,11 @@ const BillingList = () => {
               <></>
             )}
             {!selectedNoShowListDetails.Country == "" ? (
-              <div className={`col-${!selectedNoShowListDetails.City == "" ? 4 : 6}`}>
+              <div
+                className={`col-${
+                  !selectedNoShowListDetails.City == "" ? 4 : 6
+                }`}
+              >
                 <p className="table-modal-list ">
                   Country: {selectedNoShowListDetails.Country}
                 </p>
@@ -852,7 +915,11 @@ const BillingList = () => {
               <></>
             )}
             {!selectedNoShowListDetails.State == "" ? (
-              <div className={`col-${!selectedNoShowListDetails.City == "" ? 4 : 6}`}>
+              <div
+                className={`col-${
+                  !selectedNoShowListDetails.City == "" ? 4 : 6
+                }`}
+              >
                 <p className="table-modal-list ">
                   State: {selectedNoShowListDetails.State}
                 </p>
@@ -895,7 +962,8 @@ const BillingList = () => {
             {selectedNoShowListDetails.WebsiteDiscount > 0 ? (
               <div className="col-6">
                 <p className="table-modal-list ">
-                  Website Discount : {selectedNoShowListDetails.WebsiteDiscount} %
+                  Website Discount : {selectedNoShowListDetails.WebsiteDiscount}{" "}
+                  %
                 </p>
               </div>
             ) : (

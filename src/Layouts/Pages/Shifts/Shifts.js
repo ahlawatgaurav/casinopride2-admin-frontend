@@ -37,6 +37,9 @@ const Shifts = () => {
     (state) => state.auth?.userDetailsAfterValidation
   );
 
+  const activeDateOfOutlet = useSelector(
+    (state) => state.users?.saveOutletDate?.Details
+  );
   const [outletId, setOutletId] = useState("");
 
   const outletOpenDetails = useSelector((state) => state.auth?.outeltDetails);
@@ -59,6 +62,24 @@ const Shifts = () => {
     "TODAYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY-------------------------->",
     today
   );
+
+  console.log(
+    "activeDateOfOutlet-----------------------------------------------<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<>>>>>>>>>>>>>>..----------------***************************************************************8-->",
+    activeDateOfOutlet?.OutletDate
+  );
+
+  // const inputDate = activeDateOfOutlet?.Details?.Date;
+
+  // // Parse the input date using moment
+  // const parsedDateOfOutlet = moment(inputDate);
+
+  // // Format the parsed date in "YYYY-MM-DD" format
+  // const formattedDateOutlet = parsedDateOfOutlet.format("YYYY-MM-DD");
+
+  // console.log(
+  //   "activeDateOfOutlet---------------------------------------------------------------***************************************************************8-->",
+  //   formattedDateOutlet
+  // );
 
   useEffect(() => {
     api.CORE_PORT.get(`/core/checkCurrentOutlet?outletDate=${today}`, {
@@ -197,6 +218,13 @@ const Shifts = () => {
     );
   };
 
+  const [checkActiveOtlet, setCheckActiveOutlet] = useState(false);
+
+  console.log(
+    "CHECK IF TRUEEEEEEEEEEEEEEEEEEE ORRRRRRRRRRRRRRRRRRRR FALSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS---------->",
+    checkActiveOtlet
+  );
+
   const closeShiftTwo = () => {
     const data = {
       outletId: outletId,
@@ -334,10 +362,19 @@ const Shifts = () => {
       checkActiveOutlet(loginDetails?.logindata?.Token, (callback) => {
         if (callback.status) {
           console.log(
+            "check Active outlet---------------------<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<>>>>>>>>>>>>>>>..------->",
+
+            callback?.response?.Details
+          );
+          console.log(
             "check Active outlet---------------------------->",
+
             callback?.response?.Details?.OutletDate == today
-              ? "Trueeeeeeeeeeeeeeeeeeeeeeee"
-              : "Falseeeeeeeeeeee Dateeeeeeeeeeeeeee"
+              ? "Truee"
+              : "Falsee"
+          );
+          setCheckActiveOutlet(
+            callback?.response?.Details?.OutletDate == today ? true : false
           );
         } else {
           toast.error(callback.error);
@@ -396,7 +433,7 @@ const Shifts = () => {
 
     dispatch(
       checkCurrentOutletFn(
-        today,
+        !checkActiveOtlet ? activeDateOfOutlet?.OutletDate : today,
         loginDetails?.logindata?.Token,
         (callback) => {
           if (callback.status) {

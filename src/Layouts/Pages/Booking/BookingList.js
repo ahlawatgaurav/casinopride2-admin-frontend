@@ -10,12 +10,19 @@ import { Oval } from "react-loader-spinner";
 import "../../../assets/global.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, Form } from "react-bootstrap";
 import more from "../../../assets/Images/more.png";
 import PackagesPage from "../Packages/PackagePage";
+import { Country, State, City } from "country-state-city";
+import Select from "react-select";
+import { updateBooking } from "../../../Redux/actions/booking";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const BookingList = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const loginDetails = useSelector(
     (state) => state.auth?.userDetailsAfterLogin.Details
@@ -103,6 +110,81 @@ const BookingList = () => {
     fetchUserBookingFn();
   }, [futureDate]);
 
+  const [editBookingDetails, setEditBookingDetails] = useState("");
+
+  const [isEditing, setIsEditing] = useState(false);
+
+  const startEditing = (item) => {
+    console.log("Item details from modal------------------->", item);
+    setEditBookingDetails(item);
+    setIsEditing(true);
+  };
+  const cancelEditing = () => setIsEditing(false);
+
+  const [guestName, setGuestName] = useState("");
+  const [address, setAddress] = useState("");
+  const [dateofbirth, setDateofbirth] = useState("");
+  const [gstNumber, setgstNumber] = useState("");
+
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedState, setSelectedState] = useState(null);
+  const [selectedCity, setSelectedCity] = useState(null);
+
+  useEffect(() => {
+    console.log(selectedCountry);
+    console.log(selectedCountry?.isoCode);
+    console.log(State?.getStatesOfCountry(selectedCountry?.isoCode));
+  }, [selectedCountry]);
+
+  const backendData = {
+    selectedCountryName: editBookingDetails?.Country,
+    selectedStateName: editBookingDetails?.State,
+  };
+
+  useEffect(() => {
+    setSelectedCountry({ name: backendData.selectedCountryName });
+    setSelectedState({ name: backendData.selectedStateName });
+  }, []);
+
+  console.log();
+
+  const updateBookingFn = () => {
+    const data = {
+      bookingId: editBookingDetails?.Id,
+      guestName: guestName,
+      address: address,
+      dob: dateofbirth,
+      country: selectedCountry?.name,
+      state: selectedState?.name,
+      city: selectedCity,
+      GSTNumber: gstNumber,
+      isActive: 1,
+    };
+
+    console.log("Data from update booking ------->", data);
+
+    dispatch(
+      updateBooking(loginDetails?.logindata?.Token, data, (callback) => {
+        if (callback.status) {
+          console.log(
+            "update booking details --------------?",
+            callback?.response?.Details
+          );
+
+          toast.success("Updated Booking details success");
+
+          navigate("/GenerateBill", {
+            state: { userData: callback?.response?.Details },
+          });
+          // navigate(-1);
+          toast.error(callback.error);
+        } else {
+          toast.error(callback.error);
+        }
+      })
+    );
+  };
+
   return (
     <div>
       <ToastContainer />
@@ -169,6 +251,9 @@ const BookingList = () => {
             <th scope="col" className="text-center table_heading">
               Total Guest Count
             </th>
+            <th scope="col" className="text-center table_heading">
+              Update Booking
+            </th>
 
             <th scope="col" className="text-center table_heading">
               View more
@@ -213,6 +298,14 @@ const BookingList = () => {
                 <td className="manager-list">{item.Phone}</td>
                 <td className="manager-list">{item.ActualAmount}</td>
                 <td className="manager-list">{item.TotalGuestCount}</td>
+                <td className="manager-list">
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => startEditing(item)}
+                  >
+                    Update Booking
+                  </button>
+                </td>
 
                 {/* <td className="manager-list">
                   <Link
@@ -358,6 +451,157 @@ const BookingList = () => {
           </div>
         </Modal.Body>
         <Modal.Footer></Modal.Footer>
+      </Modal>
+
+      <Modal
+        show={isEditing}
+        onHide={cancelEditing}
+        backdrop="static"
+        keyboard={false}
+        size="lg"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Booking for {editBookingDetails?.Id}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="row">
+            <div className="col-lg-6 mt-3 mt-3">
+              <label for="formGroupExampleInput " className="form_text">
+                Guest Name <span style={{ color: "red" }}>*</span>
+              </label>
+              <input
+                class="form-control mt-2 "
+                type="text"
+                placeholder="Full Name"
+                onChange={(e) => setGuestName(e.target.value)}
+                defaultValue={editBookingDetails?.FullName}
+              />
+            </div>
+
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text">
+                Address <span style={{ color: "red" }}>*</span>
+              </label>
+              <input
+                class="form-control mt-2"
+                type="text"
+                placeholder="Enter your address"
+                onChange={(e) => setAddress(e.target.value)}
+                defaultValue={editBookingDetails?.Address}
+              />
+            </div>
+
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text">
+                Date of birth
+              </label>
+              <input
+                class="form-control mt-2"
+                type="date"
+                placeholder="Enter Start Date"
+                onChange={(e) => setDateofbirth(e.target.value)}
+                defaultValue={editBookingDetails?.DOB}
+              />
+            </div>
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text">
+                GST Details
+              </label>
+              <input
+                class="form-control mt-2"
+                type="text"
+                placeholder="Enter GST number"
+                onChange={(e) => setgstNumber(e.target.value)}
+                defaultValue={editBookingDetails?.GSTNumber}
+              />
+            </div>
+
+            {/* <div className="col-lg-6 mt-3">
+              <label htmlFor="formGroupExampleInput" className="form_text mb-2">
+                Country
+              </label>
+              <Select
+                options={Country.getAllCountries()}
+                getOptionLabel={(options) => options["name"]}
+                getOptionValue={(options) => options["name"]}
+                value={selectedCountry}
+                onChange={(item) => setSelectedCountry(item)}
+              />
+            </div>
+
+            <div className="col-lg-6 mt-3">
+              <label htmlFor="formGroupExampleInput" className="form_text mb-2">
+                State
+              </label>
+              <Select
+                options={State?.getStatesOfCountry(selectedCountry?.isoCode)}
+                getOptionLabel={(options) => options["name"]}
+                getOptionValue={(options) => options["name"]}
+                value={selectedState}
+                onChange={(item) => setSelectedState(item)}
+              />
+            </div> */}
+
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text mb-2">
+                Country
+              </label>
+              <Select
+                // className="form-control"
+                options={Country.getAllCountries()}
+                getOptionLabel={(options) => {
+                  return options["name"];
+                }}
+                getOptionValue={(options) => {
+                  return options["name"];
+                }}
+                value={selectedCountry}
+                onChange={(item) => {
+                  setSelectedCountry(item);
+                }}
+              />
+            </div>
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text mb-2">
+                State
+              </label>
+              <Select
+                // className="form-control"
+                options={State?.getStatesOfCountry(selectedCountry?.isoCode)}
+                getOptionLabel={(options) => {
+                  return options["name"];
+                }}
+                getOptionValue={(options) => {
+                  return options["name"];
+                }}
+                value={selectedState}
+                onChange={(item) => {
+                  setSelectedState(item);
+                }}
+              />
+            </div>
+            <div className="col-lg-6 mt-3 ">
+              <label for="formGroupExampleInput " className="form_text mb-2">
+                City
+              </label>
+
+              <input
+                class="form-control "
+                type="text"
+                placeholder="Enter your city"
+                onChange={(e) => setSelectedCity(e.target.value)}
+              />
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={cancelEditing}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={updateBookingFn}>
+            Update Booking
+          </Button>
+        </Modal.Footer>
       </Modal>
     </div>
   );

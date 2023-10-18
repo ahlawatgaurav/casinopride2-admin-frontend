@@ -65,9 +65,10 @@ export const AddBillingDetails =
 export const GetBillingDetails =
   (token, futureDate, userId, shiftId, billId, searchBillId, callback) =>
   async (dispatch) => {
-    // const parsedBillId = parseInt(billId);
-    // const parsedShiftId = parseInt(shiftId);
-    // const parsedUserId = parseInt(userId);
+    console.log(
+      "futureDate-----------------from redux***********************************************************>",
+      futureDate
+    );
 
     console.log("searchBillId--->", parseInt(searchBillId));
 
@@ -186,14 +187,35 @@ export const getVoidBillingList = (token, callback) => async (dispatch) => {
     });
 };
 export const getNoShowGuestList =
-  (token,eventDate, callback) => async (dispatch) => {
+  (token, eventDate, callback) => async (dispatch) => {
     if (eventDate === null) {
-      api.BILLING_PORT.get(
-        `/billing/noShowGuestList`,
-        {
-          headers: { AuthToken: token },
-        }
-      )
+      api.BILLING_PORT.get(`/billing/noShowGuestList`, {
+        headers: { AuthToken: token },
+      })
+        .then((response) => {
+          console.log("Get No show guest list Details -> ->", response.data);
+          if (response.data?.Details) {
+            console.log(response.data?.Details);
+            callback({
+              status: true,
+              response: response?.data,
+            });
+          } else if (response.data?.Error) {
+            callback({
+              status: false,
+              error: response.data?.Error?.ErrorMessage,
+            });
+          }
+        })
+        .catch((err) => {
+          {
+            console.log("error", err);
+          }
+        });
+    } else {
+      api.BILLING_PORT.get(`/billing/noShowGuestList?eventDate=${eventDate}`, {
+        headers: { AuthToken: token },
+      })
         .then((response) => {
           console.log("Get No show guest list Details -> ->", response.data);
           if (response.data?.Details) {
@@ -215,35 +237,4 @@ export const getNoShowGuestList =
           }
         });
     }
-    else{
-      api.BILLING_PORT.get(
-        `/billing/noShowGuestList?eventDate=${eventDate}`,
-        {
-          headers: { AuthToken: token },
-        }
-      )
-        .then((response) => {
-          console.log("Get No show guest list Details -> ->", response.data);
-          if (response.data?.Details) {
-            console.log(response.data?.Details);
-            callback({
-              status: true,
-              response: response?.data,
-            });
-          } else if (response.data?.Error) {
-            callback({
-              status: false,
-              error: response.data?.Error?.ErrorMessage,
-            });
-          }
-        })
-        .catch((err) => {
-          {
-            console.log("error", err);
-          }
-        });
-    }
-
-
-    
   };

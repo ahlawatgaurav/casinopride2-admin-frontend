@@ -1,5 +1,5 @@
 import api from "../../Service/api";
-import { saveShiftDetails } from "../reducers/users";
+import { saveShiftDetails, saveOutletDate } from "../reducers/users";
 
 export const AddUserDetails = (data, token, callback) => async (dispatch) => {
   api.CORE_PORT.post("/core/user", data, { headers: { AuthToken: token } })
@@ -832,6 +832,8 @@ export const checkActiveOutlet = (token, callback) => async (dispatch) => {
           status: true,
           response: response?.data,
         });
+
+        dispatch(saveOutletDate(response.data));
       } else if (response.data?.Error) {
         callback({
           status: false,
