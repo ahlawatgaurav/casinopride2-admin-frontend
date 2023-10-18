@@ -129,7 +129,7 @@ const AddUser = () => {
               );
             }
             toast.success("User Added");
-            navigate(-1);
+
             toast.error(callback.error);
           } else {
             toast.error(callback.error);
@@ -385,6 +385,23 @@ const AddUser = () => {
               placeholder="0"
               onChange={(e) => setMonrhtlysettlement(e.target.value)}
               defaultValue={userData?.MonthlySettlement}
+            />
+          </div>
+        ) : (
+          <></>
+        )}
+
+        {userData && userType == 6 ? (
+          <div className="col-lg-6 mt-3">
+            <label for="formGroupExampleInput " className="form_text">
+              QR Link <span style={{ color: "red" }}>*</span>
+            </label>
+            <input
+              class="form-control mt-2"
+              type="text"
+              placeholder="password"
+              disabled
+              defaultValue={userData?.QRLink}
             />
           </div>
         ) : (

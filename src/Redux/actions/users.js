@@ -820,6 +820,32 @@ export const checkShiftForUser =
       });
   };
 
+export const checkActiveOutlet = (token, callback) => async (dispatch) => {
+  api.CORE_PORT.get(`/core/checkActiveOutlet`, {
+    headers: { AuthToken: token },
+  })
+    .then((response) => {
+      console.log(" Check Active user ->", response.data);
+      if (response.data) {
+        console.log(response.data);
+        callback({
+          status: true,
+          response: response?.data,
+        });
+      } else if (response.data?.Error) {
+        callback({
+          status: false,
+          error: response.data?.Error?.ErrorMessage,
+        });
+      }
+    })
+    .catch((err) => {
+      {
+        console.log("error", err);
+      }
+    });
+};
+
 export const recentShiftForOutlet =
   (date, token, callback) => async (dispatch) => {
     api.CORE_PORT.get(`/core/recentShiftForOutlet?outletDate=${date}`, {

@@ -22,6 +22,7 @@ import api from "../../../Service/api";
 import { saveOutletDetails } from "../../../Redux/reducers/auth";
 import { checkCurrentOutletFn } from "../../../Redux/actions/users";
 import { Oval } from "react-loader-spinner";
+import { checkActiveOutlet } from "../../../Redux/actions/users";
 
 const Shifts = () => {
   const location = useLocation();
@@ -53,6 +54,11 @@ const Shifts = () => {
   const today = moment().format("YYYY-MM-DD");
 
   const [loader, setLoader] = useState(true);
+
+  console.log(
+    "TODAYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY-------------------------->",
+    today
+  );
 
   useEffect(() => {
     api.CORE_PORT.get(`/core/checkCurrentOutlet?outletDate=${today}`, {
@@ -323,6 +329,22 @@ const Shifts = () => {
 
   useEffect(() => {
     console.log("Hi called over here, useeffect is working------------->");
+
+    dispatch(
+      checkActiveOutlet(loginDetails?.logindata?.Token, (callback) => {
+        if (callback.status) {
+          console.log(
+            "check Active outlet---------------------------->",
+            callback?.response?.Details?.OutletDate == today
+              ? "Trueeeeeeeeeeeeeeeeeeeeeeee"
+              : "Falseeeeeeeeeeee Dateeeeeeeeeeeeeee"
+          );
+        } else {
+          toast.error(callback.error);
+        }
+      })
+    );
+
     dispatch(
       checkShiftForUser(
         outletFormattedData,
