@@ -151,13 +151,13 @@ const BookingList = () => {
   const updateBookingFn = () => {
     const data = {
       bookingId: editBookingDetails?.Id,
-      guestName: guestName,
-      address: address,
-      dob: dateofbirth,
+      guestName: guestName ? guestName : editBookingDetails?.FullName,
+      address: address ? address : editBookingDetails?.Address,
+      dob: dateofbirth ? dateofbirth : editBookingDetails?.DOB,
       country: selectedCountry?.name,
       state: selectedState?.name,
-      city: selectedCity,
-      GSTNumber: gstNumber,
+      city: selectedCity ? selectedCity : editBookingDetails.City,
+      GSTNumber: gstNumber ? gstNumber :editBookingDetails.GSTNumber,
       isActive: 1,
     };
 
@@ -590,6 +590,7 @@ const BookingList = () => {
                 type="text"
                 placeholder="Enter your city"
                 onChange={(e) => setSelectedCity(e.target.value)}
+                defaultValue={editBookingDetails?.City}
               />
             </div>
           </div>
