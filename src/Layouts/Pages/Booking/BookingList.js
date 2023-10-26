@@ -18,6 +18,7 @@ import Select from "react-select";
 import { updateBooking } from "../../../Redux/actions/booking";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import moment from "moment";
 
 const BookingList = () => {
   const dispatch = useDispatch();
@@ -83,6 +84,7 @@ const BookingList = () => {
 
   const [showViewMoreModal, setShowViewMoreModal] = useState(false);
   const [selectedUserDetails, setSelectedUserDetails] = useState({});
+  console.log("selectedUserDetails------------------->", selectedUserDetails);
 
   const handleViewMore = (userDetails) => {
     setSelectedUserDetails(userDetails);
@@ -157,7 +159,7 @@ const BookingList = () => {
       country: selectedCountry?.name,
       state: selectedState?.name,
       city: selectedCity ? selectedCity : editBookingDetails.City,
-      GSTNumber: gstNumber ? gstNumber :editBookingDetails.GSTNumber,
+      GSTNumber: gstNumber ? gstNumber : editBookingDetails.GSTNumber,
       isActive: 1,
     };
 
@@ -240,10 +242,10 @@ const BookingList = () => {
         <thead>
           <tr>
             <th scope="col" className="text-center table_heading">
-              Full Name
+              Guest Name
             </th>
             <th scope="col" className="text-center table_heading">
-              Phone
+              Guest Phone no
             </th>
             <th scope="col" className="text-center table_heading">
               Total Amount
@@ -334,24 +336,24 @@ const BookingList = () => {
 
       <Modal show={showViewMoreModal} onHide={handleCloseViewMore} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Booking Details</Modal.Title>
+          <Modal.Title>Guest Booking Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="row">
             <div className="col-6">
               <p className="table-modal-list ">
-                Full Name: {selectedUserDetails.FullName}
+                Guest Name: {selectedUserDetails.FullName}
               </p>
             </div>
             <div className="col-6">
               <p className="table-modal-list ">
-                Phone: {selectedUserDetails.Phone}
+                Guest Phone no: {selectedUserDetails.Phone}
               </p>
             </div>
             {!selectedUserDetails.Email == "" ? (
               <div className="col-6">
                 <p className="table-modal-list ">
-                  Email: {selectedUserDetails.Email}
+                  Guest Email: {selectedUserDetails.Email}
                 </p>
               </div>
             ) : (
@@ -365,7 +367,7 @@ const BookingList = () => {
             {!selectedUserDetails.Address == "" ? (
               <div className="col-12">
                 <p className="table-modal-list ">
-                  Address: {selectedUserDetails.Address}
+                  Guest Address: {selectedUserDetails.Address}
                 </p>
               </div>
             ) : (
@@ -400,9 +402,17 @@ const BookingList = () => {
             )}
             <div className="col-6">
               <p className="table-modal-list ">
-                Actual Amount: {selectedUserDetails.ActualAmount}
+                Total Amount: {selectedUserDetails.ActualAmount}
               </p>
-            </div>{" "}
+            </div>
+            <div className="col-6">
+              <p className="table-modal-list ">
+                Booking Date :{" "}
+                {moment(selectedUserDetails.BookingDate).format(
+                  "YYYY-MM-DD HH:mm"
+                )}
+              </p>
+            </div>
             {selectedUserDetails.DOB == "" ? (
               <div className="col-6">
                 <p className="table-modal-list ">
@@ -448,6 +458,33 @@ const BookingList = () => {
             ) : (
               <></>
             )}
+            <div className="row">
+              <div className="col-6">
+                <p className="table-modal-list ">
+                  Package Name:{" "}
+                  {selectedUserDetails.PackageName ? (
+                    JSON.parse(selectedUserDetails.PackageName).map(
+                      (item, index) => <span key={index}>{item} </span>
+                    )
+                  ) : (
+                    <span>No package name available</span>
+                  )}
+                </p>
+              </div>
+
+              <div className="col-6">
+                <p className="table-modal-list ">
+                  Package Price:{" "}
+                  {selectedUserDetails.PackageName ? (
+                    JSON.parse(selectedUserDetails.PackageName).map(
+                      (item, index) => <span key={index}>{item} </span>
+                    )
+                  ) : (
+                    <span>No package name available</span>
+                  )}
+                </p>
+              </div>
+            </div>
           </div>
         </Modal.Body>
         <Modal.Footer></Modal.Footer>

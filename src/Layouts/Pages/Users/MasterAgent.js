@@ -175,8 +175,12 @@ const MasterAgent = () => {
             filterMasterAgent.map((item) => (
               <tr key={item.id}>
                 <td className="manager-list ">{item.Name}</td>
-                <td className="manager-list">{item.Phone}</td>
-                <td className="manager-list">{item.Email}</td>
+                <td className="manager-list">
+                  {item.Phone ? item.Phone : "-"}
+                </td>
+                <td className="manager-list">
+                  {item.Email ? item.Email : "-"}
+                </td>
                 <td className="manager-list">
                   {item.IsUserEnabled ? (
                     <span style={{ color: "green" }}>Active</span>
@@ -240,11 +244,17 @@ const MasterAgent = () => {
         </Modal.Header>
         <Modal.Body>
           <p className="manager-list ">Name: {selectedUserDetails.Name}</p>
-          <p className="manager-list ">Phone: {selectedUserDetails.Phone}</p>
-          <p className="manager-list ">Email: {selectedUserDetails.Email}</p>
-          <p className="manager-list ">
-            Address: {selectedUserDetails.Address}
-          </p>
+          {selectedUserDetails.Phone && (
+            <p className="manager-list ">Phone: {selectedUserDetails.Phone}</p>
+          )}
+          {selectedUserDetails.Email && (
+            <p className="manager-list ">Email: {selectedUserDetails.Email}</p>
+          )}
+          {selectedUserDetails.Address && (
+            <p className="manager-list ">
+              Address: {selectedUserDetails.Address}
+            </p>
+          )}
           <p className="manager-list ">
             Password: {selectedUserDetails.Password}
           </p>

@@ -404,7 +404,7 @@ const PackagesPage = ({
                               fontWeight: "bold",
                             }}
                           >
-                            Teens: {teensCount}
+                            Kids: {teensCount}
                           </p>
                         </div>
                         <div className="text-center col-lg-3 col-md-3 col-sm-3 col-3">
@@ -531,7 +531,7 @@ const PackagesPage = ({
                             <div className="row package-item">
                               <div className="col-4 ">
                                 <p className="mb-0 detail">
-                                  <span className="detail">Teens:</span>{" "}
+                                  <span className="detail">Kids:</span>{" "}
                                   {teensCount}
                                 </p>
                               </div>
@@ -540,7 +540,7 @@ const PackagesPage = ({
                                   className="mb-0 detail"
                                   style={{ textAlign: "center" }}
                                 >
-                                  <span className="detail">Teens count:</span>{" "}
+                                  <span className="detail">Kids count:</span>{" "}
                                   {teensCount}
                                 </p>
                               </div>
@@ -550,7 +550,7 @@ const PackagesPage = ({
                                   style={{ textAlign: "right" }}
                                 >
                                   <span className="detail">
-                                    Total Teens Price:
+                                    Total Kids Price:
                                   </span>
                                   {totalTeensPrice}
                                 </p>

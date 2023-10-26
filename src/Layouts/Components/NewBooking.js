@@ -163,6 +163,14 @@ const NewBooking = () => {
   const [teensWeekendPrice, setTeensWeekendPrice] = useState("");
   const [teensPackageName, setTeensPackageName] = useState("");
 
+  const [cashAmount, setCashAmount] = useState("");
+  const [upiAmount, setUpiAmount] = useState("");
+  const [cardAmount, setCardAmount] = useState("");
+  const [cardHoldersName, setcardHoldersName] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardType, setCardType] = useState("");
+  console.log("cardType------->", cardType);
+
   console.log("phone--------------->", phone);
 
   console.log("remainingCoupons------------>remaining", remainingCoupons);
@@ -200,6 +208,8 @@ const NewBooking = () => {
         setCouponToggle(false);
         setCouponCode("");
         setSelectedOption("");
+      } else if (referredByToggle) {
+        setamountAfterDiscount("");
       }
     }
   };
@@ -258,6 +268,8 @@ const NewBooking = () => {
   const day = String(currentDate.getDate()).padStart(2, "0");
 
   const formattedDate = `${year}-${month}-${day}`;
+
+  console.log("Foramted Date------------------------------>", formattedDate);
 
   useEffect(() => {
     fetchCouponCodes();
@@ -395,6 +407,7 @@ const NewBooking = () => {
         teensRate: totalTeensRate,
         teensTax: teenstaxPercentage,
         teensTaxName: teensTaxName,
+        bookingDate: formattedDate,
         discount: discountFigure,
         panelDiscountId: selectedOption,
         couponId: couponId,
@@ -443,6 +456,13 @@ const NewBooking = () => {
           packageIds.length == 0
             ? JSON.stringify(teensWeekendPrice)
             : JSON.stringify(packageWeekendPrice),
+
+        cashAmount: cashAmount,
+        cardAmount: cardAmount,
+        UPIAmount: upiAmount,
+        cardHoldersName: cardHoldersName,
+        cardNumber: cardNumber,
+        cardType: cardType,
       };
 
       console.log("Data from booking ------->", data);
@@ -515,6 +535,13 @@ const NewBooking = () => {
   const handlePaymentSelection = (event) => {
     // Update the selected option when the user makes a selection
     setPaymentOption(event.target.value);
+
+    setCashAmount("");
+    setUpiAmount("");
+    setCardAmount("");
+    setcardHoldersName("");
+    setCardNumber("");
+    setCardType("");
   };
 
   console.log("paymentOption---------------->", paymentOption);
@@ -802,11 +829,114 @@ const NewBooking = () => {
             <option value="">Select...</option>
             <option value="Cash">Cash </option>
             <option value="Card">Card </option>
+            <option value="Online (UPI)">UPI </option>
+
             <option value="Part Card / Part Cash">Part Card / Part Cash</option>
-            <option value="Online (UPI)">Online(UPI)</option>
+            <option value="Part Card / Part Online (UPI)">
+              Part Card / Part Online (UPI)
+            </option>
+            <option value="Part Cash / Part Online (UPI)">
+              Part Cash / Part Online (UPI)
+            </option>
+
             <option value="Company Settlement">Company Settlement </option>
           </select>
         </div>
+
+        {paymentOption == "Cash" ? (
+          <div className="row">
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text">
+                Cash Amount
+              </label>
+              <input
+                class="form-control mt-2"
+                type="text"
+                placeholder="Enter the amount"
+                onChange={(e) => setCashAmount(e.target.value)}
+              />
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+
+        {paymentOption == "Card" ? (
+          <div className="row">
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text">
+                Card Amount
+              </label>
+              <input
+                class="form-control mt-2"
+                type="text"
+                placeholder="Enter the amount"
+                onChange={(e) => setCardAmount(e.target.value)}
+              />
+            </div>
+            <div className="col-lg-6 mt-3">
+              <label htmlFor="formGroupExampleInput" className="form_text">
+                Card Holder's Name
+              </label>
+              <input
+                className="form-control mt-2"
+                type="text"
+                placeholder="Enter the card holder's name"
+                onChange={(e) => setcardHoldersName(e.target.value)}
+              />
+            </div>
+
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text">
+                Card Type
+              </label>
+              <select
+                id="dropdown"
+                class="form-control mt-2"
+                value={cardType}
+                onChange={(e) => setCardType(e.target.value)}
+              >
+                <option value="">Select...</option>
+                <option value="Visa card">Visa card </option>
+                <option value="MasterCard">MasterCard </option>
+                <option value="Rupay Card">Rupay Card </option>
+              </select>
+            </div>
+            <div className="col-lg-6 mt-3">
+              <label htmlFor="formGroupExampleInput" className="form_text">
+                Card Number
+              </label>
+              <input
+                className="form-control mt-2"
+                type="text"
+                placeholder="Enter the card number"
+                onChange={(e) => setCardNumber(e.target.value)}
+              />
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+
+        {paymentOption === "Card" ? <div className="row"></div> : <></>}
+
+        {paymentOption == "Online (UPI)" ? (
+          <div className="row">
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text">
+                Online (UPI) Amount
+              </label>
+              <input
+                class="form-control mt-2"
+                type="text"
+                placeholder="Enter the amount"
+                onChange={(e) => setUpiAmount(e.target.value)}
+              />
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
 
         {paymentOption == "Part Card / Part Cash" ? (
           <div className="row">
@@ -818,7 +948,45 @@ const NewBooking = () => {
                 class="form-control mt-2"
                 type="text"
                 placeholder="Enter the amount"
-                onChange={(e) => setPartCard(e.target.value)}
+                onChange={(e) => setCardAmount(e.target.value)}
+              />
+            </div>
+            <div className="col-lg-6 mt-3">
+              <label htmlFor="formGroupExampleInput" className="form_text">
+                Card Holder's Name
+              </label>
+              <input
+                className="form-control mt-2"
+                type="text"
+                placeholder="Enter the card holder's name"
+                onChange={(e) => setcardHoldersName(e.target.value)}
+              />
+            </div>
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text">
+                Card Type
+              </label>
+              <select
+                id="dropdown"
+                class="form-control mt-2"
+                value={cardType}
+                onChange={(e) => setCardType(e.target.value)}
+              >
+                <option value="">Select...</option>
+                <option value="Visa card">Visa card </option>
+                <option value="MasterCard">MasterCard </option>
+                <option value="Rupay Card">Rupay Card </option>
+              </select>
+            </div>
+            <div className="col-lg-6 mt-3">
+              <label htmlFor="formGroupExampleInput" className="form_text">
+                Card Number
+              </label>
+              <input
+                className="form-control mt-2"
+                type="text"
+                placeholder="Enter the card number"
+                onChange={(e) => setCardNumber(e.target.value)}
               />
             </div>
             <div className="col-lg-6 mt-3">
@@ -829,7 +997,65 @@ const NewBooking = () => {
                 class="form-control mt-2"
                 type="text"
                 placeholder="Enter the amount"
-                onChange={(e) => setPartCash(e.target.value)}
+                onChange={(e) => setCashAmount(e.target.value)}
+              />
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+
+        {paymentOption == "Part Card / Part Online (UPI)" ? (
+          <div className="row">
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text">
+                Part Card
+              </label>
+              <input
+                class="form-control mt-2"
+                type="text"
+                placeholder="Enter the amount"
+                onChange={(e) => setCardAmount(e.target.value)}
+              />
+            </div>
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text">
+                Part Online(UPI)
+              </label>
+              <input
+                class="form-control mt-2"
+                type="text"
+                placeholder="Enter the amount"
+                onChange={(e) => setUpiAmount(e.target.value)}
+              />
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+
+        {paymentOption == "Part Cash / Part Online (UPI)" ? (
+          <div className="row">
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text">
+                Part Cash
+              </label>
+              <input
+                class="form-control mt-2"
+                type="text"
+                placeholder="Enter the amount"
+                onChange={(e) => setCashAmount(e.target.value)}
+              />
+            </div>
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text">
+                Part Online(UPI)
+              </label>
+              <input
+                class="form-control mt-2"
+                type="text"
+                placeholder="Enter the amount"
+                onChange={(e) => setUpiAmount(e.target.value)}
               />
             </div>
           </div>

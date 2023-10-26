@@ -201,7 +201,7 @@ const BillingDetails = () => {
           imageBlob,
           `${BookingDetails[0]?.BillingId}billing.png`
         );
-        formData.append("bookingId", BookingDetails[0]?.BookingId);
+        formData.append("bookingId", BookingDetails[0]?.BillingId);
 
         dispatch(
           uploadBillFile(

@@ -523,10 +523,6 @@ const RegenerateBill = () => {
         state: { BookingDetails: item?.Items },
       });
     }
-
-    // navigate("/BillingDetails", {
-    //   state: { BookingDetails: item?.Items },
-    // });
   };
 
   return (

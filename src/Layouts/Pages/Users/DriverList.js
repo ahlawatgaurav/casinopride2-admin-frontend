@@ -172,7 +172,9 @@ const DriverList = () => {
             filterDriverList.map((item) => (
               <tr key={item.id}>
                 <td className="manager-list ">{item.Name}</td>
-                <td className="manager-list">{item.Phone}</td>
+                <td className="manager-list">
+                  {item.Phone ? item.Phone : "-"}
+                </td>
 
                 <td className="manager-list">
                   {item.IsUserEnabled ? (
@@ -241,11 +243,15 @@ const DriverList = () => {
         </Modal.Header>
         <Modal.Body>
           <p className="manager-list ">Name: {selectedUserDetails.Name}</p>
-          <p className="manager-list ">Phone: {selectedUserDetails.Phone}</p>
+          {selectedUserDetails.Phone && (
+            <p className="manager-list ">Phone: {selectedUserDetails.Phone}</p>
+          )}
 
-          <p className="manager-list ">
-            Address: {selectedUserDetails.Address}
-          </p>
+          {selectedUserDetails.Address && (
+            <p className="manager-list ">
+              Address: {selectedUserDetails.Address}
+            </p>
+          )}
         </Modal.Body>
         <Modal.Footer></Modal.Footer>
       </Modal>

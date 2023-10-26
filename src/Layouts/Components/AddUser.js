@@ -73,15 +73,15 @@ const AddUser = () => {
     return passwordPattern.test(password);
   };
   const onsubmit = () => {
-    if (fullName == "" || address == "" || phone == "") {
+    if (fullName == "") {
       toast.warning("Please fill all the fields");
     }
     //  else if (!isValidEmail(email)) {
     //   toast.warning("Please enter a valid email address");
     // }
-    else if (phone.length > 10 || phone.length < 10) {
-      toast.warning("Please enter a valid phone number (up to 10 digits)");
-    }
+    // else if (phone.length > 10 || phone.length < 10) {
+    //   toast.warning("Please enter a valid phone number (up to 10 digits)");
+    // }
     // else if (!isValidPassword(password)) {
     //   toast.warning(
     //     "Password must contain at least one uppercase letter, one digit, and one special character"
@@ -122,8 +122,7 @@ const AddUser = () => {
                   }
                 )
               );
-            }
-            else{
+            } else {
               navigate(-1);
             }
             toast.success("User Added");
@@ -138,7 +137,7 @@ const AddUser = () => {
   };
 
   const onSubmitEdit = () => {
-    if (fullName == "" || address == "" || phone == "") {
+    if (fullName == "") {
       toast.warning("Please fill all the fields");
     } else {
       const data = {
@@ -204,252 +203,264 @@ const AddUser = () => {
   }, [updatedQrcodeImage]);
 
   return (
-    <div>
-      <ToastContainer />
-      <div className="row">
-        {userType == 2 ? (
-          <h3 className="mb-4">{userData ? "Edit Manager" : "Add Manager"}</h3>
-        ) : (
-          <></>
-        )}
-        {userType == 3 ? (
-          <h3 className="mb-4">{userData ? "Edit GRE" : "Add GRE"}</h3>
-        ) : (
-          <></>
-        )}
-        {userType == 4 ? (
-          <h3 className="mb-4">
-            {userData ? "Edit Master Agent" : "Add Master Agent"}
-          </h3>
-        ) : (
-          <></>
-        )}
+    console.log("Tu huyeeeeeeeeeee", userData),
+    (
+      <div>
+        <ToastContainer />
+        <div className="row">
+          {userType == 2 ? (
+            <h3 className="mb-4">
+              {userData ? "Edit Manager" : "Add Manager"}
+            </h3>
+          ) : (
+            <></>
+          )}
+          {userType == 3 ? (
+            <h3 className="mb-4">{userData ? "Edit GRE" : "Add GRE"}</h3>
+          ) : (
+            <></>
+          )}
+          {userType == 4 ? (
+            <h3 className="mb-4">
+              {userData ? "Edit Master Agent" : "Add Master Agent"}
+            </h3>
+          ) : (
+            <></>
+          )}
 
-        {userType == 5 ? (
-          <h3 className="mb-4">
-            {userData ? "Edit  Travel Agent" : "Add Travel Agent"}
-          </h3>
-        ) : (
-          <></>
-        )}
-        {userType == 6 ? (
-          <h3 className="mb-4">
-            {userData ? "Edit Local Agent " : "Add Local Agent"}
-          </h3>
-        ) : (
-          <></>
-        )}
+          {userType == 5 ? (
+            <h3 className="mb-4">
+              {userData ? "Edit  Travel Agent" : "Add Travel Agent"}
+            </h3>
+          ) : (
+            <></>
+          )}
+          {userType == 6 ? (
+            <h3 className="mb-4">
+              {userData ? "Edit Local Agent " : "Add Local Agent"}
+            </h3>
+          ) : (
+            <></>
+          )}
 
-        {userType == 7 ? (
-          <h3 className="mb-4">
-            {userData ? "Edit Accounts" : "Add Accounts"}
-          </h3>
-        ) : (
-          <></>
-        )}
+          {userType == 7 ? (
+            <h3 className="mb-4">
+              {userData ? "Edit Accounts" : "Add Accounts"}
+            </h3>
+          ) : (
+            <></>
+          )}
 
-        <div className="col-lg-6 mt-3 mt-3">
-          <label for="formGroupExampleInput " className="form_text">
-            Full Name <span style={{ color: "red" }}>*</span>
-          </label>
-          <input
-            class="form-control mt-2 "
-            type="text"
-            disabled={userData ? disabled : ""}
-            placeholder="Full Name"
-            onChange={(e) => setFullName(e.target.value)}
-            defaultValue={userData?.Name}
-          />
-        </div>
-
-        <div className="col-lg-6 mt-3">
-          <label for="formGroupExampleInput " className="form_text">
-            Phone <span style={{ color: "red" }}>*</span>
-          </label>
-          <input
-            class="form-control mt-2"
-            type="number"
-            disabled={userData ? disabled : ""}
-            placeholder="Enter phone"
-            onChange={(e) => setPhone(e.target.value)}
-            defaultValue={userData?.Phone}
-            maxLength="10"
-          />
-        </div>
-        {userType == 6 ? (
-          <></>
-        ) : (
-          <div className="col-lg-6 mt-3">
-            <label
-              for="formGroupExampleInput "
-              className="form_text"
-              style={{ fontSize: "15px", fontWeight: "600" }}
-            >
-              Email <span style={{ color: "red" }}>*</span>
+          <div className="col-lg-6 mt-3 mt-3">
+            <label for="formGroupExampleInput " className="form_text">
+              Full Name <span style={{ color: "red" }}>*</span>
             </label>
             <input
-              class="form-control mt-2"
+              class="form-control mt-2 "
               type="text"
-              placeholder="Enter Email"
-              onChange={(e) => setEmail(e.target.value)}
-              defaultValue={userData?.Email}
+              disabled={userData ? disabled : ""}
+              placeholder="Full Name"
+              onChange={(e) => setFullName(e.target.value)}
+              defaultValue={userData?.Name}
             />
           </div>
-        )}
 
-        <div className="col-lg-6 mt-3">
-          <label for="formGroupExampleInput " className="form_text">
-            Address <span style={{ color: "red" }}>*</span>
-          </label>
-          <input
-            class="form-control mt-2"
-            type="text"
-            placeholder="Enter your address"
-            onChange={(e) => setAddress(e.target.value)}
-            defaultValue={userData?.Address}
-          />
-        </div>
-
-        {userType == 6 ? (
-          <></>
-        ) : (
           <div className="col-lg-6 mt-3">
             <label for="formGroupExampleInput " className="form_text">
-              Username <span style={{ color: "red" }}>*</span>
+              Phone
+              {/* <span style={{ color: "red" }}>*</span> */}
             </label>
-            <input
-              class="form-control mt-2"
-              type="text"
-              placeholder="Enter Username"
-              onChange={(e) => setUsername(e.target.value)}
-              defaultValue={userData?.Username}
-            />
-          </div>
-        )}
-
-        {userType == 6 ? (
-          <></>
-        ) : (
-          <div className="col-lg-6 mt-3">
-            <label for="formGroupExampleInput " className="form_text">
-              Password <span style={{ color: "red" }}>*</span>
-            </label>
-            <input
-              class="form-control mt-2"
-              type="text"
-              placeholder="password"
-              onChange={(e) => setPassword(e.target.value)}
-              defaultValue={userData?.Password}
-            />
-          </div>
-        )}
-
-        {userType == "5" ||
-        userType == "6" ||
-        userData?.UserType == "5" ||
-        userData?.UserType == "6" ? (
-          <div className="col-lg-6 mt-3">
-            {userType == "5" || userData?.UserType == "5" ? (
-              <label for="formGroupExampleInput " className="form_text">
-                Travel Agent Commission <span style={{ color: "red" }}>*</span>
-              </label>
-            ) : (
-              <label for="formGroupExampleInput " className="form_text">
-                Discount Percentage <span style={{ color: "red" }}>*</span>
-              </label>
-            )}
             <input
               class="form-control mt-2"
               type="number"
-              placeholder="Discount Percentage"
-              onChange={(e) => setDiscountPercent(e.target.value)}
-              defaultValue={userData?.DiscountPercent}
+              // disabled={userData ? disabled : ""}
+              disabled={userData?.Phone != null ? disabled : ""}
+              placeholder="Enter phone"
+              onChange={(e) => setPhone(e.target.value)}
+              defaultValue={userData?.Phone}
+              maxLength="10"
             />
           </div>
-        ) : (
-          <></>
-        )}
-        {userType == "5" ||
-        userData?.UserType == "5" ||
-        userData?.UserType == "6" ? (
+          {userType == 6 ? (
+            <></>
+          ) : (
+            <div className="col-lg-6 mt-3">
+              <label
+                for="formGroupExampleInput "
+                className="form_text"
+                style={{ fontSize: "15px", fontWeight: "600" }}
+              >
+                Email
+                {/* <span style={{ color: "red" }}>*</span> */}
+              </label>
+              <input
+                class="form-control mt-2"
+                type="text"
+                placeholder="Enter Email"
+                onChange={(e) => setEmail(e.target.value)}
+                defaultValue={userData?.Email}
+              />
+            </div>
+          )}
+
           <div className="col-lg-6 mt-3">
             <label for="formGroupExampleInput " className="form_text">
-              Monthly settlement
+              Address
+              {/* <span style={{ color: "red" }}>*</span> */}
             </label>
             <input
               class="form-control mt-2"
               type="text"
-              disabled={!userData}
-              placeholder="0"
-              onChange={(e) => setMonrhtlysettlement(e.target.value)}
-              defaultValue={userData?.MonthlySettlement}
+              placeholder="Enter your address"
+              onChange={(e) => setAddress(e.target.value)}
+              defaultValue={userData?.Address}
             />
           </div>
-        ) : (
-          <></>
-        )}
 
-        {userData && userType == 6 ? (
-          <div className="col-lg-6 mt-3">
-            <label for="formGroupExampleInput " className="form_text">
-              QR Link <span style={{ color: "red" }}>*</span>
-            </label>
-            {/* <input
+          {userType == 6 ? (
+            <></>
+          ) : (
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text">
+                Username <span style={{ color: "red" }}>*</span>
+              </label>
+              <input
+                class="form-control mt-2"
+                type="text"
+                placeholder="Enter Username"
+                onChange={(e) => setUsername(e.target.value)}
+                defaultValue={userData?.Username}
+              />
+            </div>
+          )}
+
+          {userType == 6 ? (
+            <></>
+          ) : (
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text">
+                Password <span style={{ color: "red" }}>*</span>
+              </label>
+              <input
+                class="form-control mt-2"
+                type="text"
+                placeholder="password"
+                onChange={(e) => setPassword(e.target.value)}
+                defaultValue={userData?.Password}
+              />
+            </div>
+          )}
+
+          {userType == "5" ||
+          userType == "6" ||
+          userData?.UserType == "5" ||
+          userData?.UserType == "6" ? (
+            <div className="col-lg-6 mt-3">
+              {userType == "5" || userData?.UserType == "5" ? (
+                <label for="formGroupExampleInput " className="form_text">
+                  Travel Agent Commission{" "}
+                  <span style={{ color: "red" }}>*</span>
+                </label>
+              ) : (
+                <label for="formGroupExampleInput " className="form_text">
+                  Discount Percentage <span style={{ color: "red" }}>*</span>
+                </label>
+              )}
+              <input
+                class="form-control mt-2"
+                type="number"
+                placeholder="Discount Percentage"
+                onChange={(e) => setDiscountPercent(e.target.value)}
+                defaultValue={userData?.DiscountPercent}
+              />
+            </div>
+          ) : (
+            <></>
+          )}
+          {userType == "5" ||
+          userData?.UserType == "5" ||
+          userData?.UserType == "6" ? (
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text">
+                Monthly settlement
+              </label>
+              <input
+                class="form-control mt-2"
+                type="text"
+                disabled={!userData}
+                placeholder="0"
+                onChange={(e) => setMonrhtlysettlement(e.target.value)}
+                defaultValue={userData?.MonthlySettlement}
+              />
+            </div>
+          ) : (
+            <></>
+          )}
+
+          {userData && userType == 6 ? (
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text">
+                QR Link <span style={{ color: "red" }}>*</span>
+              </label>
+              {/* <input
               class="form-control mt-2"
               type="text"
               placeholder="password"
               disabled
               defaultValue={userData?.QRLink}
             /> */}
-            <p style={{ marginTop: "20px", fontSize: "15px"}}>{userData?.QRLink}</p>
-          </div>
-        ) : (
-          <></>
-        )}
-
-        {userData ? (
-          <div className="col-lg-6 mt-5">
-            <div className="form-check form-switch">
-              <label for="formGroupExampleInput " className="form_text">
-                Is user enabled?
-              </label>
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="switch"
-                checked={isChecked === 1}
-                onChange={handleToggle}
-              />
+              <p style={{ marginTop: "20px", fontSize: "15px" }}>
+                {userData?.QRLink}
+              </p>
             </div>
+          ) : (
+            <></>
+          )}
+
+          {userData ? (
+            <div className="col-lg-6 mt-5">
+              <div className="form-check form-switch">
+                <label for="formGroupExampleInput " className="form_text">
+                  Is user enabled?
+                </label>
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="switch"
+                  checked={isChecked === 1}
+                  onChange={handleToggle}
+                />
+              </div>
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
+        {!userData ? (
+          <div className="col-lg-6 mb-2 btn-lg mx-auto d-flex justify-content-center ">
+            <button
+              style={{ paddingLeft: "100px", paddingRight: "100px" }}
+              type="submit"
+              className="btn btn_colour mt-5 btn-lg"
+              onClick={onsubmit}
+            >
+              Submit
+            </button>
           </div>
         ) : (
-          <></>
+          <div className="col-lg-6 mb-2 btn-lg mx-auto d-flex justify-content-center ">
+            <button
+              style={{ paddingLeft: "100px", paddingRight: "100px" }}
+              type="submit"
+              className="btn btn_colour mt-5 btn-lg"
+              onClick={onSubmitEdit}
+            >
+              Submit
+            </button>
+          </div>
         )}
       </div>
-      {!userData ? (
-        <div className="col-lg-6 mb-2 btn-lg mx-auto d-flex justify-content-center ">
-          <button
-            style={{ paddingLeft: "100px", paddingRight: "100px" }}
-            type="submit"
-            className="btn btn_colour mt-5 btn-lg"
-            onClick={onsubmit}
-          >
-            Submit
-          </button>
-        </div>
-      ) : (
-        <div className="col-lg-6 mb-2 btn-lg mx-auto d-flex justify-content-center ">
-          <button
-            style={{ paddingLeft: "100px", paddingRight: "100px" }}
-            type="submit"
-            className="btn btn_colour mt-5 btn-lg"
-            onClick={onSubmitEdit}
-          >
-            Submit
-          </button>
-        </div>
-      )}
-    </div>
+    )
   );
 };
 

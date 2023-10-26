@@ -131,7 +131,7 @@ const SideNav = () => {
               <></>
             )}
 
-            {loginDetails?.logindata?.UserType == "1" ||
+            {/* {loginDetails?.logindata?.UserType == "1" ||
             loginDetails?.logindata?.UserType == "7" ||
             loginDetails?.logindata?.UserType == "3" ? (
               <Nav.Item eventKey="6" icon={<PageIcon />}>
@@ -141,7 +141,7 @@ const SideNav = () => {
               </Nav.Item>
             ) : (
               <></>
-            )}
+            )} */}
             {loginDetails?.logindata?.UserType == "1" ? (
               <Nav.Menu
                 placement="rightStart"

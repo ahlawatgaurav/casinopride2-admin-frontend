@@ -87,6 +87,7 @@ const BillingList = () => {
   const [displayNoShowGuestList, setDisplayNoShowGuestList] = useState([]);
   const [eventDate, setEventDate] = useState(null);
   const [online, setOnline] = useState(reportId == 4 ? 1 : 0);
+  const [voidBillReason, setVoidBillReason] = useState();
 
   const fetchBillingDetailsFn = () => {
     dispatch(
@@ -370,8 +371,8 @@ const BillingList = () => {
   const handleVoidBill = () => {
     const voidBillData = {
       bookingId: voidBookingId,
+      voidBillReason: voidBillReason,
     };
-
     dispatch(
       voidBill(loginDetails?.logindata?.Token, voidBillData, (callback) => {
         if (callback.status) {
@@ -506,21 +507,45 @@ const BillingList = () => {
   });
 
   const combinedDataArray = Object.values(combinedData);
+  // Now, combinedDataArray contains the data grouped by BookingId
+  console.log("Combined Array-------------------------->", combinedDataArray);
 
+  const combinedVoidBillsData = {};
+
+  voidBillingList.forEach((item) => {
+    const bookingId = item.BookingId;
+    if (!combinedVoidBillsData[bookingId]) {
+      combinedVoidBillsData[bookingId] = {
+        BookingId: bookingId,
+        Items: [item],
+      };
+    } else {
+      combinedVoidBillsData[bookingId].Items.push(item);
+    }
+  });
+
+  const combinedVoidDataArray = Object.values(combinedVoidBillsData);
   // Now, combinedDataArray contains the data grouped by BookingId
   console.log(
-    "Combined Array-------------------------->",
-    combinedDataArray[1]?.Items
+    "combined Void Data Array------------------------->",
+    combinedVoidDataArray
   );
 
   const regenerateBillFn = (item) => {
     console.log(
       "Item--------------------------------- regenerate bill------------>",
-      item
+      item?.Items
     );
-    navigate("/BillingDetails", {
-      state: { BookingDetails: combinedDataArray[1]?.Items },
-    });
+
+    if (item?.Items[0]?.NumOfTeens - item?.Items[0]?.TotalGuestCount == 0) {
+      navigate("/TeensBilling", {
+        state: { BookingDetails: item?.Items },
+      });
+    } else {
+      navigate("/BillingDetails", {
+        state: { BookingDetails: item?.Items },
+      });
+    }
   };
 
   return (
@@ -529,56 +554,55 @@ const BillingList = () => {
       <h3 className="mb-4">Billing List</h3>
 
       <div className="row mt-3">
-        <div className="row">
-          <div className="col-lg-4">
-            <label for="formGroupExampleInput " className="form_text">
-              Display All Bills
-            </label>
+        <div className="col-lg-4">
+          <label for="formGroupExampleInput " className="form_text">
+            Display All Bills
+          </label>
 
-            <div className="form-check form-switch">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="discountSwitch"
-                checked={allBill}
-                onChange={() => handleToggle("allBill")}
-              />
-            </div>
+          <div className="form-check form-switch">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="discountSwitch"
+              checked={allBill}
+              onChange={() => handleToggle("allBill")}
+            />
           </div>
+        </div>
 
-          <div className="col-lg-4">
-            <label for="formGroupExampleInput " className="form_text">
-              Display Void Bills
-            </label>
+        <div className="col-lg-4">
+          <label for="formGroupExampleInput " className="form_text">
+            Display Void Bills
+          </label>
 
-            <div className="form-check form-switch">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="couponSwitch"
-                checked={voidBillList}
-                onChange={() => handleToggle("voidBillList")}
-              />
-            </div>
+          <div className="form-check form-switch">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="couponSwitch"
+              checked={voidBillList}
+              onChange={() => handleToggle("voidBillList")}
+            />
           </div>
+        </div>
 
-          <div className="col-lg-4">
-            <label for="formGroupExampleInput " className="form_text">
-              Display No Show Guest List
-            </label>
+        <div className="col-lg-4">
+          <label for="formGroupExampleInput " className="form_text">
+            Display No Show Guest List
+          </label>
 
-            <div className="form-check form-switch">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="referredBySwitch"
-                checked={noShowGuestList}
-                onChange={() => handleToggle("noShowGuestList")}
-              />
-            </div>
+          <div className="form-check form-switch">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="referredBySwitch"
+              checked={noShowGuestList}
+              onChange={() => handleToggle("noShowGuestList")}
+            />
           </div>
         </div>
       </div>
+
       {allBill === true &&
         voidBillList === false &&
         noShowGuestList === false && ( //show all bills with filters
@@ -715,17 +739,20 @@ const BillingList = () => {
               <thead>
                 <tr>
                   <th scope="col" className="text-center table_heading">
-                    Bill Id
+                    Bill No
                   </th>
                   <th scope="col" className="text-center table_heading">
                     Guest Name
                   </th>
                   <th scope="col" className="text-center table_heading">
-                    Phone
+                    Package Name
+                  </th>
+                  <th scope="col" className="text-center table_heading">
+                    Billing Amount
                   </th>
 
                   <th scope="col" className="text-center table_heading">
-                    Users Name
+                    Time
                   </th>
 
                   <th scope="col" className="text-center table_heading">
@@ -734,6 +761,9 @@ const BillingList = () => {
 
                   <th scope="col" className="text-center table_heading">
                     Void Bill
+                  </th>
+                  <th scope="col" className="text-center table_heading">
+                    Reprint Bill
                   </th>
 
                   <th scope="col" className="text-center table_heading">
@@ -766,20 +796,39 @@ const BillingList = () => {
                       </div>
                     </td>
                   </tr>
-                ) : billingDetails.length === 0 ? (
+                ) : combinedDataArray.length === 0 ? (
                   <tr>
                     <td colSpan="6" className="text-center">
                       No data found.
                     </td>
                   </tr>
                 ) : (
-                  billingDetails.map((item) => (
+                  combinedDataArray.map((item) => (
                     <tr key={item.id}>
-                      <td className="manager-list">{item.BillingId}</td>
-                      <td className="manager-list ">{item.GuestName}</td>
-                      <td className="manager-list">{item.Phone}</td>
                       <td className="manager-list">
-                        {item.UsersName ? item.UsersName : "-"}
+                        {item?.Items[0]?.BillingId}
+                      </td>
+                      <td className="manager-list ">
+                        {item?.Items[0]?.GuestName}
+                      </td>
+                      <td className="manager-list">
+                        {item?.Items[0]?.PackageName ? (
+                          JSON.parse(item?.Items[0]?.PackageName).map(
+                            (item, index) => (
+                              <li key={index} style={{ listStyleType: "none" }}>
+                                {item}{" "}
+                              </li>
+                            )
+                          )
+                        ) : (
+                          <span>No package name available</span>
+                        )}
+                      </td>
+                      <td className="manager-list">
+                        {item?.Items[0]?.ActualAmount}
+                      </td>
+                      <td className="manager-list">
+                        {item?.Items[0]?.ActualBillingTime}
                       </td>
                       <td className="manager-list">
                         {item.ShiftId === 0 ? "-" : item.ShiftId}
@@ -802,9 +851,18 @@ const BillingList = () => {
                         </td>
                       )}
 
+                      <td style={{ textAlign: "center" }}>
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => regenerateBillFn(item)}
+                        >
+                          Reprint Bill
+                        </button>
+                      </td>
+
                       <td
                         className="manager-list"
-                        onClick={() => handleViewMore(item)}
+                        onClick={() => handleViewMore(item?.Items[0])}
                       >
                         <img src={more} className="more_img" />
                       </td>
@@ -823,7 +881,7 @@ const BillingList = () => {
             <thead>
               <tr>
                 <th scope="col" className="text-center table_heading">
-                  Bill Id
+                  Bill No
                 </th>
                 <th scope="col" className="text-center table_heading">
                   Booking Id
@@ -834,9 +892,8 @@ const BillingList = () => {
                 <th scope="col" className="text-center table_heading">
                   Phone
                 </th>
-
                 <th scope="col" className="text-center table_heading">
-                  Users Name
+                  Package Name
                 </th>
 
                 <th scope="col" className="text-center table_heading">
@@ -879,21 +936,40 @@ const BillingList = () => {
                     </div>
                   </td>
                 </tr>
-              ) : voidBillingList.length === 0 ? (
+              ) : combinedVoidDataArray.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="text-center">
                     No data found.
                   </td>
                 </tr>
               ) : (
-                voidBillingList.map((item) => (
+                combinedVoidDataArray.map((item) => (
                   <tr key={item.id}>
-                    <td className="manager-list">{item.BillingId}</td>
-                    <td className="manager-list ">{item?.BookingId}</td>
+                    <td className="manager-list">
+                      {item?.Items[0]?.BillingId}
+                    </td>
+                    <td className="manager-list ">
+                      {item?.Items[0]?.BookingId}
+                    </td>
 
-                    <td className="manager-list ">{item.GuestName}</td>
-                    <td className="manager-list">{item.Phone}</td>
-                    <td className="manager-list">{item.UsersName}</td>
+                    <td className="manager-list ">
+                      {item?.Items[0]?.GuestName}
+                    </td>
+                    <td className="manager-list">{item?.Items[0]?.Phone}</td>
+                    <td className="manager-list">
+                      {item?.Items[0]?.PackageName ? (
+                        JSON.parse(item?.Items[0]?.PackageName).map(
+                          (item, index) => (
+                            <li key={index} style={{ listStyleType: "none" }}>
+                              {item}{" "}
+                            </li>
+                          )
+                        )
+                      ) : (
+                        <span>No package name available</span>
+                      )}
+                    </td>
+
                     <td className="manager-list">
                       {item.ShiftId === 0 ? "-" : item.ShiftId}
                     </td>
@@ -903,11 +979,12 @@ const BillingList = () => {
                     >
                       {item.IsVoid == 1 ? "Void" : "Active"}
                     </td>
-                    {item?.NewBillId === null || item?.NewBillId === 0 ? (
+                    {item?.Items[0]?.NewBillId === null ||
+                    item?.Items[0]?.NewBillId === 0 ? (
                       <td className="manager-list">
                         <button
                           className="btn btn-primary"
-                          onClick={() => handleShow(item)}
+                          onClick={() => handleShow(item?.Items[0])}
                         >
                           Add New Bill Id
                         </button>
@@ -1058,6 +1135,9 @@ const BillingList = () => {
         <Modal.Body>
           <div className="row">
             <img src={selectedUserDetails?.BillingFile} />
+          </div>
+          {/* <div className="row">
+            <img src={selectedUserDetails?.BillingFile} />
             <div className="col-6">
               <p className="table-modal-list ">
                 Item Details :
@@ -1156,7 +1236,7 @@ const BillingList = () => {
             ) : (
               <></>
             )}
-          </div>
+          </div> */}
         </Modal.Body>
         <Modal.Footer></Modal.Footer>
       </Modal>
@@ -1299,14 +1379,29 @@ const BillingList = () => {
         <Modal.Header closeButton>
           <Modal.Title>Void Bill </Modal.Title>
         </Modal.Header>
-        <Modal.Body>Are you sure you want to void this bill?</Modal.Body>
+        <Modal.Body>
+          Are you sure you want to void this bill?
+          <label for="formGroupExampleInput " className="form_text">
+            If Yes then Enter your Reason to Void it:
+            <span style={{ color: "red" }}>*</span>
+          </label>
+          <input
+            class="form-control mt-2"
+            type="text"
+            placeholder="Enter the Reason"
+            onChange={(e) => setVoidBillReason(e.target.value)}
+          />
+        </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={closeModal}>
             Close
           </Button>
-
-          <Button variant="danger" onClick={handleVoidBill}>
-            Yes
+          <Button
+            variant="danger"
+            onClick={handleVoidBill}
+            disabled={voidBillReason ? false : true}
+          >
+            Void
           </Button>
         </Modal.Footer>
       </Modal>
@@ -1324,6 +1419,7 @@ const BillingList = () => {
             onChange={(e) => setNewBillId(e.target.value)}
           />
         </Modal.Body>
+
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close
