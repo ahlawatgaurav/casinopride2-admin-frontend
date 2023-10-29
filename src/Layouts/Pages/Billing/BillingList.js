@@ -557,6 +557,7 @@ const BillingList = () => {
     }
   };
 
+  console.log("Combined Array--->", combinedDataArray);
   return (
     <div>
       <ToastContainer />
@@ -851,7 +852,9 @@ const BillingList = () => {
                         {item?.Items[0]?.ActualBillingTime}
                       </td>
                       <td className="manager-list">
-                        {item.ShiftId === 0 ? "-" : item.ShiftId}
+                        {item.Items[0]?.ShiftId == 0
+                          ? "-"
+                          : item.Items[0]?.ShiftId}
                       </td>
                       {loginDetails?.logindata?.UserType === 5 ||
                       loginDetails?.logindata?.UserType === 1 ? (
