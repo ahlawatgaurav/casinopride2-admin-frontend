@@ -37,6 +37,10 @@ const BillingDetails = () => {
   );
 
   console.log("Data to be passed as sms------------------->", BookingDetails);
+  console.log(
+    "Data to be passed as sms------------------->",
+    BookingDetails[0]?.BillingId
+  );
 
   const [totalDiscount, setTotalDiscount] = useState(0);
 
@@ -199,15 +203,27 @@ const BillingDetails = () => {
           return new Blob([u8arr], { type: mime });
         }
 
-        // Create a FormData object and append the image blob
+        console.log(
+          "BookingDetails[0]?.BillingId-------->",
+          BookingDetails[0]?.BookingId
+        );
+
         const formData = new FormData();
         formData.append(
           "File",
           imageBlob,
           `${BookingDetails[0]?.BillingId}billing.png`
         );
-        formData.append("bookingId", BookingDetails[0]?.BillingId);
+        formData.append("bookingId", BookingDetails[0]?.BookingId);
 
+        console.log(
+          "BookingDetails[0]?.BillingId------newww-->",
+          BookingDetails[0]?.BillingId
+        );
+
+        formData.forEach((value, key) => {
+          console.log("Hiiiiii", key, value);
+        });
         dispatch(
           uploadBillFile(
             loginDetails?.logindata?.Token,
@@ -322,6 +338,28 @@ const BillingDetails = () => {
                         );
                         setUpatedQrcodeImage(callback?.response?.shortUrl);
 
+                        const data = {
+                          receiverMail: JSON.stringify(
+                            BookingDetails[0]?.Email
+                          ),
+                          amount: BookingDetails[0]?.ActualAmount,
+                          billFile: JSON.stringify(
+                            callback?.response?.shortUrl
+                          ),
+                        };
+
+                        dispatch(
+                          sendEmail(data, (callback) => {
+                            if (callback.status) {
+                              toast.success("Email sent");
+
+                              toast.error(callback.error);
+                            } else {
+                              toast.error(callback.error);
+                            }
+                          })
+                        );
+
                         const apiUrl = `http://commnestsms.com/api/push.json?apikey=635cd8e64fddd&route=transactional&sender=CPGOAA&mobileno=${BookingDetails[0]?.Phone}&text=Thank%20you%20for%20choosing%20Casino%20Pride.%20View%20e-bill%20of%20Rs%20${BookingDetails[0]?.ActualAmount}%20at%20-%20${callback?.response?.shortUrl}%0ALets%20Play%20with%20Pride%20!%0AGood%20luck%20!%0ACPGOAA`;
                         fetch(apiUrl)
                           .then((response) => {
@@ -362,24 +400,6 @@ const BillingDetails = () => {
         console.log(
           "bllling file------------------------{{{{{{{{}}}}}}}}}}}}}}}}}----->",
           updatedQrcodeImage
-        );
-
-        const data = {
-          receiverMail: JSON.stringify(BookingDetails[0]?.Email),
-          amount: BookingDetails[0]?.ActualAmount,
-          billFile: JSON.stringify(updatedQrcodeImage),
-        };
-
-        dispatch(
-          sendEmail(data, (callback) => {
-            if (callback.status) {
-              toast.success("Email sent");
-
-              toast.error(callback.error);
-            } else {
-              toast.error(callback.error);
-            }
-          })
         );
 
         // if (response.ok) {

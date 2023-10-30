@@ -41,6 +41,7 @@ import AgentSettlementList from "./Layouts/Pages/AgentSettlement/AgentSettlement
 import RegenerateBill from "./Layouts/Pages/Billing/RegenerateBill";
 import QrLinkPage from "./Layouts/Pages/QRLink/QrLinkPage";
 import LocalAgentList from "./Layouts/Pages/Users/LocalAgentList";
+import AcknowledgementDetails from "./Layouts/Pages/Ack/AcknowledgementDetails";
 function App() {
   let { param } = useParams();
   return (
@@ -79,6 +80,15 @@ function App() {
           element={
             <Layout>
               <AddFutureBookingDates />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/:param"
+          element={
+            <Layout>
+              <AcknowledgementDetails />
             </Layout>
           }
         />
@@ -311,7 +321,7 @@ function App() {
           path="/LocalAgentList"
           element={
             <Layout>
-              <LocalAgentList/>
+              <LocalAgentList />
             </Layout>
           }
         />

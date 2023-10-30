@@ -210,8 +210,6 @@ const BookingList = () => {
       packageWeekendPrice: JSON.stringify(item.PackageWeekendPrice),
     };
 
-    console.log("data------------>", data);
-
     dispatch(
       AddBillingDetails(loginDetails?.logindata?.Token, data, (callback) => {
         if (callback.status) {

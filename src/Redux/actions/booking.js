@@ -125,6 +125,35 @@ export const fetchUserbookings =
       });
   };
 
+export const fetchBookingDetailsById =
+  (token, bookingId, callback) => async (dispatch) => {
+    console.log(token);
+
+    api.BOOKING_PORT.get(`/booking/getBookingDetails?bookingId=${bookingId}`, {
+      headers: { AuthToken: token },
+    })
+      .then((response) => {
+        console.log("Get user bookings based on id ->", response.data);
+        if (response.data?.Details) {
+          console.log(response.data?.Details);
+          callback({
+            status: true,
+            response: response?.data,
+          });
+        } else if (response.data?.Error) {
+          callback({
+            status: false,
+            error: response.data?.Error?.ErrorMessage,
+          });
+        }
+      })
+      .catch((err) => {
+        {
+          console.log("error", err);
+        }
+      });
+  };
+
 export const updateBooking = (token, data, callback) => async (dispatch) => {
   api.BOOKING_PORT.put("/booking/updateBooking", data, {
     headers: { AuthToken: token },
