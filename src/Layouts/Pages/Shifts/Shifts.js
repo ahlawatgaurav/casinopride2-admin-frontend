@@ -23,6 +23,7 @@ import { saveOutletDetails } from "../../../Redux/reducers/auth";
 import { checkCurrentOutletFn } from "../../../Redux/actions/users";
 import { Oval } from "react-loader-spinner";
 import { checkActiveOutlet } from "../../../Redux/actions/users";
+import { cashierReport } from "../../../Redux/actions/billing";
 
 const Shifts = () => {
   const location = useLocation();
@@ -86,6 +87,9 @@ const Shifts = () => {
   const [defaultShift1, setDefaultShift1] = useState(false);
   const [shiftDetailsForUser, setSHiftDetaislForUser] = useState();
   const [closeShiftButton, setCloseShiftButton] = useState(false);
+  const [openCloseOtletModal, setOpenCloseOutletModal] = useState(false);
+  const [showGenerateCashierModal,setShowGenerateCashierModal] = useState(false)
+
 
   const openOutletModal = () => {
     setOutletModalOpen(true);
@@ -702,7 +706,8 @@ const Shifts = () => {
           setShiftDetails("");
           setOutletDetails(callback?.response?.Details?.OutletStatus);
           toast.success("Outlet  is Closed");
-          window.location.reload();
+          setShowGenerateCashierModal(true)
+          // window.location.reload();
         } else {
           toast.error(callback.error);
         }
@@ -710,7 +715,6 @@ const Shifts = () => {
     );
   };
 
-  const [openCloseOtletModal, setOpenCloseOutletModal] = useState(false);
 
   const OpenCLoseOutletModalFn = () => {
     setOpenCloseOutletModal(true);
@@ -2108,6 +2112,32 @@ const Shifts = () => {
     }
   };
 
+  const generateCashierReport = () => {
+    console.log('outletFormattedData>>',outletFormattedData);
+    dispatch(
+      cashierReport(
+        loginDetails?.logindata?.Token,
+        outletFormattedData,
+        (callback) => {
+          if (callback.status) {
+            // setLoading(false);
+            console.log("cashierReport--->>", callback?.response);
+            window.open(callback?.response?.Details?.ReportFile, "_blank");
+            setShowGenerateCashierModal(false)
+            window.location.reload();
+          } else {
+            console.log("cashierReport>>>Callback------", callback.error);
+            toast.error(callback.error);
+          }
+        }
+      )
+    );
+  };
+
+  const closeCashierReportModal = ()=>{
+    setShowGenerateCashierModal(false)
+    window.location.reload();
+  }
   return (
     <div>
       {loader ? (
@@ -2154,9 +2184,9 @@ const Shifts = () => {
                   Close Outlet
                 </Button>
               </div>
-            ) : (
+          ) : (
               <></>
-            )}
+            )} 
           </div>
 
           {shiftOneComponent({
@@ -2346,6 +2376,37 @@ const Shifts = () => {
             </div>
           </div>
         </Modal.Body>
+
+      </Modal>
+
+
+      <Modal
+        show={showGenerateCashierModal}
+        onHide={closeCashierReportModal}
+        centered
+      >
+        <Modal.Body>
+          <div className="row">
+            {/* <img src={xcircle} alt="Check Circle" className="check-circle" /> */}
+            <p className="outletTitle">Generate Cashier Report</p>
+            <p className="outletTex">
+              Generate Cashier Report
+            </p>
+          </div>
+          <div className="row">
+            <div>
+              <Button onClick={generateCashierReport} className="closeConfirmBtn">
+                Generate
+              </Button>
+            </div>
+            <div>
+              <Button onClick={closeCashierReportModal} className="closecancelBtn">
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+
       </Modal>
 
       <Modal show={showConfirmModal} onHide={handleConfirmClose}>

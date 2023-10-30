@@ -369,3 +369,33 @@ export const generateNoShowReport =
         }
       });
   };
+export const cashierReport =
+  (token, date, callback) => async (dispatch) => {
+    api.BILLING_PORT.get(
+      `/billing/cashierReport?date=${date}&reportTypeId=6`,
+      {
+        headers: { AuthToken: token },
+      }
+    )
+      .then((response) => {
+        console.log("generate cashierReport");
+        console.log("generate cashierReport>>>>", response.data);
+        if (response.data?.Details) {
+          console.log(response.data?.Details);
+          callback({
+            status: true,
+            response: response?.data,
+          });
+        } else if (response.data?.Error) {
+          callback({
+            status: false,
+            error: response.data?.Error?.ErrorMessage,
+          });
+        }
+      })
+      .catch((err) => {
+        {
+          console.log("inside resp of getVoidBillingList error", err);
+        }
+      });
+  };
