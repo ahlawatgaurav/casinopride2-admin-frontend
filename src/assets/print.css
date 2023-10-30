@@ -54,11 +54,10 @@ img {
 
 .BillPrintFontPrint {
   font-size: 7px;
-  line-height: 11px !important;
+  line-height: 10px !important;
   font-weight: bold !important;
 }
 
 .ticket_table {
   width: 100% !important;
-  max-width: 100% !important;
 }

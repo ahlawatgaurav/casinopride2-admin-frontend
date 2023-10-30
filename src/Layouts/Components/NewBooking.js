@@ -49,6 +49,14 @@ const NewBooking = () => {
 
   console.log("loginDetails-------------->", loginDetails);
 
+  useEffect(() => {
+    if (!loginDetails) {
+      navigate("/");
+    } else {
+      console.log("Hi");
+    }
+  }, []);
+
   const outletOpenDetails = useSelector((state) => state.auth?.outeltDetails);
 
   const activeDateOfOutlet = useSelector(
@@ -69,7 +77,11 @@ const NewBooking = () => {
     (state) => state.auth?.userDetailsAfterValidation
   );
 
-  const parsedDate = moment(outletOpenDetails?.Details[0]?.Date);
+  const parsedDate = moment(
+    outletOpenDetails &&
+      outletOpenDetails?.Details &&
+      outletOpenDetails?.Details[0]?.Date
+  );
   const outletFormattedData = parsedDate.format("YYYY-MM-DD");
 
   const [shiftDetails, setShiftDetails] = useState("");

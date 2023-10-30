@@ -46,6 +46,7 @@ function LoginPage() {
           setLoading(false);
         } else {
           toast.error(callback.error);
+          navigate("/");
           setLoading(false);
         }
       })
