@@ -30,8 +30,8 @@ th.price {
 }
 
 .ticket {
-  width: 155px;
-  max-width: 155px;
+  width: 100%;
+  max-width: 100%;
 }
 
 img {
@@ -47,17 +47,18 @@ img {
 }
 
 .logo-imagePrint {
-  height: 20px;
-  width: 20px;
+  height: 70px;
+  width: 70px;
   object-fit: contain;
 }
 
 .BillPrintFontPrint {
-  font-size: 5px;
-  line-height: 6px !important;
+  font-size: 7px;
+  line-height: 11px !important;
+  font-weight: bold !important;
 }
 
 .ticket_table {
-  width: 120px !important;
-  max-width: 120px !important;
+  width: 100% !important;
+  max-width: 100% !important;
 }
