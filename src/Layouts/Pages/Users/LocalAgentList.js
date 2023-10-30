@@ -12,7 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Button, Modal } from "react-bootstrap";
 import more from "../../../assets/Images/more.png";
 
-const DriverList = () => {
+const LocalAgentList = () => {
   const dispatch = useDispatch();
 
   const loginDetails = useSelector(
@@ -31,9 +31,9 @@ const DriverList = () => {
     setUserId(Id);
   };
 
-  const fetchDriverDetails = () => {
+  const fetchLocalAgentDetails = () => {
     dispatch(
-      getUserDetails(loginDetails?.logindata?.Token, 6, (callback) => {
+      getUserDetails(loginDetails?.logindata?.Token, 8, (callback) => {
         if (callback.status) {
           setLoading(false);
           console.log(
@@ -48,7 +48,7 @@ const DriverList = () => {
   };
 
   useEffect(() => {
-    fetchDriverDetails();
+    fetchLocalAgentDetails();
   }, [dispatch]);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -86,7 +86,7 @@ const DriverList = () => {
 
   return (
     <div>
-      <h3 className="mb-4">Taxi Agent List</h3>
+      <h3 className="mb-4">Local Agent List</h3>
       <div className="container">
         <div className="row">
           <div className="col-md-8 col-lg-6 mb-3">
@@ -106,10 +106,10 @@ const DriverList = () => {
             <button className="btn btn-primary">
               <Link
                 to="/AddUser"
-                state={{ userType: "6" }}
+                state={{ userType: "8" }}
                 className="addLinks"
               >
-                Add Taxi Agent
+                Add Local Agent
               </Link>
             </button>
           </div>
@@ -187,7 +187,7 @@ const DriverList = () => {
                   {" "}
                   <Link
                     to="/AddUser"
-                    state={{ userData: item, userType: "6" }}
+                    state={{ userData: item, userType: "8" }}
                     className="links"
                   >
                     <AiFillEdit
@@ -259,4 +259,4 @@ const DriverList = () => {
   );
 };
 
-export default DriverList;
+export default LocalAgentList;

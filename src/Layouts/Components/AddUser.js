@@ -106,17 +106,19 @@ const AddUser = () => {
       dispatch(
         AddUserDetails(data, loginDetails?.logindata?.Token, (callback) => {
           if (callback.status) {
-            if (callback?.response?.Details?.UserType == 6) {
+            if (callback?.response?.Details?.UserType == 6 || callback?.response?.Details?.UserType == 8) {
               dispatch(
                 addQrCodeLink(
                   loginDetails?.logindata?.Token,
                   callback?.response?.Details?.Id,
+                  callback?.response?.Details?.UserType,
                   (callback) => {
                     if (callback.status) {
                       console.log(
                         "Callback from QR CODE ---------------------->",
                         callback?.response
                       );
+                    toast.success("User Added");
                       navigate(-1);
                     }
                   }
@@ -125,7 +127,6 @@ const AddUser = () => {
             } else {
               navigate(-1);
             }
-            toast.success("User Added");
 
             toast.error(callback.error);
           } else {
@@ -152,6 +153,8 @@ const AddUser = () => {
         userType: userData?.UserType,
         discountPercent: discountPercent,
         monthlySettlement: monthlysettlement,
+        QRLink: userData?.QRLink,
+        NumOfBookings: userData?.NumOfBookings,
         userRef: userData?.Ref,
         isUserEnabled: isChecked,
         isActive: 1,
@@ -237,7 +240,7 @@ const AddUser = () => {
           )}
           {userType == 6 ? (
             <h3 className="mb-4">
-              {userData ? "Edit Local Agent " : "Add Local Agent"}
+              {userData ? "Edit Taxi Agent " : "Add Taxi Agent"}
             </h3>
           ) : (
             <></>
@@ -246,6 +249,13 @@ const AddUser = () => {
           {userType == 7 ? (
             <h3 className="mb-4">
               {userData ? "Edit Accounts" : "Add Accounts"}
+            </h3>
+          ) : (
+            <></>
+          )}
+          {userType == 8 ? (
+            <h3 className="mb-4">
+              {userData ? "Edit Local Agent" : "Add Local Agent"}
             </h3>
           ) : (
             <></>
@@ -281,7 +291,7 @@ const AddUser = () => {
               maxLength="10"
             />
           </div>
-          {userType == 6 ? (
+          {(userType == 6 || userType==8) ? (
             <></>
           ) : (
             <div className="col-lg-6 mt-3">
@@ -317,7 +327,7 @@ const AddUser = () => {
             />
           </div>
 
-          {userType == 6 ? (
+          {(userType == 6 || userType==8) ? (
             <></>
           ) : (
             <div className="col-lg-6 mt-3">
@@ -334,7 +344,7 @@ const AddUser = () => {
             </div>
           )}
 
-          {userType == 6 ? (
+          {(userType == 6 || userType==8) ? (
             <></>
           ) : (
             <div className="col-lg-6 mt-3">
@@ -353,8 +363,10 @@ const AddUser = () => {
 
           {userType == "5" ||
           userType == "6" ||
+          userType == "8" ||
           userData?.UserType == "5" ||
-          userData?.UserType == "6" ? (
+          userData?.UserType == "6" ||
+          userType?.UserType=="8" ? (
             <div className="col-lg-6 mt-3">
               {userType == "5" || userData?.UserType == "5" ? (
                 <label for="formGroupExampleInput " className="form_text">
@@ -379,7 +391,8 @@ const AddUser = () => {
           )}
           {userType == "5" ||
           userData?.UserType == "5" ||
-          userData?.UserType == "6" ? (
+          userData?.UserType == "6" ||
+          userData?.UserType=="8" ? (
             <div className="col-lg-6 mt-3">
               <label for="formGroupExampleInput " className="form_text">
                 Monthly settlement
@@ -397,7 +410,7 @@ const AddUser = () => {
             <></>
           )}
 
-          {userData && userType == 6 ? (
+          {(userData && userType == 6) || (userData && userType == 8) ? (
             <div className="col-lg-6 mt-3">
               <label for="formGroupExampleInput " className="form_text">
                 QR Link <span style={{ color: "red" }}>*</span>

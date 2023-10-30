@@ -43,8 +43,8 @@ export const EditUserDetails = (data, token, callback) => async (dispatch) => {
     });
 };
 
-export const addQrCodeLink = (token, userId, callback) => async (dispatch) => {
-  api.CORE_PORT.get(`/core/addQRLink?userId=${userId}`, {
+export const addQrCodeLink = (token, userId,UserType, callback) => async (dispatch) => {
+  api.CORE_PORT.get(`/core/addQRLink?userId=${userId}&userType=${UserType}`, {
     headers: { AuthToken: token },
   })
     .then((response) => {

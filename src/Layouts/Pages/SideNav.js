@@ -197,6 +197,14 @@ const SideNav = () => {
                   onClick={() => navigate("/DriverList")}
                 >
                   <Link to="/DriverList" className="links">
+                    Taxi Agent
+                  </Link>
+                </Nav.Item>
+                <Nav.Item
+                  eventKey="3-4"
+                  onClick={() => navigate("/LocalAgentList")}
+                >
+                  <Link to="/LocalAgentList" className="links">
                     Local Agent
                   </Link>
                 </Nav.Item>

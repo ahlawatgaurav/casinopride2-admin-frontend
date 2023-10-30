@@ -40,6 +40,7 @@ import "react-toastify/dist/ReactToastify.css";
 import AgentSettlementList from "./Layouts/Pages/AgentSettlement/AgentSettlementList";
 import RegenerateBill from "./Layouts/Pages/Billing/RegenerateBill";
 import QrLinkPage from "./Layouts/Pages/QRLink/QrLinkPage";
+import LocalAgentList from "./Layouts/Pages/Users/LocalAgentList";
 function App() {
   let { param } = useParams();
   return (
@@ -303,6 +304,14 @@ function App() {
           element={
             <Layout>
               <AddDiscountOnWebsite />
+            </Layout>
+          }
+        />
+        <Route
+          path="/LocalAgentList"
+          element={
+            <Layout>
+              <LocalAgentList/>
             </Layout>
           }
         />
