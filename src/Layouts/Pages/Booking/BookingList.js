@@ -20,6 +20,11 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
 import { AddBillingDetails } from "../../../Redux/actions/billing";
+import editpencil from "../../../assets/Images/editpencil.png";
+import { FaBeer } from "react-icons/fa";
+
+import { LiaFileInvoiceSolid } from "react-icons/lia";
+import { CiCircleMore } from "react-icons/ci";
 
 const BookingList = () => {
   const dispatch = useDispatch();
@@ -321,11 +326,12 @@ const BookingList = () => {
             <th scope="col" className="text-center table_heading">
               Total Guest Count
             </th>
-            <th scope="col" className="text-center table_heading">
-              Update Booking
-            </th>
+
             <th scope="col" className="text-center table_heading">
               Generate Bill
+            </th>
+            <th scope="col" className="text-center table_heading">
+              Update Booking
             </th>
 
             <th scope="col" className="text-center table_heading">
@@ -392,25 +398,28 @@ const BookingList = () => {
                 <td className="manager-list">{item.TotalGuestCount}</td>
 
                 <td className="manager-list">
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => startEditing(item)}
-                  >
-                    Update Booking
-                  </button>
-                </td>
-
-                <td className="manager-list">
                   {item?.FutureDate == today ? (
-                    <button
-                      className="btn btn-primary"
+                    <LiaFileInvoiceSolid
                       onClick={() => GenerateBill(item)}
-                    >
-                      Generate Bill
-                    </button>
+                      style={{
+                        height: "22px",
+                        width: "22px",
+                        backgroundColor: "white",
+                      }}
+                    />
                   ) : (
                     <p>-</p>
                   )}
+                </td>
+                <td className="manager-list">
+                  <AiFillEdit
+                    onClick={() => startEditing(item)}
+                    style={{
+                      height: "20px",
+                      width: "20px",
+                      backgroundColor: "white",
+                    }}
+                  />
                 </td>
 
                 {/* <td className="manager-list">
@@ -427,9 +436,17 @@ const BookingList = () => {
 
                 <td
                   className="manager-list"
-                  onClick={() => handleViewMore(item)}
+                  // onClick={() => handleViewMore(item)}
                 >
-                  <img src={more} className="more_img" />
+                  {/* <img src={more} className="more_img" /> */}
+                  <CiCircleMore
+                    onClick={() => handleViewMore(item)}
+                    style={{
+                      height: "22px",
+                      width: "22px",
+                      backgroundColor: "white",
+                    }}
+                  />
                 </td>
               </tr>
             ))
@@ -445,8 +462,8 @@ const BookingList = () => {
         <Modal.Body>
           <div className="row">
             <div className="col-6">
-              <p className="table-modal-list ">
-                Guest Name: {selectedUserDetails.FullName}
+              <p className="table-modal-list">
+                Guest Name: <span> {selectedUserDetails.FullName}</span>
               </p>
             </div>
             <div className="col-6">
@@ -602,7 +619,7 @@ const BookingList = () => {
         size="lg"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Edit Booking for {editBookingDetails?.Id}</Modal.Title>
+          <Modal.Title>Edit Booking </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="row">

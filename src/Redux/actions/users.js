@@ -43,31 +43,32 @@ export const EditUserDetails = (data, token, callback) => async (dispatch) => {
     });
 };
 
-export const addQrCodeLink = (token, userId,UserType, callback) => async (dispatch) => {
-  api.CORE_PORT.get(`/core/addQRLink?userId=${userId}&userType=${UserType}`, {
-    headers: { AuthToken: token },
-  })
-    .then((response) => {
-      console.log("Add QR details ->", response.data);
-      if (response.data?.Details) {
-        console.log(response.data?.Details);
-        callback({
-          status: true,
-          response: response?.data,
-        });
-      } else if (response.data?.Error) {
-        callback({
-          status: false,
-          error: response.data?.Error?.ErrorMessage,
-        });
-      }
+export const addQrCodeLink =
+  (token, userId, UserType, callback) => async (dispatch) => {
+    api.CORE_PORT.get(`/core/addQRLink?userId=${userId}&userType=${UserType}`, {
+      headers: { AuthToken: token },
     })
-    .catch((err) => {
-      {
-        console.log("error", err);
-      }
-    });
-};
+      .then((response) => {
+        console.log("Add QR details ->", response.data);
+        if (response.data?.Details) {
+          console.log(response.data?.Details);
+          callback({
+            status: true,
+            response: response?.data,
+          });
+        } else if (response.data?.Error) {
+          callback({
+            status: false,
+            error: response.data?.Error?.ErrorMessage,
+          });
+        }
+      })
+      .catch((err) => {
+        {
+          console.log("error", err);
+        }
+      });
+  };
 
 export const getUserDetails =
   (token, usertype, callback) => async (dispatch) => {
@@ -1071,13 +1072,63 @@ export const getLongUrl = (code, token, callback) => async (dispatch) => {
       }
     });
 };
-export const uploadQRFile = (token,data, callback) => async (dispatch) => {
+export const uploadQRFile = (token, data, callback) => async (dispatch) => {
   console.log("Data for uploadQRFile>>>", data);
   api.CORE_PORT.post("/core/uploadQRFile", data, {
-    headers: { AuthToken: token,"Content-Type": "application/pdf" },
+    headers: { AuthToken: token, "Content-Type": "application/pdf" },
   })
     .then((response) => {
       console.log("Upload>>QRFile>>response.data>>>", response.data);
+      if (response.data?.Details) {
+        console.log(response.data?.Details);
+        callback({
+          status: true,
+          response: response?.data,
+        });
+      } else if (response.data?.Error) {
+        callback({
+          status: false,
+          error: response.data?.Error?.ErrorMessage,
+        });
+      }
+    })
+    .catch((err) => {
+      {
+        console.log("error", err);
+      }
+    });
+};
+
+export const getUserById = (userId, callback) => async (dispatch) => {
+  console.log("pappa toh band bajaye>>", userId);
+  api.CORE_PORT.get(`/core/getUserById?userId=${userId}`)
+    .then((response) => {
+      console.log("get User By Id ----->", response.data);
+      if (response.data) {
+        console.log(response.data);
+        callback({
+          status: true,
+          response: response?.data,
+        });
+        dispatch(saveDriverDetails(response.data));
+      } else if (response.data?.Error) {
+        callback({
+          status: false,
+          error: response.data?.Error?.ErrorMessage,
+        });
+      }
+    })
+    .catch((err) => {
+      {
+        console.log("error", err);
+      }
+    });
+};
+
+export const countDriverBookings = (data, callback) => async (dispatch) => {
+  api.CORE_PORT.put("/core/countDriverBookings", data)
+    .then((response) => {
+      console.log("Count Driver bookings ->", response.data);
       if (response.data?.Details) {
         console.log(response.data?.Details);
         callback({

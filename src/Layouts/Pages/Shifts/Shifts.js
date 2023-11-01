@@ -1319,14 +1319,15 @@ const Shifts = () => {
                 <div className="card-header">
                   <h5 className="mb-0">Open the shift one</h5>
                 </div>
-
-                <button
-                  className="btn btn-primary mr-2"
-                  onClick={handleConfirmShow}
-                  style={{ width: "100%" }}
-                >
-                  Close
-                </button>
+                <div className="card-footer">
+                  <button
+                    className="btn btn-primary mr-2"
+                    onClick={handleConfirmShow}
+                    style={{ width: "100%" }}
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -1396,16 +1397,17 @@ const Shifts = () => {
                 <div className="card-header">
                   <h5 className="mb-0">Open the shift one</h5>
                 </div>
-
-                <button
-                  className={`btn ${
-                    outletDetails === 1 ? "btn-primary" : "btn-secondary"
-                  } mr-2`}
-                  onClick={reopenShiftOneFn}
-                  style={{ width: "100%" }}
-                >
-                  Reopen
-                </button>
+                <div className="card-footer">
+                  <button
+                    className={`btn ${
+                      outletDetails === 1 ? "btn-primary" : "btn-secondary"
+                    } mr-2`}
+                    onClick={reopenShiftOneFn}
+                    style={{ width: "100%" }}
+                  >
+                    Reopen
+                  </button>
+                </div>
 
                 {/* <button
               className="btn btn-primary mr-2"
@@ -1476,17 +1478,18 @@ const Shifts = () => {
                 <div className="card-header">
                   <h5 className="mb-0">Open the shift one</h5>
                 </div>
-
-                <button
-                  className={`btn ${
-                    outletDetails === 1 ? "btn-primary" : "btn-secondary"
-                  } mr-2`}
-                  onClick={reopenShiftOneFn}
-                  style={{ width: "100%" }}
-                  disabled={true}
-                >
-                  Reopen
-                </button>
+                <div className="card-footer">
+                  <button
+                    className={`btn ${
+                      outletDetails === 1 ? "btn-primary" : "btn-secondary"
+                    } mr-2`}
+                    onClick={reopenShiftOneFn}
+                    style={{ width: "100%" }}
+                    disabled={true}
+                  >
+                    Reopen
+                  </button>
+                </div>
 
                 {/* <button
               className="btn btn-primary mr-2"
@@ -1573,16 +1576,17 @@ const Shifts = () => {
                 <div className="card-header">
                   <h5 className="mb-0">Open the shift Two</h5>
                 </div>
-
-                <button
-                  className={`btn ${
-                    outletDetails === 1 ? "btn-primary" : "btn-secondary"
-                  } mr-2`}
-                  onClick={reopenShiftTwoFn}
-                  style={{ width: "100%" }}
-                >
-                  Reopen
-                </button>
+                <div className="card-footer">
+                  <button
+                    className={`btn ${
+                      outletDetails === 1 ? "btn-primary" : "btn-secondary"
+                    } mr-2`}
+                    onClick={reopenShiftTwoFn}
+                    style={{ width: "100%" }}
+                  >
+                    Reopen
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -1632,17 +1636,18 @@ const Shifts = () => {
                 <div className="card-header">
                   <h5 className="mb-0">Open the shift Two</h5>
                 </div>
-
-                <button
-                  className={`btn ${
-                    outletDetails === 1 ? "btn-primary" : "btn-secondary"
-                  } mr-2`}
-                  onClick={reopenShiftTwoFn}
-                  style={{ width: "100%" }}
-                  disabled={true}
-                >
-                  Reopen
-                </button>
+                <div className="card-footer">
+                  <button
+                    className={`btn ${
+                      outletDetails === 1 ? "btn-primary" : "btn-secondary"
+                    } mr-2`}
+                    onClick={reopenShiftTwoFn}
+                    style={{ width: "100%" }}
+                    disabled={true}
+                  >
+                    Reopen
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -1690,16 +1695,17 @@ const Shifts = () => {
                 <div className="card-header">
                   <h5 className="mb-0">Open the shift Two</h5>
                 </div>
-
-                <button
-                  className={`btn ${
-                    outletDetails === 1 ? "btn-primary" : "btn-secondary"
-                  } mr-2`}
-                  onClick={reopenShiftTwoFn}
-                  style={{ width: "100%" }}
-                >
-                  Reopen
-                </button>
+                <div className="card-footer">
+                  <button
+                    className={`btn ${
+                      outletDetails === 1 ? "btn-primary" : "btn-secondary"
+                    } mr-2`}
+                    onClick={reopenShiftTwoFn}
+                    style={{ width: "100%" }}
+                  >
+                    Reopen
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -1711,16 +1717,17 @@ const Shifts = () => {
                 <div className="card-header">
                   <h5 className="mb-0">Open the shift Three</h5>
                 </div>
-
-                <button
-                  className={`btn ${
-                    outletDetails === 1 ? "btn-primary" : "btn-secondary"
-                  } mr-2`}
-                  onClick={reopenShiftThreeFn}
-                  style={{ width: "100%" }}
-                >
-                  Reopen
-                </button>
+                <div className="card-footer">
+                  <button
+                    className={`btn ${
+                      outletDetails === 1 ? "btn-primary" : "btn-secondary"
+                    } mr-2`}
+                    onClick={reopenShiftThreeFn}
+                    style={{ width: "100%" }}
+                  >
+                    Reopen
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -1914,16 +1921,17 @@ const Shifts = () => {
                 <div className="card-header">
                   <h5 className="mb-0">Open the shift Two</h5>
                 </div>
-
-                <button
-                  className={`btn ${
-                    outletDetails === 1 ? "btn-primary" : "btn-secondary"
-                  } mr-2`}
-                  onClick={reopenShiftTwoFn}
-                  style={{ width: "100%" }}
-                >
-                  Reopen
-                </button>
+                <div className="card-footer">
+                  <button
+                    className={`btn ${
+                      outletDetails === 1 ? "btn-primary" : "btn-secondary"
+                    } mr-2`}
+                    onClick={reopenShiftTwoFn}
+                    style={{ width: "100%" }}
+                  >
+                    Reopen
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -1969,16 +1977,17 @@ const Shifts = () => {
                 <div className="card-header">
                   <h5 className="mb-0">Open the shift one</h5>
                 </div>
-
-                <button
-                  className={`btn ${
-                    outletDetails === 1 ? "btn-primary" : "btn-secondary"
-                  } mr-2`}
-                  onClick={reopenShiftOneFn}
-                  style={{ width: "100%" }}
-                >
-                  Reopen
-                </button>
+                <div className="card-footer">
+                  <button
+                    className={`btn ${
+                      outletDetails === 1 ? "btn-primary" : "btn-secondary"
+                    } mr-2`}
+                    onClick={reopenShiftOneFn}
+                    style={{ width: "100%" }}
+                  >
+                    Reopen
+                  </button>
+                </div>
 
                 {/* <button
               className="btn btn-primary mr-2"
@@ -2201,6 +2210,17 @@ const Shifts = () => {
             shiftDetailsForUser,
             shifts,
           })}
+
+          <div className="row mt-5 mx-auto">
+            <div className="col-lg mx-auto">
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate("/NewBooking")}
+              >
+                Create New booking
+              </button>
+            </div>
+          </div>
 
           {/* <div className="row">
             <div className="col-md-4">

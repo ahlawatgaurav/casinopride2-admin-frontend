@@ -258,6 +258,7 @@ const BillingDetails = () => {
   };
 
   const SendDetailsToUser = useCallback(() => {
+    updateReportsItemDetails();
     setLoader(true);
     if (elementRef.current === null) {
       return;
@@ -608,10 +609,8 @@ const BillingDetails = () => {
         (callback) => {
           if (callback.status) {
             setLoading(false);
-            setModalVisibility(false);
-            toast.success("Void Bill Successful");
-            fetchBillingDetailsFn();
-            fetchVoidBillList();
+
+            console.log("Item details updated", callback);
           } else {
             console.log("Callback--------voidt>>error", callback.error);
             toast.error(callback.error);
@@ -658,11 +657,11 @@ const BillingDetails = () => {
           <></>
         )}
 
-        <div>
+        {/* <div>
           <button onClick={updateReportsItemDetails}>
             Send calculated Item Details
           </button>
-        </div>
+        </div> */}
 
         <div className="container-fluid" ref={elementRef}>
           {BookingDetails &&
@@ -825,7 +824,10 @@ const BillingDetails = () => {
                       </span>
                     </p>
 
-                    <p className="bill-number BillPrintFont">
+                    <p
+                      className="bill-number BillPrintFont"
+                      style={{ marginRight: "25px" }}
+                    >
                       BILL#: {item.BillNumber}
                     </p>
                   </div>

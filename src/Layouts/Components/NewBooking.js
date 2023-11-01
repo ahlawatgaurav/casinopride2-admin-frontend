@@ -32,6 +32,8 @@ import { compose } from "@reduxjs/toolkit";
 import { Oval } from "react-loader-spinner";
 import { AddBillingDetails } from "../../Redux/actions/billing";
 import { checkActiveOutlet } from "../../Redux/actions/users";
+import { getUserById } from "../../Redux/actions/users";
+import { countDriverBookings } from "../../Redux/actions/users";
 const NewBooking = () => {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -183,6 +185,33 @@ const NewBooking = () => {
       )
     );
   }, [validateDetails]);
+
+  const [localAgentDetails, setLocalAgentDetails] = useState("");
+  const [localAgentId, setLocalAgentId] = useState();
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const userId = url.searchParams.get("UserId");
+    console.log("userId++++", userId);
+
+    if (userId != null) {
+      dispatch(
+        getUserById(userId, (callback) => {
+          console.log("hii get user by Id>>callabck>>", callback);
+          if (callback.status) {
+            console.log(
+              "callabck.response.details>>",
+              callback?.response?.Details?.Id
+            );
+            setLocalAgentId(callback?.response?.Details?.Id);
+            setLocalAgentDetails(callback?.response?.Details);
+          } else {
+            toast.error(callback.error);
+          }
+        })
+      );
+    }
+  }, []);
 
   const [guestName, setGuestName] = useState("");
   const [email, setEmail] = useState("");
@@ -597,6 +626,7 @@ const NewBooking = () => {
         cardHoldersName: cardHoldersName,
         cardNumber: cardNumber,
         cardType: cardType,
+        localAgentName: localAgentDetails?.Name,
       };
 
       console.log("Data from booking ------->", data);
@@ -650,6 +680,30 @@ const NewBooking = () => {
                       callback?.response?.Details[0]?.NumOfTeens,
                       callback?.response?.Details[0]?.TotalGuestCount
                     );
+
+                    if (localAgentId) {
+                      const agentDetails = {
+                        userId: localAgentDetails?.Id,
+                        userType: localAgentDetails?.UserType,
+                      };
+                      dispatch(
+                        countDriverBookings(
+                          agentDetails,
+
+                          (callback) => {
+                            if (callback.status) {
+                              console.log(
+                                "Callback count local agent bookings---->",
+                                callback?.response?.Details
+                              );
+                            } else {
+                              toast.error(callback.error);
+                              // reject(callback);
+                            }
+                          }
+                        )
+                      );
+                    }
 
                     if (
                       callback?.response?.Details[0]?.NumOfTeens -
@@ -787,7 +841,7 @@ const NewBooking = () => {
       return (
         <div>
           <p style={{ fontSize: "15px", color: "red" }}>
-            Open the outlet to create new booking
+            Open the outlet & Shift to create a new booking
           </p>
         </div>
       );
@@ -1009,6 +1063,23 @@ const NewBooking = () => {
             onChange={(e) => setDateofbirth(e.target.value)}
           />
         </div>
+
+        {localAgentDetails ? (
+          <div className="col-lg-6 mt-3">
+            <label for="formGroupExampleInput " className="form_text">
+              Local Agent Details
+            </label>
+            <input
+              class="form-control mt-2"
+              type="text"
+              placeholder="Enter Start Date"
+              value={localAgentDetails?.Name}
+              disabled={true}
+            />
+          </div>
+        ) : (
+          <></>
+        )}
         <div className="col-lg-6 mt-3">
           <label for="formGroupExampleInput " className="form_text">
             Payment Option <span style={{ color: "red" }}>*</span>
@@ -1444,10 +1515,6 @@ const NewBooking = () => {
             </div>
             <div className="row">
               <div>
-                {/* <Button onClick={onsubmit} className="confirmbtn">
-                  Yes
-                </Button> */}
-
                 <Button
                   className="confirmbtn"
                   onClick={onsubmit}

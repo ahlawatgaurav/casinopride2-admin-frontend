@@ -398,15 +398,12 @@ export const cashierReport = (token, date, callback) => async (dispatch) => {
 
 export const updateItemDetailsBillFn =
   (token, data, callback) => async (dispatch) => {
-    console.log("update Item Details Bill Fn---------->", data);
+    console.log("Item details updated------>", data);
     api.BILLING_PORT.put("/billing/updateItemDetailsBill", data, {
       headers: { AuthToken: token },
     })
       .then((response) => {
-        console.log(
-          "update Item Details Bill Fn---------- ---------->",
-          response.data
-        );
+        console.log("Item details updated------>", response.data);
         if (response.data?.Details) {
           console.log(response.data?.Details);
           callback({

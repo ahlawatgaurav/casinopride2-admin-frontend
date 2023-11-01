@@ -330,7 +330,7 @@ const AddPackage = () => {
             type="number"
             min={0}
             onWheel={(e) => e.target.blur()}
-            placeholder="Package Weekend Price"
+            placeholder="Teens Price"
             onChange={(e) => setPackageTeensPrice(e.target.value)}
             defaultValue={userData?.PackageTeensPrice}
           />

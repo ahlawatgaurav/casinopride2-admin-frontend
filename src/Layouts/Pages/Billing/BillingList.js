@@ -26,6 +26,10 @@ import { updateBillForVoid } from "../../../Redux/actions/billing";
 import { generateCSVReport } from "../../../Redux/actions/billing";
 import { generateNoShowReport } from "../../../Redux/actions/billing";
 import { useNavigate } from "react-router-dom";
+import printerpng from "../../../assets/Images/printerpng.png";
+import { AiOutlinePrinter } from "react-icons/ai";
+import { FcCancel } from "react-icons/fc";
+import { CiCircleMore } from "react-icons/ci";
 
 const BillingList = () => {
   const dispatch = useDispatch();
@@ -863,12 +867,16 @@ const BillingList = () => {
                           {item?.Items[0]?.IsVoid == null ||
                           item?.Items[0]?.IsVoid == 0 ? (
                             <td style={{ textAlign: "center" }}>
-                              <button
+                              {/* <button
                                 className="btn btn-primary"
                                 onClick={() => openModal(item)}
-                              >
-                                Void Bill
-                              </button>
+                              > */}
+
+                              {/* </button> */}
+                              <FcCancel
+                                onClick={() => openModal(item)}
+                                style={{ height: "22px", width: "22px" }}
+                              />
                             </td>
                           ) : (
                             <td
@@ -889,19 +897,30 @@ const BillingList = () => {
                       )}
 
                       <td style={{ textAlign: "center" }}>
-                        <button
-                          className="btn btn-primary"
+                        {/* <button onClick={() => regenerateBillFn(item)}> */}
+                        {/* <img
+                            src={printerpng}
+                            style={{ height: "40px", width: "40px" }}
+                          /> */}
+                        <AiOutlinePrinter
+                          style={{ height: "22px", width: "22px" }}
                           onClick={() => regenerateBillFn(item)}
-                        >
-                          Reprint Bill
-                        </button>
+                        />
+                        {/* </button> */}
                       </td>
 
                       <td
                         className="manager-list"
-                        onClick={() => handleViewMore(item?.Items[0])}
+                        // onClick={() => handleViewMore(item?.Items[0])}
                       >
-                        <img src={more} className="more_img" />
+                        {/* <img src={more} className="more_img" /> */}
+                        <CiCircleMore
+                          onClick={() => handleViewMore(item?.Items[0])}
+                          style={{
+                            height: "22px",
+                            width: "22px",
+                          }}
+                        />
                       </td>
                     </tr>
                   ))
