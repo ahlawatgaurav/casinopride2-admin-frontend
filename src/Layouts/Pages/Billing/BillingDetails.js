@@ -21,6 +21,7 @@ import { shortenUrl } from "../../../Redux/actions/users";
 import "../../../assets/print.css";
 import ReactToPrint from "react-to-print";
 import { useReactToPrint } from "react-to-print";
+import { updateItemDetailsBillFn } from "../../../Redux/actions/billing";
 
 const BillingDetails = () => {
   const printableContentRef = useRef();
@@ -450,6 +451,185 @@ const BillingDetails = () => {
     setFinalUseState(finalDetails);
   }, []);
 
+  // const updatededBillDetails = {
+  //   updatedItemDetails: BookingDetails.map((item) => {
+  //     const Rate = item?.ItemDetails?.Rate;
+  //     const packageGuestCount = item?.ItemDetails?.packageGuestCount;
+  //     const resultRate = Rate.map(
+  //       (value, index) => value * packageGuestCount[index]
+  //     );
+  //     const Price = item?.ItemDetails?.Price;
+  //     const resultPrice = Price.map(
+  //       (value, index) => value * packageGuestCount[index]
+  //     );
+
+  //     const taxDiffSum = item?.ItemDetails?.TaxDiff.reduce(
+  //       (acc, value) => acc + value,
+  //       0
+  //     );
+  //     console.log("taxDiffSum", taxDiffSum);
+
+  //     const itemTaxName = item?.ItemDetails?.ItemTaxName;
+  //     const adjustedTaxDiffSum =
+  //       itemTaxName[0] === "GST" ? taxDiffSum / 2 : taxDiffSum;
+
+  //     console.log("adjusted Tax Diff Sum----->", adjustedTaxDiffSum);
+
+  //     const cgstProperty = `CGST ${item?.ItemDetails?.ItemTax / 2} %`;
+  //     const sgstProperty = `SGST ${item?.ItemDetails?.ItemTax / 2} %`;
+  //     const vatProperty = `VAT ${item?.ItemDetails?.ItemTax} %`;
+
+  //     return {
+  //       ItemTax: item?.ItemDetails?.ItemTax,
+  //       ItemId: [item?.ItemDetails?.ItemId],
+  //       ItemName: [item?.ItemDetails?.ItemName],
+  //       Price: [resultPrice],
+  //       Rate: [resultRate],
+  //       ItemTaxName: [item?.ItemDetails?.ItemTaxName[0]],
+  //       TaxDiff: [item?.ItemDetails?.TaxDiff],
+  //       IsDeductable: [item?.ItemDetails?.IsDeductable],
+  //       PackageId: [item?.PackageId],
+  //       packageGuestCount: [packageGuestCount],
+  //       [cgstProperty]: adjustedTaxDiffSum / 2,
+  //       [sgstProperty]: adjustedTaxDiffSum / 2,
+  //       [vatProperty]:adjustedTaxDiffSum
+
+  //     };
+  //   }),
+  // };
+
+  const updatededBillDetails = {
+    updatedItemDetails: BookingDetails.map((item) => {
+      const Rate = item?.ItemDetails?.Rate;
+      const packageGuestCount = item?.ItemDetails?.packageGuestCount;
+      const resultRate = Rate.map(
+        (value, index) => value * packageGuestCount[index]
+      );
+
+      const Price = item?.ItemDetails?.Price;
+      const resultPrice = Price.map(
+        (value, index) => value * packageGuestCount[index]
+      );
+
+      const taxDiffSum = item?.ItemDetails?.TaxDiff.reduce(
+        (acc, value) => acc + value,
+        0
+      );
+      console.log("taxDiffSum", taxDiffSum);
+
+      const itemTaxName = item?.ItemDetails?.ItemTaxName;
+      const adjustedTaxDiffSum =
+        itemTaxName[0] === "GST" ? taxDiffSum / 2 : taxDiffSum;
+
+      console.log("adjusted Tax Diff Sum----->", adjustedTaxDiffSum);
+      const itemTeensTaxName = item?.TeensTaxName;
+      console.log("Teens Tax name", itemTeensTaxName);
+
+      const KidsItemName = "Kids";
+
+      const KidsCount = item?.NumOfTeens;
+      console.log("Kids count==>", KidsCount);
+      const KidsRate = item?.TeensRate * item?.NumOfTeens;
+      console.log("Kids rate", KidsRate);
+
+      const KidsPrice = item?.TeensPrice * item?.NumOfTeens;
+      console.log("Kids Price", KidsPrice);
+
+      const KidsCgstProperty = `CGST ${item?.TeensTax / 2} %`;
+      console.log("Kids cgst", KidsCgstProperty);
+
+      const KidsSgstProperty = `CGST ${item?.TeensTax / 2} %`;
+      console.log("Kids sgst", KidsSgstProperty);
+
+      const KidsTax = item?.TeensTaxBifurcation;
+
+      // Define dynamic property names
+      const cgstProperty = `CGST ${item?.ItemDetails?.ItemTax / 2} %`;
+      const sgstProperty = `SGST ${item?.ItemDetails?.ItemTax / 2} %`;
+      const vatProperty = `VAT ${item?.ItemDetails?.ItemTax} %`;
+
+      // Create an object to store the properties
+      const properties = {
+        ItemTax: item?.ItemDetails?.ItemTax,
+        ItemId: item?.ItemDetails?.ItemId,
+        ItemName: item?.ItemDetails?.ItemName,
+        Price: resultPrice,
+        Rate: resultRate,
+        ItemTaxName: itemTaxName[0],
+        TaxDiff: item?.ItemDetails?.TaxDiff,
+        IsDeductable: item?.ItemDetails?.IsDeductable,
+        PackageId: item?.PackageId,
+        packageGuestCount: packageGuestCount,
+      };
+
+      if (itemTaxName[0] === "GST") {
+        if (KidsCount > 0) {
+          properties["KidsItemName"] = KidsItemName;
+          properties["KidsCount"] = KidsCount;
+          properties["KidsRate"] = KidsRate;
+          properties["KidsPrice"] = KidsPrice;
+          properties[KidsCgstProperty] = KidsTax;
+          properties[KidsSgstProperty] = KidsTax;
+          properties[cgstProperty] = adjustedTaxDiffSum / 2;
+          properties[sgstProperty] = adjustedTaxDiffSum / 2;
+        } else {
+          properties[cgstProperty] = adjustedTaxDiffSum / 2;
+          properties[sgstProperty] = adjustedTaxDiffSum / 2;
+        }
+      } else if (itemTaxName[0] === "VAT") {
+        properties[vatProperty] = adjustedTaxDiffSum;
+      }
+
+      return properties;
+    }),
+  };
+
+  // console.log("Dummy Data-------->", updatededBillDetails);
+
+  const BillIdDetails = {
+    billId: BookingDetails.map((item) => {
+      return item?.BillingId; // You can directly access and return the BillingId
+    }),
+  };
+
+  const updateReportsItemDetails = () => {
+    const itemDetailsData = {
+      updatedItemDetails: JSON.stringify(
+        updatededBillDetails?.updatedItemDetails
+      ),
+      billId: JSON.stringify(BillIdDetails?.billId),
+    };
+
+    console.log("Dummy Data-------->", itemDetailsData);
+    dispatch(
+      updateItemDetailsBillFn(
+        loginDetails?.logindata?.Token,
+        itemDetailsData,
+        (callback) => {
+          if (callback.status) {
+            setLoading(false);
+            setModalVisibility(false);
+            toast.success("Void Bill Successful");
+            fetchBillingDetailsFn();
+            fetchVoidBillList();
+          } else {
+            console.log("Callback--------voidt>>error", callback.error);
+            toast.error(callback.error);
+          }
+        }
+      )
+    );
+  };
+
+  console.log(
+    "Updated Item Details----------------->",
+    updatededBillDetails?.updatedItemDetails
+  );
+
+  console.log("Data to be passed as sms------------------->", BookingDetails);
+
+  console.log("BillIdDetails--------------->", BillIdDetails?.billId);
+
   return (
     <div>
       <div>
@@ -477,6 +657,12 @@ const BillingDetails = () => {
         ) : (
           <></>
         )}
+
+        <div>
+          <button onClick={updateReportsItemDetails}>
+            Send calculated Item Details
+          </button>
+        </div>
 
         <div className="container-fluid" ref={elementRef}>
           {BookingDetails &&
