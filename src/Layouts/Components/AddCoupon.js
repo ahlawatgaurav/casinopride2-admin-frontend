@@ -171,6 +171,20 @@ const AddCoupon = () => {
   const formattedDate = moment(startDate).format("YYYY-MM-DD");
   const formattedEndDate = moment(endDate).format("YYYY-MM-DD");
 
+  const handleInputChange = (e) => {
+    const inputText = e.target.value;
+
+    // Use regular expression to match only numbers and limit to 2 digits
+    const regex = /^[0-9]{0,2}$/;
+    if (regex.test(inputText)) {
+      if (
+        inputText === "" ||
+        (parseInt(inputText, 10) >= 0 && parseInt(inputText, 10) <= 99)
+      ) {
+        setcouponDiscount(inputText);
+      }
+    }
+  };
   return (
     <div>
       {" "}
@@ -270,16 +284,14 @@ const AddCoupon = () => {
             className="form_text"
             style={{ fontSize: "15px", fontWeight: "600" }}
           >
-            Coupon Discount <span style={{ color: "red" }}>*</span>
+            Coupon Discount (percent) <span style={{ color: "red" }}>*</span>
           </label>
           <input
-            class="form-control mt-2"
+            className="form-control mt-2"
             type="text"
             placeholder="Coupon Discount"
-            onChange={(e) => {
-              setcouponDiscount(Math.min(e.target.value, 99));
-            }}
-            defaultValue={userData?.CouponDiscount}
+            onChange={handleInputChange}
+            value={couponDiscount}
             maxLength={2}
           />
         </div>

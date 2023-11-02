@@ -1188,7 +1188,7 @@ const TeensBilling = () => {
 
   const updatededBillDetails = {
     ItemTax: BookingDetails[0]?.TeensTax,
-    ItemName: BookingDetails[0]?.PackageName,
+
     KidsPrice: BookingDetails[0]?.TeensPrice,
     KidsRate: BookingDetails[0]?.TeensRate * BookingDetails[0]?.NumOfTeens,
     ItemTaxName: BookingDetails[0]?.TeensTaxName,

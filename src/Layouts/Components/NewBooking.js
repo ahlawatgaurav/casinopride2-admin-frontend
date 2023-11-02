@@ -492,6 +492,13 @@ const NewBooking = () => {
       toast.warning("Please select the payment option");
       setLoader(false);
       handleClose();
+    } else if (
+      (gstNumber != "" && gstNumber.length > 15) ||
+      gstNumber.length < 15
+    ) {
+      toast.warning("Please enter a valid GST number");
+      setLoader(false);
+      handleClose();
     } else if (!isValidEmail(email)) {
       toast.warning("Please enter a valid email address");
       setLoader(false);
@@ -857,6 +864,10 @@ const NewBooking = () => {
   console.log("Shift type ShiftOpen---------->", shiftDetails);
   console.log("Shift type ShiftTypeId---------->", shiftDetails);
 
+  const handleFocus = (e) => {
+    e.target.type = "date";
+  };
+
   return (
     <div>
       <ToastContainer />
@@ -1063,8 +1074,22 @@ const NewBooking = () => {
             type="date"
             placeholder="Enter Start Date"
             onChange={(e) => setDateofbirth(e.target.value)}
+            onFocus={handleFocus}
           />
         </div>
+
+        {/* <div className="col-lg-6 mt-3">
+          <label htmlFor="formGroupExampleInput" className="form_text">
+            Date of birth
+          </label>
+          <input
+            className="form-control mt-2"
+            type="date"
+            placeholder="Enter Start Date"
+            value={dateofbirth}
+            onChange={(e) => setDateofbirth(e.target.value)}
+          />
+        </div> */}
 
         {localAgentDetails ? (
           <div className="col-lg-6 mt-3">

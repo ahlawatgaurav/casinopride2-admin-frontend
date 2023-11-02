@@ -831,7 +831,9 @@ const BillingList = () => {
                         {item?.Items[0]?.GuestName}
                       </td>
                       <td className="manager-list">
-                        {item?.Items[0]?.PackageName ? (
+                        {item &&
+                        item?.Items[0] &&
+                        item?.Items[0]?.PackageName ? (
                           JSON.parse(item?.Items[0]?.PackageName).map(
                             (item, index) => (
                               <li key={index} style={{ listStyleType: "none" }}>

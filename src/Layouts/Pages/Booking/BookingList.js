@@ -153,24 +153,28 @@ const BookingList = () => {
   useEffect(() => {
     setSelectedCountry({ name: backendData.selectedCountryName });
     setSelectedState({ name: backendData.selectedStateName });
-  }, []);
+  }, [editBookingDetails]);
 
-  console.log();
+  console.log("Backend Data---------->", backendData);
 
   const updateBookingFn = () => {
-    const data = {
-      bookingId: editBookingDetails?.Id,
-      guestName: guestName ? guestName : editBookingDetails?.FullName,
-      address: address ? address : editBookingDetails?.Address,
-      dob: dateofbirth ? dateofbirth : editBookingDetails?.DOB,
-      country: selectedCountry?.name,
-      state: selectedState?.name,
-      city: selectedCity ? selectedCity : editBookingDetails.City,
-      GSTNumber: gstNumber ? gstNumber : editBookingDetails.GSTNumber,
-      isActive: 1,
-    };
-
-    console.log("Data from update booking ------->", data);
+    if (gstNumber.length > 15 && gstNumber.length < 15) {
+      console.log("Error");
+      toast.success("ERRORRRRR");
+    } else {
+      const data = {
+        bookingId: editBookingDetails?.Id,
+        guestName: guestName ? guestName : editBookingDetails?.FullName,
+        address: address ? address : editBookingDetails?.Address,
+        dob: dateofbirth ? dateofbirth : editBookingDetails?.DOB,
+        country: selectedCountry?.name,
+        state: selectedState?.name,
+        city: selectedCity ? selectedCity : editBookingDetails.City,
+        GSTNumber: gstNumber ? gstNumber : editBookingDetails.GSTNumber,
+        isActive: 1,
+      };
+      console.log("Data from update booking ------->", data);
+    }
 
     dispatch(
       updateBooking(loginDetails?.logindata?.Token, data, (callback) => {
@@ -312,7 +316,7 @@ const BookingList = () => {
               Guest Name
             </th>
             <th scope="col" className="text-center table_heading">
-              Guest Phone no
+              Guest Phone
             </th>
             <th scope="col" className="text-center table_heading">
               Packages
@@ -326,14 +330,12 @@ const BookingList = () => {
             <th scope="col" className="text-center table_heading">
               Total Guest Count
             </th>
-
             <th scope="col" className="text-center table_heading">
               Generate Bill
             </th>
             <th scope="col" className="text-center table_heading">
               Update Booking
             </th>
-
             <th scope="col" className="text-center table_heading">
               View more
             </th>
@@ -618,8 +620,8 @@ const BookingList = () => {
         keyboard={false}
         size="lg"
       >
-        <Modal.Header closeButton>
-          <Modal.Title>Edit Booking </Modal.Title>
+        <Modal.Header>
+          <Modal.Title>Update Booking</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="row">
@@ -674,11 +676,12 @@ const BookingList = () => {
               />
             </div>
 
-            {/* <div className="col-lg-6 mt-3">
+            <div className="col-lg-6 mt-3">
               <label htmlFor="formGroupExampleInput" className="form_text mb-2">
                 Country
               </label>
               <Select
+                className="form_text"
                 options={Country.getAllCountries()}
                 getOptionLabel={(options) => options["name"]}
                 getOptionValue={(options) => options["name"]}
@@ -692,15 +695,16 @@ const BookingList = () => {
                 State
               </label>
               <Select
+                className="form_text"
                 options={State?.getStatesOfCountry(selectedCountry?.isoCode)}
                 getOptionLabel={(options) => options["name"]}
                 getOptionValue={(options) => options["name"]}
                 value={selectedState}
                 onChange={(item) => setSelectedState(item)}
               />
-            </div> */}
+            </div>
 
-            <div className="col-lg-6 mt-3">
+            {/* <div className="col-lg-6 mt-3">
               <label for="formGroupExampleInput " className="form_text mb-2">
                 Country
               </label>
@@ -737,7 +741,7 @@ const BookingList = () => {
                   setSelectedState(item);
                 }}
               />
-            </div>
+            </div> */}
             <div className="col-lg-6 mt-3 ">
               <label for="formGroupExampleInput " className="form_text mb-2">
                 City

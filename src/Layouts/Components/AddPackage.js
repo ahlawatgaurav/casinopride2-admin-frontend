@@ -264,7 +264,7 @@ const AddPackage = () => {
         <h3 className="mb-4">Add Package</h3>
         <div className="col-lg-6 mt-3 mt-3">
           <label for="formGroupExampleInput " className="form_text">
-            Package Name
+            Package Name <span style={{ color: "red" }}>*</span>
           </label>
           <input
             class="form-control mt-2 "
@@ -281,7 +281,7 @@ const AddPackage = () => {
             className="form_text"
             style={{ fontSize: "15px", fontWeight: "600" }}
           >
-            Package Description
+            Package Description <span style={{ color: "red" }}>*</span>
           </label>
           <input
             class="form-control mt-2"
@@ -293,7 +293,7 @@ const AddPackage = () => {
         </div>
         <div className="col-lg-6 mt-3">
           <label for="formGroupExampleInput " className="form_text">
-            Package Weekdays Price
+            Package Weekdays Price <span style={{ color: "red" }}>*</span>
           </label>
           <input
             class="form-control mt-2"
@@ -308,7 +308,7 @@ const AddPackage = () => {
 
         <div className="col-lg-6 mt-3">
           <label for="formGroupExampleInput " className="form_text">
-            Package Weekend Price
+            Package Weekend Price <span style={{ color: "red" }}>*</span>
           </label>
           <input
             class="form-control mt-2"
@@ -323,7 +323,7 @@ const AddPackage = () => {
 
         <div className="col-lg-6 mt-3">
           <label for="formGroupExampleInput " className="form_text">
-            Teens Price
+            Teens Price <span style={{ color: "red" }}>*</span>
           </label>
           <input
             class="form-control mt-2"
@@ -338,20 +338,21 @@ const AddPackage = () => {
 
         <div className="col-lg-6 mt-3">
           <label for="formGroupExampleInput " className="form_text">
-            Teens Tax Name
+            Teens Tax Name <span style={{ color: "red" }}>*</span>
           </label>
           <input
             class="form-control mt-2"
             type="text"
+            value={packageTeensTax.toUpperCase()}
             placeholder="Teens Tax Name"
-            onChange={(e) => setPackageTeensTax(e.target.value)}
+            onChange={(e) => setPackageTeensTax(e.target.value.toUpperCase())}
             defaultValue={userData?.PackageTeensTaxName}
           />
         </div>
 
         <div className="col-lg-6 mt-3">
           <label for="formGroupExampleInput " className="form_text">
-            Teens Tax %
+            Teens Tax % <span style={{ color: "red" }}>*</span>
           </label>
           <input
             min={0}
@@ -389,7 +390,7 @@ const AddPackage = () => {
               <div key={index} className="col-lg-6 mb-5">
                 <div className="row">
                   <div className="col-lg-6">
-                    <h4 className="mb-3">Item {index + 1}</h4>
+                    <h4 className="mb-3">Item {index + 1} </h4>
                   </div>
                   <div className="col-lg-6 d-flex justify-content-end">
                     <img
@@ -401,7 +402,7 @@ const AddPackage = () => {
                 </div>
 
                 <label for="formGroupExampleInput " className="form_text">
-                  Item Name
+                  Item Name <span style={{ color: "red" }}>*</span>
                 </label>
 
                 <input
@@ -414,7 +415,7 @@ const AddPackage = () => {
                   }
                 />
                 <label for="formGroupExampleInput " className="form_text">
-                  Weekday Price
+                  Weekday Price <span style={{ color: "red" }}>*</span>
                 </label>
                 <input
                   onWheel={(e) => e.target.blur()}
@@ -432,7 +433,7 @@ const AddPackage = () => {
                   }
                 />
                 <label for="formGroupExampleInput " className="form_text">
-                  Weekend Price
+                  Weekend Price <span style={{ color: "red" }}>*</span>
                 </label>
                 <input
                   type="number"
@@ -451,19 +452,23 @@ const AddPackage = () => {
                 />
 
                 <label for="formGroupExampleInput " className="form_text">
-                  Tax Name
+                  Tax Name <span style={{ color: "red" }}>*</span>
                 </label>
                 <input
                   type="text"
                   className="form-control mb-2"
                   placeholder="Item Tax Name"
-                  value={item.itemTaxName}
+                  value={item.itemTaxName.toUpperCase()}
                   onChange={(e) =>
-                    handleItemInputChange(index, "itemTaxName", e.target.value)
+                    handleItemInputChange(
+                      index,
+                      "itemTaxName",
+                      e.target.value.toUpperCase()
+                    )
                   }
                 />
                 <label for="formGroupExampleInput " className="form_text">
-                  Tax %
+                  Tax % <span style={{ color: "red" }}>*</span>
                 </label>
                 <input
                   onWheel={(e) => e.target.blur()}

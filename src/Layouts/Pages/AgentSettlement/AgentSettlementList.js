@@ -160,7 +160,7 @@ const AgentSettlementList = () => {
 
   return (
     <div>
-      <h3 className="mb-4">Agent settlement List</h3>
+      <h3 className="mb-4">Travel Agent settlement List</h3>
       <div className="container">
         <div className="row">
           <div className="col-md-8 col-lg-6 mb-3">
