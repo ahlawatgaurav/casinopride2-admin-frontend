@@ -851,7 +851,8 @@ const BillingList = () => {
                   combinedDataArray.map((item) => (
                     <tr key={item.id}>
                       <td className="manager-list">
-                        {item?.Items[0]?.BillingId}
+                        {/* {item?.Items[0]?.BillingId} */}
+                        {item?.Items[0]?.BillNumber}
                       </td>
                       <td className="manager-list ">
                         {item?.Items[0]?.GuestName}
@@ -1037,7 +1038,8 @@ const BillingList = () => {
                 combinedVoidDataArray.map((item) => (
                   <tr key={item.id}>
                     <td className="manager-list">
-                      {item?.Items[0]?.BillingId}
+                      {/* {item?.Items[0]?.BillingId} */}
+                      {item?.Items[0]?.BillNumber}
                     </td>
 
                     <td className="manager-list ">
