@@ -214,7 +214,7 @@ const BillingDetails = () => {
         formData.append(
           "File",
           imageBlob,
-          `${BookingDetails[0]?.BillingId}billing.png`
+          `${BookingDetails[0]?.BillingId}bill.png`
         );
         formData.append("bookingId", BookingDetails[0]?.BookingId);
 
@@ -291,7 +291,11 @@ const BillingDetails = () => {
         }
 
         const formData = new FormData();
-        formData.append("File", imageBlob, "billing.png");
+        formData.append(
+          "File",
+          imageBlob,
+          `${BookingDetails[0]?.BillingId}bill.png`
+        );
         formData.append("bookingId", BookingDetails[0]?.BookingId);
 
         dispatch(
