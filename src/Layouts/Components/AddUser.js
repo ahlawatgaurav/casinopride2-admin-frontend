@@ -80,10 +80,23 @@ const AddUser = () => {
     console.log("onsubmit", email);
     if (fullName == "") {
       toast.warning("Please fill all the fields");
+      setDisableAddUserButton(false);
     } else if (!isValidEmail(email) && email != "") {
       console.log("isValidEmail");
       toast.warning("Please enter a valid email address");
+      setDisableAddUserButton(false);
+    } else if (
+      (userType == 2 && userName == "" && password == "") ||
+      (userType == 3 && userName == "" && password == "") ||
+      (userType == 4 && userName == "" && password == "") ||
+      (userType == 5 && userName == "" && password == "") ||
+      (userType == 6 && userName == "" && discountPercent == "") ||
+      (userType == 7 && userName == "" && password == "")
+    ) {
+      toast.warning("Please enter all the fields");
+      setDisableAddUserButton(false);
     }
+
     // else if (phone.length > 10 || phone.length < 10) {
     //   toast.warning("Please enter a valid phone number (up to 10 digits)");
     // }
