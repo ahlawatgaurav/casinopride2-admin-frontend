@@ -469,23 +469,28 @@ const NewBooking = () => {
 
   const handleSelectChange = (e) => {
     const selectedValue = e.target.value;
+    if (selectedValue == "") {
+      setamountAfterDiscount("");
+    }
+    else{
+      console.log("Discount valueeeeeeeeeee", e.target.value);
 
-    console.log("Discount valueeeeeeeeeee", e.target.value);
+      const selectedPanelDiscount = panelDiscounts.find(
+        (item) => item.Id == selectedValue
+      );
+  
+      console.log(
+        "selectedPanelDiscount-----------------------********************************8-------------->",
+        selectedPanelDiscount?.PanelDiscount
+      );
+      setDiscountFigure(selectedPanelDiscount?.PanelDiscount);
+  
+      setSelectedOption(e.target.value);
+      const discount = (amount * selectedPanelDiscount?.PanelDiscount) / 100;
+      const discountedAmount = amount - discount;
+      setamountAfterDiscount(discountedAmount);
+    }
 
-    const selectedPanelDiscount = panelDiscounts.find(
-      (item) => item.Id == selectedValue
-    );
-
-    console.log(
-      "selectedPanelDiscount-----------------------********************************8-------------->",
-      selectedPanelDiscount?.PanelDiscount
-    );
-    setDiscountFigure(selectedPanelDiscount?.PanelDiscount);
-
-    setSelectedOption(e.target.value);
-    const discount = (amount * selectedPanelDiscount?.PanelDiscount) / 100;
-    const discountedAmount = amount - discount;
-    setamountAfterDiscount(discountedAmount);
   };
 
   console.log("usedCouponArr-------------->", usedCouponArr);
