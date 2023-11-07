@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { Country, State, City } from "country-state-city";
 import Select from "react-select";
 import { useEffect } from "react";
@@ -29,11 +29,12 @@ import checkcircle from "../../assets/Images/checkcircle.png";
 import { recentShiftForOutlet } from "../../Redux/actions/users";
 import { getEnabledPanelDiscount } from "../../Redux/actions/users";
 import { compose } from "@reduxjs/toolkit";
-import { Oval } from "react-loader-spinner";
+import { Oval, MagnifyingGlass, RotatingLines } from "react-loader-spinner";
 import { AddBillingDetails } from "../../Redux/actions/billing";
 import { checkActiveOutlet } from "../../Redux/actions/users";
 import { getUserById } from "../../Redux/actions/users";
 import { countDriverBookings } from "../../Redux/actions/users";
+import { QrReader } from "react-qr-reader";
 const NewBooking = () => {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -1079,9 +1080,104 @@ const NewBooking = () => {
     );
   };
 
+  const [inputValue, setInputValue] = useState("");
+  const [timeoutId, setTimeoutId] = useState(null);
+
+  const [secretInput, setSecretInput] = useState("");
+  const [buttonColor, setButtonColor] = useState("red");
+
+  // const handleRedButtonClick = () => {
+  //   setButtonColor("green");
+  //   const input = scannerRef.current.value;
+  //   window.open(input, "_blank");
+  // };
+
+  // const [scannedData, setScannedData] = useState("");
+  // const inputRef = useRef(null);
+  // const [scannerLoader, setScannerLoader] = useState(false);
+
+  // useEffect(() => {
+  //   const openTabTimer = setTimeout(() => {
+  //     setScannerLoader(true);
+  //     if (scannedData) {
+  //       window.open(scannedData, "_blank");
+  //       setScannerLoader(false);
+  //     }
+  //   }, 2000);
+
+  //   return () => {
+  //     clearTimeout(openTabTimer);
+  //     setScannerLoader(false);
+  //   };
+  // }, [scannedData]);
+
+  // useEffect(() => {
+  //   inputRef.current.focus();
+  // }, []);
+
+  const [scannedData, setScannedData] = useState("");
+  const inputRef = useRef(null);
+  const [scannerLoader, setScannerLoader] = useState(false);
+
+  useEffect(() => {
+    if (scannedData) {
+      setScannerLoader(true);
+    }
+
+    const openTabTimer = setTimeout(() => {
+      if (scannedData) {
+        window.open(scannedData);
+        setScannerLoader(false);
+      }
+    }, 1000);
+
+    return () => {
+      clearTimeout(openTabTimer);
+    };
+  }, [scannedData]);
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
+
   return (
     <div>
+      <div>
+        <input
+          type="text"
+          ref={inputRef}
+          autoFocus // Set the autofocus attribute to focus the input
+          style={{
+            position: "absolute", // Hide the input using CSS
+            left: "-9999px",
+          }}
+          value={scannedData}
+          onChange={(e) => setScannedData(e.target.value)}
+        />
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {!scannerLoader ? (
+          <div></div>
+        ) : (
+          <RotatingLines
+            strokeColor="#0095d4"
+            strokeWidth="5"
+            animationDuration="0.75"
+            width="96"
+            visible={true}
+          />
+        )}
+      </div>
+
       <ToastContainer />
+
       <div className="row">
         <div className="container-fluid vh-20 d-flex justify-content-end align-items-center">
           <button

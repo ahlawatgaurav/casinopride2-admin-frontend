@@ -86,12 +86,18 @@ const AddUser = () => {
       toast.warning("Please enter a valid email address");
       setDisableAddUserButton(false);
     } else if (
-      (userType == 2 && userName == "" && password == "") ||
-      (userType == 3 && userName == "" && password == "") ||
-      (userType == 4 && userName == "" && password == "") ||
-      (userType == 5 && userName == "" && password == "") ||
-      (userType == 6 && userName == "" && discountPercent == "") ||
-      (userType == 7 && userName == "" && password == "")
+      (userType == 2 && userName == "") ||
+      (userType == 2 && password == "") ||
+      (userType == 3 && userName == "") ||
+      (userType == 3 && password == "") ||
+      (userType == 4 && userName == "") ||
+      (userType == 4 && password == "") ||
+      (userType == 5 && userName == "") ||
+      (userType == 5 && password == "") ||
+      (userType == 6 && userName == "") ||
+      (userType == 6 && discountPercent == "") ||
+      (userType == 7 && userName == "") ||
+      (userType == 7 && password == "")
     ) {
       toast.warning("Please enter all the fields");
       setDisableAddUserButton(false);
