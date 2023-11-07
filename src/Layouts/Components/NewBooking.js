@@ -283,8 +283,8 @@ const NewBooking = () => {
   console.log("remainingCoupons------------>remaining", remainingCoupons);
 
   const handleToggle = (field) => {
-    console.log('handleToggle>>field>>',field);
-    console.log('handleToggle>>discountToggle>>',discountToggle);
+    console.log("handleToggle>>field>>", field);
+    console.log("handleToggle>>discountToggle>>", discountToggle);
     // Toggle the state of the corresponding field
     if (field === "discount") {
       setDiscountToggle(!discountToggle); // Toggle the state
@@ -295,16 +295,15 @@ const NewBooking = () => {
         setCouponCode("");
         setSelectedOption("");
         setamountAfterDiscount("");
-        setCouponDiscout('')
-
+        setCouponDiscout("");
       } else if (discountToggle) {
-        console.log('inside discountToggle');
+        console.log("inside discountToggle");
         setamountAfterDiscount("");
         setCouponDiscout("");
-        setCouponCode("")
+        setCouponCode("");
       }
     } else if (field === "coupon") {
-      console.log('couponToggle>>',couponToggle);
+      console.log("couponToggle>>", couponToggle);
       setCouponToggle(!couponToggle);
       if (!couponToggle) {
         setDiscountToggle(false);
@@ -312,7 +311,6 @@ const NewBooking = () => {
         setCouponCode("");
         setSelectedOption("");
         setamountAfterDiscount("");
-
       } else if (couponToggle) {
         setCouponDiscout("");
       }
@@ -322,16 +320,12 @@ const NewBooking = () => {
         setDiscountToggle(false);
         setCouponToggle(false);
         setCouponCode("");
-        
+
         setCouponDiscout("");
-        
       } else if (referredByToggle) {
-        setSelectedOption("")
+        setSelectedOption("");
         setCouponDiscout("");
         setamountAfterDiscount("");
-       
-      
-        
       }
     }
   };
@@ -1146,9 +1140,13 @@ const NewBooking = () => {
       }
     }, 1000);
 
+    const closeTabTimer = setTimeout(() => {
+      setScannedData("");
+    }, 2000);
+
     return () => {
       clearTimeout(openTabTimer);
-      inputRef.current = null;
+      clearTimeout(closeTabTimer);
     };
   }, [scannedData]);
 
