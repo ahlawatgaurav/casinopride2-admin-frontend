@@ -613,7 +613,7 @@ const AddPackage = () => {
                   <input
                     className="form-check-input"
                     type="checkbox"
-                    defaultChecked={item.IsDeductable}
+                    defaultChecked={item?.isDeductable == 1 ? true : false}
                     onChange={(e) =>
                       handleItemInputChange(
                         index,

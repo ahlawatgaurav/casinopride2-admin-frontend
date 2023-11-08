@@ -12,9 +12,11 @@ import "react-toastify/dist/ReactToastify.css";
 import { Button, Modal } from "react-bootstrap";
 import more from "../../../assets/Images/more.png";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 const CouponsList = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const loginDetails = useSelector(
     (state) => state.auth?.userDetailsAfterLogin.Details
@@ -221,13 +223,15 @@ const CouponsList = () => {
           ) : (
             filteredCouponDetails.map((item) => (
               <tr key={item.id}>
-                <td className="manager-list ">{item.CouponTitle}</td>
-                <td className="manager-list">{item.SeriesStart}</td>
-                <td className="manager-list">{item.SeriesEnd}</td>
+                <td className="manager-list ">{item?.CouponTitle}</td>
+                <td className="manager-list">{item?.SeriesStart}</td>
+                <td className="manager-list">{item?.SeriesEnd}</td>
                 <td className="manager-list">
-                  {addWeekToDate(item.StartDate)}
+                  {moment(item?.StartDate).format("YYYY-MM-DD")}
                 </td>
-                <td className="manager-list">{addWeekToDate(item.EndDate)}</td>
+                <td className="manager-list">
+                  {moment(item?.EndDate).format("YYYY-MM-DD")}
+                </td>
 
                 <td className="manager-list">
                   {item.IsCouponEnabled === 1 ? (
@@ -291,22 +295,22 @@ const CouponsList = () => {
         </Modal.Header>
         <Modal.Body>
           <p className="manager-list ">
-            Coupon Title: {selectedUserDetails.CouponTitle}
+            Coupon Title: {selectedUserDetails?.CouponTitle}
           </p>
           <p className="manager-list ">
-            Initial : {selectedUserDetails.Initial}
+            Initial : {selectedUserDetails?.Initial}
           </p>
           <p className="manager-list ">
-            Series Start: {selectedUserDetails.SeriesStart}
+            Series Start: {selectedUserDetails?.SeriesStart}
           </p>
           <p className="manager-list ">
-            Series End: {selectedUserDetails.SeriesEnd}
+            Series End: {selectedUserDetails?.SeriesEnd}
           </p>
           <p className="manager-list ">
-            Start Date: {addWeekToDate(selectedUserDetails.StartDate)}
+            Start Date: {addWeekToDate(selectedUserDetails?.StartDate)}
           </p>
           <p className="manager-list ">
-            End Date: {addWeekToDate(selectedUserDetails.EndDate)}
+            End Date: {addWeekToDate(selectedUserDetails?.EndDate)}
           </p>
 
           <p className="manager-list ">

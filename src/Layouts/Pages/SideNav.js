@@ -12,7 +12,7 @@ import CalendarIcon from "@rsuite/icons/Calendar";
 import TagNumberIcon from "@rsuite/icons/TagNumber";
 import logo from "../../assets/Images/logo.png";
 import onlylogo from "../../assets/Images/onlylogo.png";
-import { FaTimes } from "react-icons/fa"; // Import icons
+import { FaTimes } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -23,6 +23,11 @@ import "react-toastify/dist/ReactToastify.css";
 import "../../assets/NavBar.css";
 import { Link } from "react-router-dom";
 import { Button, Modal } from "react-bootstrap";
+import booking from "../../assets/Images/booking.png";
+import { BiMoneyWithdraw } from "react-icons/bi";
+import CreditCardMinusIcon from "@rsuite/icons/CreditCardMinus";
+import DocPassIcon from "@rsuite/icons/DocPass";
+import PeoplesIcon from "@rsuite/icons/Peoples";
 
 const SideNav = () => {
   const [expanded, setExpanded] = React.useState(true);
@@ -126,7 +131,11 @@ const SideNav = () => {
             {loginDetails?.logindata?.UserType == "1" ||
             loginDetails?.logindata?.UserType == "3" ||
             loginDetails?.logindata?.UserType == "2" ? (
-              <Nav.Item eventKey="1" icon={<PageIcon />} onClick={bookingsLink}>
+              <Nav.Item
+                eventKey="1"
+                icon={<DocPassIcon />}
+                onClick={bookingsLink}
+              >
                 <Link to="/BookingList" className="links">
                   Bookings
                 </Link>
@@ -164,7 +173,7 @@ const SideNav = () => {
                 placement="rightStart"
                 eventKey="3"
                 title="Users"
-                icon={<AdminIcon />}
+                icon={<PeoplesIcon />}
               >
                 <Nav.Item
                   eventKey="3-1"
@@ -254,7 +263,7 @@ const SideNav = () => {
             {loginDetails?.logindata?.UserType == "1" ? (
               <Nav.Item
                 eventKey="71"
-                icon={<ThreeColumnsIcon />}
+                icon={<CreditCardMinusIcon />}
                 onClick={() => navigate("/AgentSettlementList")}
               >
                 <Link to="/AgentSettlementList" className="links">

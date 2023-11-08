@@ -73,6 +73,8 @@ const AddCoupon = () => {
   // const todayDate = moment().format("YYYY-MM-DD");
   const todayDate = moment().add(1, "days").format("YYYY-MM-DD");
 
+  console.log("startDate----------->", startDate);
+
   const onsubmit = () => {
     const startNumber = parseInt(seriesStart);
     const endNumber = parseInt(seriesEnd);

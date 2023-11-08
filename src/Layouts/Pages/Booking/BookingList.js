@@ -449,13 +449,44 @@ const BookingList = () => {
                   )}
                 </td>
 
-                <td className="manager-list">
+                {/* <td className="manager-list">
                   {item?.FinalPrice?.map((price, index) => (
                     <li key={index} style={{ listStyleType: "none" }}>
                       {price}
                     </li>
                   ))}
+                </td> */}
+                <td className="manager-list">
+                  {/* {item?.Items[0]?.FinalPrice?.map((price, index) => (
+                              <li key={index} style={{ listStyleType: "none" }}>
+                                {price}
+                              </li>
+                            ))} */}
+                  {item?.TeensPrice === 0 && item?.FinalPrice.length !== 0 && (
+                    // Display only price
+                    <div>
+                      {item?.FinalPrice?.map((price, index) => (
+                        <li key={index} style={{ listStyleType: "none" }}>
+                          {price}
+                        </li>
+                      ))}
+                    </div>
+                  )}
+                  {item?.TeensPrice !== 0 && item?.FinalPrice.length !== 0 && (
+                    <div>
+                      {item?.FinalPrice?.map((price, index) => (
+                        <li key={index} style={{ listStyleType: "none" }}>
+                          {price}
+                        </li>
+                      ))}
+                      <div>{item?.TeensPrice}</div>
+                    </div>
+                  )}
+                  {item?.TeensPrice !== 0 && item?.FinalPrice.length === 0 && (
+                    <div>{item?.TeensPrice}</div>
+                  )}
                 </td>
+
                 <td className="manager-list">
                   {item?.ActualAmount - item?.AmountAfterDiscount == 0
                     ? item?.ActualAmount
