@@ -1275,20 +1275,36 @@ const BillingDetails = () => {
                           <>
                             <h6 className="BillPrintFont">
                               CGST {item?.ItemDetails.ItemTax / 2} %:{" "}
-                              {(
+                              {/* {(
                                 item?.ItemDetails?.TaxDiff.reduce(
                                   (acc, value) => acc + value,
                                   0
                                 ) / 2
+                              ).toFixed(2)} */}
+                              {(
+                                (item?.ItemDetails?.packageGuestCount &&
+                                item?.ItemDetails?.TaxDiff
+                                  ? item.ItemDetails.packageGuestCount.reduce(
+                                      (total, count, index) =>
+                                        total +
+                                        count * item.ItemDetails.TaxDiff[index],
+                                      0
+                                    )
+                                  : 0) / 2
                               ).toFixed(2)}
                             </h6>
                             <h6 className="BillPrintFont">
                               SGST {item?.ItemDetails.ItemTax / 2} %:{" "}
                               {(
-                                item?.ItemDetails?.TaxDiff.reduce(
-                                  (acc, value) => acc + value,
-                                  0
-                                ) / 2
+                                (item?.ItemDetails?.packageGuestCount &&
+                                item?.ItemDetails?.TaxDiff
+                                  ? item.ItemDetails.packageGuestCount.reduce(
+                                      (total, count, index) =>
+                                        total +
+                                        count * item.ItemDetails.TaxDiff[index],
+                                      0
+                                    )
+                                  : 0) / 2
                               ).toFixed(2)}
                             </h6>{" "}
                           </>
@@ -1297,17 +1313,11 @@ const BillingDetails = () => {
                         )}
                         <h6 className="BillPrintFont">
                           CGST {item?.TeensTax / 2} %:{" "}
-                          {(
-                            (item?.TeensTaxBifurcation * item?.NumOfTeens) /
-                            2
-                          ).toFixed(2)}
+                          {(item?.TeensTaxBifurcation / 2).toFixed(2)}
                         </h6>
                         <h6 className="BillPrintFont">
                           SGST {item?.TeensTax / 2} %:
-                          {(
-                            (item?.TeensTaxBifurcation * item?.NumOfTeens) /
-                            2
-                          ).toFixed(2)}
+                          {(item?.TeensTaxBifurcation / 2).toFixed(2)}
                         </h6>
 
                         <h6 className="BillPrintFont">
@@ -1402,7 +1412,7 @@ const BillingDetails = () => {
                             ) : (
                               <>
                                 <h6>
-                                  CGST {item?.ItemDetails.ItemTax / 2} %:
+                                  CGST Hello{item?.ItemDetails.ItemTax / 2} %:
                                   {item?.ItemDetails?.packageGuestCount &&
                                   item?.ItemDetails?.TaxBifurcation
                                     ? (
@@ -2177,19 +2187,31 @@ const BillingDetails = () => {
                                 <h6 className="BillPrintFontPrint">
                                   CGST {item?.ItemDetails.ItemTax / 2} %:{" "}
                                   {(
-                                    item?.ItemDetails?.TaxDiff.reduce(
-                                      (acc, value) => acc + value,
-                                      0
-                                    ) / 2
+                                    (item?.ItemDetails?.packageGuestCount &&
+                                    item?.ItemDetails?.TaxDiff
+                                      ? item.ItemDetails.packageGuestCount.reduce(
+                                          (total, count, index) =>
+                                            total +
+                                            count *
+                                              item.ItemDetails.TaxDiff[index],
+                                          0
+                                        )
+                                      : 0) / 2
                                   ).toFixed(2)}
                                 </h6>
                                 <h6 className="BillPrintFontPrint">
                                   SGST {item?.ItemDetails.ItemTax / 2} %:{" "}
                                   {(
-                                    item?.ItemDetails?.TaxDiff.reduce(
-                                      (acc, value) => acc + value,
-                                      0
-                                    ) / 2
+                                    (item?.ItemDetails?.packageGuestCount &&
+                                    item?.ItemDetails?.TaxDiff
+                                      ? item.ItemDetails.packageGuestCount.reduce(
+                                          (total, count, index) =>
+                                            total +
+                                            count *
+                                              item.ItemDetails.TaxDiff[index],
+                                          0
+                                        )
+                                      : 0) / 2
                                   ).toFixed(2)}
                                 </h6>{" "}
                               </>
@@ -2198,17 +2220,11 @@ const BillingDetails = () => {
                             )}
                             <h6 className="BillPrintFontPrint">
                               CGST {item?.TeensTax / 2} %:{" "}
-                              {(
-                                (item?.TeensTaxBifurcation * item?.NumOfTeens) /
-                                2
-                              ).toFixed(2)}
+                              {(item?.TeensTaxBifurcation / 2).toFixed(2)}
                             </h6>
                             <h6 className="BillPrintFontPrint">
                               SGST {item?.TeensTax / 2} %:
-                              {(
-                                (item?.TeensTaxBifurcation * item?.NumOfTeens) /
-                                2
-                              ).toFixed(2)}
+                              {(item?.TeensTaxBifurcation / 2).toFixed(2)}
                             </h6>
 
                             <h6 className="BillPrintFontPrint">

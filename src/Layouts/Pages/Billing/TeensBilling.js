@@ -1572,7 +1572,16 @@ const TeensBilling = () => {
                   </h5>
                   <h5 className="BillPrintFontPrint">PAN No: AACCG7450R</h5>
 
-                  <h5 className="BillPrintFontPrint">TAX INVOICE</h5>
+                  <h5
+                    style={{
+                      marginBottom: "5px",
+                      fontSize: "12px",
+                      lineHeight: "10px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    TAX INVOICE
+                  </h5>
                   <div className="row">
                     <div className="col-6 bill-details">
                       <p className="BillPrintFontPrint">

@@ -234,7 +234,7 @@ const NewBooking = () => {
   const [amount, setamount] = useState("");
   const [packageIds, setPackageIds] = useState([]);
   const [packageGuestCount, setPackageGuestCount] = useState([]);
-  const [amountAfterDiscount, setamountAfterDiscount] = useState("");
+  const [amountAfterDiscount, setamountAfterDiscount] = useState(0);
   const [referredBy, setreferredBy] = useState("");
   const [couponId, setCouponId] = useState("");
   const [packageName, setPackageName] = useState("");
@@ -283,24 +283,63 @@ const NewBooking = () => {
   console.log("remainingCoupons------------>remaining", remainingCoupons);
 
   const handleToggle = (field) => {
-    console.log("handleToggle>>field>>", field);
-    console.log("handleToggle>>discountToggle>>", discountToggle);
+    const DiscountedAmount =
+      amount - amountAfterDiscount == amount ? amount : amountAfterDiscount;
+
+    if (paymentOption == "Cash") {
+      setCashAmount(DiscountedAmount);
+    } else if (paymentOption == "UPI") {
+      setCardAmount(DiscountedAmount);
+    } else if (paymentOption == "Card") {
+      setUpiAmount(DiscountedAmount);
+    }
+
     // Toggle the state of the corresponding field
     if (field === "discount") {
       setDiscountToggle(!discountToggle); // Toggle the state
+
       if (!discountToggle) {
         // If the discount toggle is being enabled, disable the others
+
+        console.log("Called Here----12>");
         setCouponToggle(false);
         setReferredByToggle(false);
         setCouponCode("");
         setSelectedOption("");
         setamountAfterDiscount("");
         setCouponDiscout("");
+
+        // if (paymentOption == "Cash") {
+        //   setCashAmount(DiscountedAmount);
+        // } else if (paymentOption == "UPI") {
+        //   setCardAmount(DiscountedAmount);
+        // } else if (paymentOption == "Card") {
+        //   setUpiAmount(DiscountedAmount);
+        // }
+
+        //newww code
       } else if (discountToggle) {
+        console.log("Called Here----11>");
         console.log("inside discountToggle");
         setamountAfterDiscount("");
         setCouponDiscout("");
         setCouponCode("");
+
+        // if (paymentOption == "Cash") {
+        //   setCashAmount(DiscountedAmount);
+        // } else if (paymentOption == "UPI") {
+        //   setCardAmount(DiscountedAmount);
+        // } else if (paymentOption == "Card") {
+        //   setUpiAmount(DiscountedAmount);
+        // }
+
+        if (paymentOption == "Cash") {
+          setCashAmount(amount);
+        } else if (paymentOption == "UPI") {
+          setCardAmount(amount);
+        } else if (paymentOption == "Card") {
+          setUpiAmount(amount);
+        }
       }
     } else if (field === "coupon") {
       console.log("couponToggle>>", couponToggle);
@@ -311,8 +350,22 @@ const NewBooking = () => {
         setCouponCode("");
         setSelectedOption("");
         setamountAfterDiscount("");
+        // if (paymentOption == "Cash") {
+        //   setCashAmount(amount);
+        // } else if (paymentOption == "UPI") {
+        //   setCardAmount(amount);
+        // } else if (paymentOption == "Card") {
+        //   setUpiAmount(amount);
+        // }
       } else if (couponToggle) {
         setCouponDiscout("");
+        // if (paymentOption == "Cash") {
+        //   setCashAmount(DiscountedAmount);
+        // } else if (paymentOption == "UPI") {
+        //   setCardAmount(DiscountedAmount);
+        // } else if (paymentOption == "Card") {
+        //   setUpiAmount(DiscountedAmount);
+        // }
       }
     } else if (field === "referredBy") {
       setReferredByToggle(!referredByToggle);
@@ -320,17 +373,36 @@ const NewBooking = () => {
         setDiscountToggle(false);
         setCouponToggle(false);
         setCouponCode("");
-
         setCouponDiscout("");
+        // if (paymentOption == "Cash") {
+        //   setCashAmount(amount);
+        // } else if (paymentOption == "UPI") {
+        //   setCardAmount(amount);
+        // } else if (paymentOption == "Card") {
+        //   setUpiAmount(amount);
+        // }
       } else if (referredByToggle) {
         setSelectedOption("");
         setCouponDiscout("");
         setamountAfterDiscount("");
+
+        // if (paymentOption == "Cash") {
+        //   setCashAmount(DiscountedAmount);
+        // } else if (paymentOption == "UPI") {
+        //   setCardAmount(DiscountedAmount);
+        // } else if (paymentOption == "Card") {
+        //   setUpiAmount(DiscountedAmount);
+        // }
       }
     }
   };
 
   console.log("couponCode--------------->", couponCode);
+
+  const finalAmountofPackage =
+    amount - amountAfterDiscount == amount ? amount : amountAfterDiscount;
+
+  console.log("finalAmountofPackage------------>----->", finalAmountofPackage);
 
   // const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState({
@@ -431,6 +503,14 @@ const NewBooking = () => {
               const discountedAmount = amount - discount;
               setCouponDiscout(discountedAmount);
 
+              if (paymentOption == "Cash") {
+                setCashAmount(discountedAmount);
+              } else if (paymentOption == "UPI") {
+                setCardAmount(discountedAmount);
+              } else if (paymentOption == "Card") {
+                setUpiAmount(discountedAmount);
+              }
+
               setDiscountFigure(callback?.response?.Details?.CouponDiscount);
               console.log(
                 "remaing------------------->length------------->",
@@ -495,6 +575,23 @@ const NewBooking = () => {
       const discount = (amount * selectedPanelDiscount?.PanelDiscount) / 100;
       const discountedAmount = amount - discount;
       setamountAfterDiscount(discountedAmount);
+
+      const DiscountedAmount =
+        amount - discountedAmount == amount ? amount : discountedAmount;
+
+      if (paymentOption == "Cash") {
+        setCashAmount(DiscountedAmount);
+        setUpiAmount("");
+        setCardAmount("");
+      } else if (paymentOption == "UPI") {
+        setUpiAmount(DiscountedAmount);
+        setCashAmount("");
+        setCardAmount("");
+      } else if (paymentOption == "Card") {
+        setCardAmount(DiscountedAmount);
+        setCashAmount("");
+        setUpiAmount("");
+      }
     }
   };
 
@@ -506,6 +603,25 @@ const NewBooking = () => {
     "activeDateOfOutlet?.OutletDate-------------->",
     activeDateOfOutlet?.OutletDate
   );
+
+  // const handlePaymentOption = () => {
+  //   console.log("paymentOption--->", paymentOption);
+  //   if (paymentOption == "Cash") {
+  //     setCashAmount(
+  //       amount - amountAfterDiscount == 0 ? amount : amountAfterDiscount
+  //     );
+  //   } else if (paymentOption == "UPI") {
+  //     setCardAmount(
+  //       amount - amountAfterDiscount == 0 ? amount : amountAfterDiscount
+  //     );
+  //   } else if (paymentOption == "Card") {
+  //     setUpiAmount(
+  //       amount - amountAfterDiscount == 0 ? amount : amountAfterDiscount
+  //     );
+  //   }
+  // };
+
+  console.log("selectedCountry?.name", selectedCountry?.name);
 
   const onsubmit = () => {
     setLoader(true);
@@ -813,16 +929,36 @@ const NewBooking = () => {
 
   console.log("amountAfterDiscount-------->", amountAfterDiscount);
 
+  // useEffect(() => {
+  //   handlePaymentSelection();
+  // }, [selectedOption]);
+
   const handlePaymentSelection = (event) => {
     // Update the selected option when the user makes a selection
     setPaymentOption(event.target.value);
 
-    setCashAmount("");
-    setUpiAmount("");
-    setCardAmount("");
+    console.log("payment selection----->", event.target.value);
+
+    const DiscountedAmount =
+      amount - amountAfterDiscount == amount ? amount : amountAfterDiscount;
+
     setcardHoldersName("");
     setCardNumber("");
     setCardType("");
+
+    if (event.target.value == "Cash") {
+      setCashAmount(DiscountedAmount);
+      setUpiAmount("");
+      setCardAmount("");
+    } else if (event.target.value == "UPI") {
+      setUpiAmount(DiscountedAmount);
+      setCashAmount("");
+      setCardAmount("");
+    } else if (event.target.value == "Card") {
+      setCardAmount(DiscountedAmount);
+      setCashAmount("");
+      setUpiAmount("");
+    }
   };
 
   console.log("paymentOption---------------->", paymentOption);
@@ -1160,6 +1296,9 @@ const NewBooking = () => {
   useEffect(() => {
     inputRef.current.focus();
   }, []);
+
+  console.log("cashAmount------>", cashAmount);
+  console.log("finalAmountofPackage------------>", finalAmountofPackage);
 
   return (
     <div>
@@ -1548,11 +1687,12 @@ const NewBooking = () => {
                 onChange={handleSelectChange}
               >
                 <option value="">Select an option</option>
-                {panelDiscounts.map((item, index) => (
-                  <option key={index} value={item?.Id}>
-                    {item?.PanelDiscount}
-                  </option>
-                ))}
+                {panelDiscounts &&
+                  panelDiscounts.map((item, index) => (
+                    <option key={index} value={item?.Id}>
+                      {item?.PanelDiscount}
+                    </option>
+                  ))}
               </select>
             </div>
           ) : (
@@ -1609,7 +1749,10 @@ const NewBooking = () => {
                 class="form-control mt-2"
                 type="text"
                 placeholder="Enter the amount"
-                onChange={(e) => setCashAmount(e.target.value)}
+                // onChange={(e) => setCashAmount(e.target.value)}
+
+                defaultValue={cashAmount}
+                value={cashAmount}
               />
             </div>
           </div>
@@ -1628,6 +1771,7 @@ const NewBooking = () => {
                 type="number"
                 placeholder="Enter the amount"
                 onChange={(e) => setCardAmount(e.target.value)}
+                value={cardAmount}
               />
             </div>
             <div className="col-lg-6 mt-3">
@@ -1685,6 +1829,7 @@ const NewBooking = () => {
                 type="text"
                 placeholder="Enter the amount"
                 onChange={(e) => setUpiAmount(e.target.value)}
+                value={upiAmount}
               />
             </div>
 
