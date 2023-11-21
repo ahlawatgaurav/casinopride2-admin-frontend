@@ -1185,6 +1185,7 @@ const BillingList = () => {
                       {item?.Items[0]?.IsVoid == 1 ? "Void" : "Active"}
                     </td>
                     {loginDetails?.logindata?.UserType === 5 ||
+                    loginDetails?.logindata?.UserType === 2 ||
                     loginDetails?.logindata?.UserType === 1 ? (
                       <>
                         {" "}
@@ -1313,10 +1314,10 @@ const BillingList = () => {
                 ) : (
                   displayNoShowGuestList.map((item) => (
                     <tr key={item.id}>
-                      <td className="manager-list ">{item.GuestName}</td>
-                      <td className="manager-list">{item.Phone}</td>
-                      <td className="manager-list">{item.ActualAmount}</td>
-                      <td className="manager-list">{item.TotalGuestCount}</td>
+                      <td className="manager-list ">{item?.GuestName}</td>
+                      <td className="manager-list">{item?.Phone}</td>
+                      <td className="manager-list">{item?.ActualAmount}</td>
+                      <td className="manager-list">{item?.TotalGuestCount}</td>
 
                       {/* <td className="manager-list">
                   <Link

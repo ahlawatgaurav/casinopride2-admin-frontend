@@ -294,13 +294,10 @@ const NewBooking = () => {
       setUpiAmount(DiscountedAmount);
     }
 
-    // Toggle the state of the corresponding field
     if (field === "discount") {
-      setDiscountToggle(!discountToggle); // Toggle the state
+      setDiscountToggle(!discountToggle);
 
       if (!discountToggle) {
-        // If the discount toggle is being enabled, disable the others
-
         console.log("Called Here----12>");
         setCouponToggle(false);
         setReferredByToggle(false);
@@ -359,13 +356,13 @@ const NewBooking = () => {
         // }
       } else if (couponToggle) {
         setCouponDiscout("");
-        // if (paymentOption == "Cash") {
-        //   setCashAmount(DiscountedAmount);
-        // } else if (paymentOption == "UPI") {
-        //   setCardAmount(DiscountedAmount);
-        // } else if (paymentOption == "Card") {
-        //   setUpiAmount(DiscountedAmount);
-        // }
+        if (paymentOption == "Cash") {
+          setCashAmount(DiscountedAmount);
+        } else if (paymentOption == "UPI") {
+          setCardAmount(DiscountedAmount);
+        } else if (paymentOption == "Card") {
+          setUpiAmount(DiscountedAmount);
+        }
       }
     } else if (field === "referredBy") {
       setReferredByToggle(!referredByToggle);

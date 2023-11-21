@@ -488,7 +488,8 @@ const BookingList = () => {
                 </td>
 
                 <td className="manager-list">
-                  {item?.ActualAmount - item?.AmountAfterDiscount == 0
+                  {item?.ActualAmount - item?.AmountAfterDiscount ==
+                  item?.ActualAmount
                     ? item?.ActualAmount
                     : item?.AmountAfterDiscount}
                 </td>
