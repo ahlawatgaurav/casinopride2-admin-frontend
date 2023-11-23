@@ -349,7 +349,7 @@ const BillingDetails = () => {
                             sendEmail(data, (callback) => {
                               if (callback.status) {
                                 toast.success("Email sent");
-                                // navigate("/NewBooking");
+                                navigate("/NewBooking");
 
                                 toast.error(callback.error);
                               } else {
@@ -768,10 +768,42 @@ const BillingDetails = () => {
   console.log("Data to be passed as sms------------------->", BookingDetails);
 
   console.log("BillIdDetails--------------->", BillIdDetails?.billId);
-  const dummyNumber = 3343.7778;
-  const truncatedNumber = Math.floor(dummyNumber * 100) / 100;
+  // const dummyNumber = 3343.7778;
+  // const truncatedNumber = Math.floor(dummyNumber * 100) / 100;
 
-  console.log("truncated number", truncatedNumber.toFixed(2));
+  // console.log("truncated number", truncatedNumber.toFixed(2));
+
+  const dummyNumber = 3343.7778;
+
+  // Round the number to 2 digits and then multiply by 2
+  const roundedAndMultiplied = (
+    (Math.round(dummyNumber * 100) / 100) *
+    2
+  ).toFixed(2);
+
+  console.log("Dummy Number---->");
+
+  const roundToTwoDecimalPlaces = (number) => Math.round(number * 100) / 100;
+
+  // const packageDiscountValue = BookingDetails.map((item) => {
+  //   console.log(
+  //     "item-->",
+  //     item?.ItemDetails?.Rate.map((rate) => parseFloat(rate).toFixed(2))
+  //   );
+  // });
+
+  BookingDetails.map((item) => {
+    const roundedRates = item?.ItemDetails?.Rate.map((rate) =>
+      parseFloat(rate).toFixed(2)
+    );
+
+    const multipliedAndSummedValue = roundedRates.reduce(
+      (acc, roundedRate) => acc + parseFloat(roundedRate) * 2,
+      0
+    );
+
+    console.log("item-->", multipliedAndSummedValue.toFixed(2));
+  });
 
   return (
     <div>
@@ -911,7 +943,7 @@ const BillingDetails = () => {
                         style={{ fontWeight: "bold" }}
                         className="BillPrintFont"
                       >
-                        {item.TotalGuestCount - BookingDetails[0].NumOfTeens}
+                        {item.TotalGuestCount - BookingDetails[0]?.NumOfTeens}
                       </span>
                     </p>
 
@@ -922,7 +954,7 @@ const BillingDetails = () => {
                           style={{ fontWeight: "bold" }}
                           className="BillPrintFont"
                         >
-                          {BookingDetails[0].NumOfTeens}
+                          {BookingDetails[0]?.NumOfTeens}
                         </span>
                       </p>
                     ) : (
@@ -935,7 +967,7 @@ const BillingDetails = () => {
                         style={{ fontWeight: "bold" }}
                         className="BillPrintFont"
                       >
-                        {item.TotalGuestCount}
+                        {item?.TotalGuestCount}
                       </span>
                     </p>
                   </div>
@@ -972,7 +1004,7 @@ const BillingDetails = () => {
                     </p>
                   </div>
                   <hr />
-                  <table className="table table-bordered">
+                  <table className="table" style={{ padding: "15px" }}>
                     <thead>
                       <tr>
                         <th
@@ -1026,24 +1058,7 @@ const BillingDetails = () => {
                           ) : (
                             <p>No data</p>
                           )}
-                          {/* {finalUseState} */}
                         </td>
-
-                        {/* <td
-                            style={{ textAlign: "right" }}
-                            className="BillPrintFont"
-                          >
-                            {item?.ItemDetails?.Rate.map((rate, index) => (
-                              <p key={index}>
-                                {rate && item?.ItemDetails?.packageGuestCount[index]
-                                  ? (
-                                      parseFloat(rate) /
-                                      item?.ItemDetails?.packageGuestCount[index]
-                                    ).toFixed(2)
-                                  : "N/A"}
-                              </p>
-                            ))}
-                          </td> */}
 
                         <td
                           style={{ textAlign: "right" }}
@@ -1052,38 +1067,18 @@ const BillingDetails = () => {
                           {item?.ItemDetails &&
                             item?.ItemDetails?.Rate.map((item, index) => (
                               <p key={index}>
-                                {item &&
-                                  Math.floor(parseFloat(item) * 100) / 100}
+                                {item && parseFloat(item).toFixed(2)}
                               </p>
                             ))}
                         </td>
-
-                        {/* <td
-                            style={{ textAlign: "right" }}
-                            className="BillPrintFont"
-                          >
-                            {item?.ItemDetails?.Rate.map((itemRate, index) => {
-                              const PanelDiscount = item?.PanelDiscount;
-                              const discountedRate =
-                                (itemRate * (100 - PanelDiscount)) / 100;
-
-                              return <p key={index}>{discountedRate.toFixed(2)}</p>;
-                            })}
-                          </td> */}
 
                         <td
                           style={{ textAlign: "right" }}
                           className="BillPrintFont"
                         >
-                          {/* Hi{" "}
-                            {item?.ItemDetails &&
-                              item?.ItemDetails?.Rate.map((item) => (
-                                <p>{parseFloat(item).toFixed(2)}</p>
-                              ))} */}
-
                           {item?.ItemDetails?.Rate.map((rate, index) => (
                             <p key={index}>
-                              {rate &&
+                              {/* {rate &&
                               item?.ItemDetails?.packageGuestCount[index]
                                 ? Math.floor(
                                     parseFloat(rate) *
@@ -1092,7 +1087,32 @@ const BillingDetails = () => {
                                       ] *
                                       100
                                   ) / 100
+                                : "N/A"} */}
+
+                              {/* {rate &&
+  item?.ItemDetails?.packageGuestCount[index]
+    ? parseFloat(
+        Math.floor(
+          parseFloat(rate) *
+            item?.ItemDetails?.packageGuestCount[index] *
+            100
+        ) / 100
+      ).toFixed(2)
+    : "N/A"} */}
+
+                              {rate &&
+                              item?.ItemDetails?.packageGuestCount[index]
+                                ? (
+                                    parseFloat(rate).toFixed(2) *
+                                    item?.ItemDetails?.packageGuestCount[index]
+                                  ).toFixed(2)
                                 : "N/A"}
+
+                              {/* {rate &&
+                              item?.ItemDetails?.packageGuestCount[index]
+                                ? parseFloat(rate) *
+                                  item?.ItemDetails?.packageGuestCount[index]
+                                : "N/A"} */}
                             </p>
                           ))}
                         </td>
@@ -1119,7 +1139,6 @@ const BillingDetails = () => {
                               style={{ textAlign: "right" }}
                               className="BillPrintFont"
                             >
-                              {/* {item?.TeensRate.toFixed(2)} */}
                               {item?.TeensRate &&
                                 item?.NumOfTeens &&
                                 Math.floor(
@@ -1140,53 +1159,6 @@ const BillingDetails = () => {
                   </table>
 
                   <div className="totals" style={{ textAlign: "right" }}>
-                    {/* GST WITH TEENS OLD CODE */}
-                    {/* {item?.ItemDetails?.ItemTaxName[0] === "GST" &&
-                      item?.TeensPrice > 0 ? (
-                        <h6 className="BillPrintFont ">
-                          Total Amount 1:{" "}
-                          {item?.ItemDetails && item?.TeensRate && (
-                            <span className="BillPrintFont">
-                              {(
-                                parseFloat(
-                                  item?.ItemDetails?.packageGuestCount.reduce(
-                                    (acc, count, index) => {
-                                      return (
-                                        acc + count * item?.ItemDetails?.Rate[index]
-                                      );
-                                    },
-                                    0
-                                  )
-                                ) + item?.TeensRate
-                              ).toFixed(2)}
-                            </span>
-                          )}
-                        </h6>
-                      ) : (
-                        <h6 className="BillPrintFont">
-                          Total Amount 2:
-                          {item?.ItemDetails &&
-                            item?.ItemDetails?.Rate.map((item) => (
-                              <span className="BillPrintFont">
-                                {parseFloat(item).toFixed(2)}
-                              </span>
-                            ))}
-                          {item?.ItemDetails && (
-                            <span className="BillPrintFont">
-                              {parseFloat(
-                                item?.ItemDetails?.packageGuestCount
-                                  .reduce((acc, count, index) => {
-                                    return (
-                                      acc + count * item?.ItemDetails?.Rate[index]
-                                    );
-                                  }, 0)
-                                  .toFixed(2)
-                              )}
-                            </span>
-                          )}
-                        </h6>
-                      )} */}
-
                     {item?.ItemDetails?.ItemTaxName[0] === "GST" ? (
                       <h6 className="BillPrintFont ">
                         Total Amount :
@@ -1194,17 +1166,36 @@ const BillingDetails = () => {
                           item?.ItemDetails?.AmountAfterDiscount ==
                         0 ? (
                           <span className="BillPrintFont">
-                            {(parseFloat(
+                            {/* {parseFloat(
                               item?.ItemDetails?.packageGuestCount
                                 .reduce((acc, count, index) => {
                                   return (
-                                    acc + count * item?.ItemDetails?.Rate[index]
+                                    acc +
+                                    count *
+                                      item?.ItemDetails?.Rate[index].toFixed(2)
                                   );
                                 }, 0)
                                 .toFixed(2)
-                            ) *
-                              100) /
-                              100}
+                            )} */}
+                            {parseFloat(
+                              item?.ItemDetails?.packageGuestCount
+                                .reduce((acc, count, index) => {
+                                  return (
+                                    acc +
+                                    parseFloat(
+                                      (
+                                        count *
+                                        parseFloat(
+                                          parseFloat(
+                                            item?.ItemDetails?.Rate[index]
+                                          ).toFixed(2)
+                                        )
+                                      ).toFixed(2)
+                                    )
+                                  );
+                                }, 0)
+                                .toFixed(2)
+                            )}
                           </span>
                         ) : (
                           // item?.ItemDetails?.Rate.map((rate, index) => (
@@ -1247,48 +1238,6 @@ const BillingDetails = () => {
                       </h6>
                     )}
 
-                    {/* {item?.ItemDetails && item?.TeensPrice > 0 ? (
-      // First condition
-      <h6 className="BillPrintFont">
-        Total Amount:{" "}
-        {item?.ItemDetails && item?.TeensRate && (
-          <span className="BillPrintFont">
-            {(
-              parseFloat(
-                item?.ItemDetails?.packageGuestCount.reduce(
-                  (acc, count, index) => {
-                    return acc + count * item?.ItemDetails?.Rate[index];
-                  },
-                  0
-                )
-              ) + item?.TeensRate
-            ).toFixed(2)}
-          </span>
-        )}
-      </h6>
-    ) : item?.NewItemCondition ? (
-
-      <h6 className="BillPrintFont">
-
-      </h6>
-    ) : (
-      // Default condition
-      <h6 className="BillPrintFont">
-        Total Amount:
-        {item?.ItemDetails && (
-          <span className="BillPrintFont">
-            {parseFloat(
-              item?.ItemDetails?.packageGuestCount
-                .reduce((acc, count, index) => {
-                  return acc + count * item?.ItemDetails?.Rate[index];
-                }, 0)
-                .toFixed(2)
-            )}
-          </span>
-        )}
-      </h6>
-    )} */}
-
                     {item?.ItemDetails?.ItemTaxName[0] === "GST" &&
                     item?.TeensPrice > 0 ? (
                       <>
@@ -1296,12 +1245,6 @@ const BillingDetails = () => {
                           <>
                             <h6 className="BillPrintFont">
                               CGST {item?.ItemDetails.ItemTax / 2} %:{" "}
-                              {/* {(
-                                item?.ItemDetails?.TaxDiff.reduce(
-                                  (acc, value) => acc + value,
-                                  0
-                                ) / 2
-                              ).toFixed(2)} */}
                               {((
                                 (item?.ItemDetails?.packageGuestCount &&
                                 item?.ItemDetails?.TaxDiff
@@ -1371,38 +1314,8 @@ const BillingDetails = () => {
                       <>
                         {item?.ItemDetails?.ItemTaxName[0] === "GST" ? (
                           <>
-                            {/* <h6 className="BillPrintFont">
-                                CGST {item?.ItemDetails.ItemTax / 2} %:{" "}
-                                {(item?.ItemDetails?.TaxDiff[0] *
-                                  item?.ItemDetails?.packageGuestCount) /
-                                  2}
-                              </h6>
-                              <h6 className="BillPrintFont">
-                                SGST {item?.ItemDetails.ItemTax / 2} %:{" "}
-                                {(item?.ItemDetails?.TaxDiff[0] *
-                                  item?.ItemDetails?.packageGuestCount) /
-                                  2}
-                              </h6> */}
                             {!item?.ItemDetails?.TaxBifurcation ? (
                               <>
-                                {/* <h6>
-                                    CGST :
-                                    {(
-                                      item?.ItemDetails?.TaxDiffWeekday?.reduce(
-                                        (acc, value) => acc + value,
-                                        0
-                                      ) / 2
-                                    ).toFixed(2)}
-                                  </h6> */}
-                                {/* <h6>
-                                    SGST :
-                                    {(
-                                      item?.ItemDetails?.TaxDiffWeekday?.reduce(
-                                        (acc, value) => acc + value,
-                                        0
-                                      ) / 2
-                                    ).toFixed(2)}
-                                  </h6> */}
                                 <h6>
                                   CGST {item?.ItemDetails.ItemTax / 2} %:{" "}
                                   {((
@@ -1460,65 +1373,6 @@ const BillingDetails = () => {
                                       100
                                     : 0}
                                 </h6>
-                                {/* <h6>
-                                    SGST 1:
-                                    {item?.ItemDetails?.ActualAmount -
-                                      item?.ItemDetails?.AmountAfterDiscount !==
-                                    0
-                                      ? item?.ItemDetails?.TaxBifurcation
-                                        ? (
-                                            item.ItemDetails.TaxBifurcation.reduce(
-                                              (total, tax) => total + tax,
-                                              0
-                                            ) / 2
-                                          ).toFixed(2)
-                                        : 0
-                                      : (
-                                          (item?.ItemDetails?.packageGuestCount &&
-                                          item?.ItemDetails?.TaxBifurcation
-                                            ? item.ItemDetails.packageGuestCount.reduce(
-                                                (total, count, index) =>
-                                                  total +
-                                                  count *
-                                                    item.ItemDetails.TaxBifurcation[
-                                                      index
-                                                    ],
-                                                0
-                                              )
-                                            : 0) / 2
-                                        ).toFixed(2)}
-                                  </h6> */}
-
-                                {/* <h6>
-                                    CGST 1:
-                                    {
-                                    item?.ItemDetails?.ActualAmount -
-                                      item?.ItemDetails?.AmountAfterDiscount !==
-                                    0
-                                      ?
-                                      item?.ItemDetails?.TaxBifurcation
-                                        ? (
-                                            item.ItemDetails.TaxBifurcation.reduce(
-                                              (total, tax) => total + tax,
-                                              0
-                                            ) / 2
-                                          ).toFixed(2)
-                                        : 0
-                                      : (
-                                          (item?.ItemDetails?.packageGuestCount &&
-                                          item?.ItemDetails?.TaxBifurcation
-                                            ? item.ItemDetails.packageGuestCount.reduce(
-                                                (total, count, index) =>
-                                                  total +
-                                                  count *
-                                                    item.ItemDetails.TaxBifurcation[
-                                                      index
-                                                    ],
-                                                0
-                                              )
-                                            : 0) / 2
-                                        ).toFixed(2)}
-                                  </h6> */}
 
                                 <h6>
                                   SGST {item?.ItemDetails.ItemTax / 2} %:
@@ -1545,27 +1399,19 @@ const BillingDetails = () => {
                         ) : item?.ItemDetails?.ItemTaxName[0] === "VAT" ? (
                           <h6 className="BillPrintFont">
                             VAT {item?.ItemDetails.ItemTax}%:
-                            {/* {(
-                                item?.ItemDetails?.TaxDiffWeekday *
-                                item?.ItemDetails?.packageGuestCount
-                              ).toFixed(2)} */}
                             {item?.ItemDetails?.packageGuestCount &&
                             item?.ItemDetails?.TaxDiff
-                              ? ((
-                                  item.ItemDetails.packageGuestCount.reduce(
+                              ? (item.ItemDetails.packageGuestCount
+                                  .reduce(
                                     (total, count, index) =>
                                       total +
                                       count * item.ItemDetails.TaxDiff[index],
                                     0
-                                  ) / 2
-                                ).toFixed(2) *
+                                  )
+                                  .toFixed(2) *
                                   100) /
                                 100
                               : "0"}
-                            {/* {item?.ItemDetails?.TaxDiffWeekday?.reduce(
-                                (acc, value) => acc + value,
-                                0
-                              ).toFixed(2)} */}
                           </h6>
                         ) : (
                           <h6 className="BillPrintFont">
@@ -1642,113 +1488,8 @@ const BillingDetails = () => {
                             )}
                           </h6>
                         )}
-
-                        {/* {item?.ItemDetails?.IsDeductable[0] === 1 &&
-                          BookingDetails[0]?.AmountAfterDiscount > 0 ? (
-                            <h6 className="BillPrintFont">
-                              Bill Amount 2:{" "}
-                              {item?.ItemDetails && (
-                                <span>
-                                  {parseFloat(
-                                    item?.ItemDetails?.packageGuestCount.reduce(
-                                      (acc, count, index) => {
-                                        return (
-                                          acc +
-                                          count * item?.ItemDetails?.Price[index]
-                                        );
-                                      },
-                                      0
-                                    ) +
-                                      (item?.TeensPrice || 0) -
-                                      (item?.ActualAmount -
-                                        item?.AmountAfterDiscount)
-                                  ).toFixed(2)}
-                                </span>
-                              )}
-                            </h6>
-                          ) : (
-                            <></>
-                          )} */}
-                        {/*
-                          {item?.ItemDetails?.IsDeductable[0] === 1 &&
-                          !BookingDetails[0]?.AmountAfterDiscount > 0 ? (
-                            <>
-                              <h6 className="BillPrintFont">
-                                Bill Amount 3:{" "}
-                                {item?.ItemDetails && (
-                                  <span>
-                                    {parseFloat(
-                                      item?.ItemDetails?.packageGuestCount.reduce(
-                                        (acc, count, index) => {
-                                          return (
-                                            acc +
-                                            count * item?.ItemDetails?.Price[index]
-                                          );
-                                        },
-                                        0
-                                      ) + (item?.TeensPrice || 0)
-                                    ).toFixed(2)}
-                                  </span>
-                                )}
-                              </h6>
-                            </>
-                          ) : (
-                            <></>
-                          )} */}
                       </>
                     )}
-
-                    {/* {item?.ItemDetails?.IsDeductable[0] === 1 &&
-                      totalDiscount == 0 &&
-                      !item?.TeensPrice > 0 ? (
-                        <h6 className="BillPrintFont">
-                          Bill Amount 4:{" "}
-                          {item?.ItemDetails && (
-                            <span>
-                              {parseFloat(
-                                item?.ItemDetails?.packageGuestCount.reduce(
-                                  (acc, count, index) => {
-                                    return (
-                                      acc + count * item?.ItemDetails?.Price[index]
-                                    );
-                                  },
-                                  0
-                                ) + (item?.TeensPrice || 0)
-                              ).toFixed(2)}
-                            </span>
-                          )}
-                        </h6>
-                      ) : (
-                        <></>
-                      )} */}
-
-                    {/* {item?.ItemDetails?.ItemTaxName[0] === "VAT" ? (
-                        <>
-                          <h6 className="BillPrintFont">
-                            Bill Amount 5:{" "}
-                            {item?.ItemDetails && (
-                              <span>
-                                {parseFloat(
-                                  (
-                                    item?.ItemDetails?.packageGuestCount.reduce(
-                                      (acc, count, index) => {
-                                        return (
-                                          acc +
-                                          count * item?.ItemDetails?.Rate[index]
-                                        );
-                                      },
-                                      0
-                                    ) *
-                                    (1 + item?.ItemDetails.ItemTax / 100)
-                                  ).toFixed(0)
-                                )}
-                              </span>
-                            )}
-                          </h6>
-                        </>
-                      ) : (
-                        <></>
-                      )} */}
                   </div>
                   <div
                     className="terms"
@@ -1791,25 +1532,11 @@ const BillingDetails = () => {
             style={{ paddingLeft: "100px", paddingRight: "100px" }}
             type="submit"
             className="btn btn_colour mt-5 btn-lg"
-            // onClick={SendDetailsToUser}
             onClick={handlePrint}
-            // disabled={loader}
           >
             Print
           </button>
         </div>
-
-        {/* <div className="col-lg-6 mb-2 btn-lg mx-auto d-flex justify-content-center ">
-          <button
-            style={{ paddingLeft: "100px", paddingRight: "100px" }}
-            type="submit"
-            className="btn btn_colour mt-5 btn-lg"
-            onClick={generateAndPrintPDF}
-            disabled={loader}
-          >
-            Generate Pdf
-          </button>
-        </div> */}
       </div>
       <div>
         <ToastContainer />
@@ -1988,12 +1715,12 @@ const BillingDetails = () => {
                             {item.Phone}
                           </span>
                         </p>
-                        {item.State ? (
+                        {item.State || item?.Address || item?.Country ? (
                           <p className="BillPrintFontPrint">
                             Guest Address:
                             <span className="BillPrintFontPrint">
                               {" "}
-                              {item?.Address} {item.State}- {item?.Country}
+                              {item?.Address} {item.State} {item?.Country}
                             </span>
                           </p>
                         ) : (
@@ -2012,7 +1739,7 @@ const BillingDetails = () => {
                           <p className="BillPrintFontPrint">
                             Number of Kids :{" "}
                             <span className="BillPrintFontPrint">
-                              {BookingDetails[0].NumOfTeens}
+                              {BookingDetails[0]?.NumOfTeens}
                             </span>
                           </p>
                         ) : (
@@ -2022,7 +1749,7 @@ const BillingDetails = () => {
                         <p className="BillPrintFontPrint">
                           Total Number of Guests :{" "}
                           <span className="BillPrintFontPrint">
-                            {item.TotalGuestCount}
+                            {item?.TotalGuestCount}
                           </span>
                         </p>
                       </div>
@@ -2051,16 +1778,9 @@ const BillingDetails = () => {
                               .format("DD/MM/YYYY HH:mm")}
                           </span>
                         </p>
-
-                        {/* <p
-                          className="BillPrintFontPrint"
-                          style={{ marginRight: "5px" }}
-                        >
-                          BILL#: {item.BillNumber}
-                        </p> */}
                       </div>
                       <hr />
-                      <table className="ticket_table">
+                      <table className="ticket_table ">
                         <thead>
                           <tr>
                             <th style={{ textAlign: "center" }}>
@@ -2074,8 +1794,18 @@ const BillingDetails = () => {
                               </p>
                             </th>
 
-                            <th style={{ textAlign: "center" }}>
-                              <p className="BillPrintFontPrintterms"> RATE</p>
+                            <th
+                              style={{
+                                textAlign: "center",
+                              }}
+                            >
+                              <p
+                                className="BillPrintFontPrintterms"
+                                style={{ marginRight: "10px" }}
+                              >
+                                {" "}
+                                RATE
+                              </p>
                             </th>
                             <th style={{ textAlign: "center" }}>
                               <p className="BillPrintFontPrintterms"> VALUE</p>
@@ -2109,11 +1839,18 @@ const BillingDetails = () => {
                               )}
                             </td>
 
-                            <td style={{ textAlign: "right" }}>
+                            <td
+                              style={{
+                                textAlign: "right",
+                              }}
+                            >
                               {item?.ItemDetails &&
                                 item?.ItemDetails?.Rate.map((item) => (
-                                  <p className="BillPrintFontPrint">
-                                    {parseFloat(item).toFixed(2)}
+                                  <p
+                                    className="BillPrintFontPrint"
+                                    style={{ marginRight: "10px" }}
+                                  >
+                                    {item && parseFloat(item).toFixed(2)}
                                   </p>
                                 ))}
                             </td>
@@ -2124,7 +1861,7 @@ const BillingDetails = () => {
                                   {rate &&
                                   item?.ItemDetails?.packageGuestCount[index]
                                     ? (
-                                        parseFloat(rate) *
+                                        parseFloat(rate).toFixed(2) *
                                         item?.ItemDetails?.packageGuestCount[
                                           index
                                         ]
@@ -2153,19 +1890,19 @@ const BillingDetails = () => {
 
                                 <td style={{ textAlign: "right" }}>
                                   <p className="BillPrintFontPrint">
-                                    {/* {item?.TeensRate.toFixed(2)} */}
                                     {item?.TeensRate &&
                                       item?.NumOfTeens &&
-                                      (
-                                        item.TeensRate / item.NumOfTeens
-                                      ).toFixed(2)}
+                                      Math.floor(
+                                        (item.TeensRate / item.NumOfTeens) * 100
+                                      ) / 100}
                                   </p>
                                 </td>
 
                                 <td style={{ textAlign: "right" }}>
                                   <p className="BillPrintFontPrint">
                                     {" "}
-                                    {item?.TeensRate.toFixed(2)}
+                                    {item?.TeensRate &&
+                                      Math.floor(item.TeensRate * 100) / 100}
                                   </p>
                                 </td>
                               </tr>
@@ -2186,7 +1923,16 @@ const BillingDetails = () => {
                                     .reduce((acc, count, index) => {
                                       return (
                                         acc +
-                                        count * item?.ItemDetails?.Rate[index]
+                                        parseFloat(
+                                          (
+                                            count *
+                                            parseFloat(
+                                              parseFloat(
+                                                item?.ItemDetails?.Rate[index]
+                                              ).toFixed(2)
+                                            )
+                                          ).toFixed(2)
+                                        )
                                       );
                                     }, 0)
                                     .toFixed(2)
@@ -2194,17 +1940,16 @@ const BillingDetails = () => {
                               </span>
                             ) : (
                               <span className="BillPrintFontPrint">
-                                {parseFloat(
+                                {(parseFloat(
                                   item?.ItemDetails?.packageGuestCount.reduce(
-                                    (acc, count, index) => {
-                                      return (
-                                        acc +
-                                        count * item?.ItemDetails?.Rate[index]
-                                      );
-                                    },
+                                    (acc, count, index) =>
+                                      acc +
+                                      count * item?.ItemDetails?.Rate[index],
                                     0
                                   ) + (item?.TeensRate || 0)
-                                ).toFixed(2)}
+                                ).toFixed(2) *
+                                  100) /
+                                  100}
                               </span>
                             )}
                           </h6>
@@ -2213,16 +1958,18 @@ const BillingDetails = () => {
                             Total Amount :
                             {item?.ItemDetails && (
                               <span className="BillPrintFontPrint">
-                                {parseFloat(
+                                {(parseFloat(
                                   item?.ItemDetails?.packageGuestCount
-                                    .reduce((acc, count, index) => {
-                                      return (
+                                    .reduce(
+                                      (acc, count, index) =>
                                         acc +
-                                        count * item?.ItemDetails?.Rate[index]
-                                      );
-                                    }, 0)
+                                        count * item?.ItemDetails?.Rate[index],
+                                      0
+                                    )
                                     .toFixed(2)
-                                )}
+                                ) *
+                                  100) /
+                                  100}
                               </span>
                             )}
                           </h6>
@@ -2235,7 +1982,7 @@ const BillingDetails = () => {
                               <>
                                 <h6 className="BillPrintFontPrint">
                                   CGST {item?.ItemDetails.ItemTax / 2} %:{" "}
-                                  {(
+                                  {((
                                     (item?.ItemDetails?.packageGuestCount &&
                                     item?.ItemDetails?.TaxDiff
                                       ? item.ItemDetails.packageGuestCount.reduce(
@@ -2246,11 +1993,13 @@ const BillingDetails = () => {
                                           0
                                         )
                                       : 0) / 2
-                                  ).toFixed(2)}
+                                  ).toFixed(2) *
+                                    100) /
+                                    100}
                                 </h6>
                                 <h6 className="BillPrintFontPrint">
                                   SGST {item?.ItemDetails.ItemTax / 2} %:{" "}
-                                  {(
+                                  {((
                                     (item?.ItemDetails?.packageGuestCount &&
                                     item?.ItemDetails?.TaxDiff
                                       ? item.ItemDetails.packageGuestCount.reduce(
@@ -2261,7 +2010,9 @@ const BillingDetails = () => {
                                           0
                                         )
                                       : 0) / 2
-                                  ).toFixed(2)}
+                                  ).toFixed(2) *
+                                    100) /
+                                    100}
                                 </h6>{" "}
                               </>
                             ) : (
@@ -2269,31 +2020,33 @@ const BillingDetails = () => {
                             )}
                             <h6 className="BillPrintFontPrint">
                               CGST {item?.TeensTax / 2} %:{" "}
-                              {(item?.TeensTaxBifurcation / 2).toFixed(2)}
+                              {((item?.TeensTaxBifurcation / 2).toFixed(2) *
+                                100) /
+                                100}
                             </h6>
                             <h6 className="BillPrintFontPrint">
                               SGST {item?.TeensTax / 2} %:
-                              {(item?.TeensTaxBifurcation / 2).toFixed(2)}
+                              {((item?.TeensTaxBifurcation / 2).toFixed(2) *
+                                100) /
+                                100}
                             </h6>
 
                             <h6 className="BillPrintFontPrint">
                               Bill Amount :{" "}
                               {item?.ItemDetails && (
                                 <span>
-                                  {parseFloat(
+                                  {(parseFloat(
                                     item?.ItemDetails?.packageGuestCount.reduce(
-                                      (acc, count, index) => {
-                                        return (
-                                          acc +
-                                          count *
-                                            item?.ItemDetails?.Price[index]
-                                        );
-                                      },
+                                      (acc, count, index) =>
+                                        acc +
+                                        count * item?.ItemDetails?.Price[index],
                                       0
                                     ) +
                                       (item?.TeensPrice || 0) -
                                       totalDiscount
-                                  ).toFixed(2)}
+                                  ).toFixed(2) *
+                                    100) /
+                                    100}
                                 </span>
                               )}
                             </h6>
@@ -2306,7 +2059,7 @@ const BillingDetails = () => {
                                   <>
                                     <h6 className="BillPrintFontPrint">
                                       CGST {item?.ItemDetails.ItemTax / 2} %:{" "}
-                                      {(
+                                      {((
                                         (item?.ItemDetails?.packageGuestCount &&
                                         item?.ItemDetails?.TaxDiff
                                           ? item.ItemDetails.packageGuestCount.reduce(
@@ -2319,12 +2072,14 @@ const BillingDetails = () => {
                                               0
                                             )
                                           : 0) / 2
-                                      ).toFixed(2)}
+                                      ).toFixed(2) *
+                                        100) /
+                                        100}
                                     </h6>
 
                                     <h6 className="BillPrintFontPrint">
                                       SGST {item?.ItemDetails.ItemTax / 2} %:{" "}
-                                      {(
+                                      {((
                                         (item?.ItemDetails?.packageGuestCount &&
                                         item?.ItemDetails?.TaxDiff
                                           ? item.ItemDetails.packageGuestCount.reduce(
@@ -2337,7 +2092,9 @@ const BillingDetails = () => {
                                               0
                                             )
                                           : 0) / 2
-                                      ).toFixed(2)}
+                                      ).toFixed(2) *
+                                        100) /
+                                        100}
                                     </h6>
                                   </>
                                 ) : (
@@ -2346,7 +2103,7 @@ const BillingDetails = () => {
                                       CGST {item?.ItemDetails.ItemTax / 2} %:
                                       {item?.ItemDetails?.packageGuestCount &&
                                       item?.ItemDetails?.TaxBifurcation
-                                        ? (
+                                        ? ((
                                             item.ItemDetails.packageGuestCount.reduce(
                                               (total, count, index) =>
                                                 total +
@@ -2355,7 +2112,9 @@ const BillingDetails = () => {
                                                     .TaxBifurcation[index],
                                               0
                                             ) / 2
-                                          ).toFixed(2)
+                                          ).toFixed(2) *
+                                            100) /
+                                          100
                                         : 0}
                                     </h6>
 
@@ -2363,7 +2122,7 @@ const BillingDetails = () => {
                                       SGST {item?.ItemDetails.ItemTax / 2} %:
                                       {item?.ItemDetails?.packageGuestCount &&
                                       item?.ItemDetails?.TaxBifurcation
-                                        ? (
+                                        ? ((
                                             item.ItemDetails.packageGuestCount.reduce(
                                               (total, count, index) =>
                                                 total +
@@ -2372,8 +2131,10 @@ const BillingDetails = () => {
                                                     .TaxBifurcation[index],
                                               0
                                             ) / 2
-                                          ).toFixed(2)
-                                        : 0}
+                                          ).toFixed(2) *
+                                            100) /
+                                          100
+                                        : "0"}
                                     </h6>
                                   </>
                                 )}
@@ -2381,16 +2142,20 @@ const BillingDetails = () => {
                             ) : item?.ItemDetails?.ItemTaxName[0] === "VAT" ? (
                               <h6 className="BillPrintFontPrint">
                                 VAT {item?.ItemDetails.ItemTax}%:
-                                {(item?.ItemDetails?.packageGuestCount &&
+                                {item?.ItemDetails?.packageGuestCount &&
                                 item?.ItemDetails?.TaxDiff
-                                  ? item.ItemDetails.packageGuestCount.reduce(
-                                      (total, count, index) =>
-                                        total +
-                                        count * item.ItemDetails.TaxDiff[index],
-                                      0
-                                    )
-                                  : 0
-                                ).toFixed(2)}
+                                  ? (item.ItemDetails.packageGuestCount
+                                      .reduce(
+                                        (total, count, index) =>
+                                          total +
+                                          count *
+                                            item.ItemDetails.TaxDiff[index],
+                                        0
+                                      )
+                                      .toFixed(2) *
+                                      100) /
+                                    100
+                                  : "0"}
                               </h6>
                             ) : (
                               <h6 className="BillPrintFontPrint"></h6>
@@ -2403,20 +2168,19 @@ const BillingDetails = () => {
                                   Bill Amount :{" "}
                                   {item?.ItemDetails && (
                                     <span>
-                                      {parseFloat(
+                                      {(parseFloat(
                                         item?.ItemDetails?.packageGuestCount.reduce(
-                                          (acc, count, index) => {
-                                            return (
-                                              acc +
-                                              count *
-                                                item?.ItemDetails?.Price[index]
-                                            );
-                                          },
+                                          (acc, count, index) =>
+                                            acc +
+                                            count *
+                                              item?.ItemDetails?.Price[index],
                                           0
                                         ) -
                                           (item?.ActualAmount -
                                             item?.AmountAfterDiscount)
-                                      ).toFixed(2)}
+                                      ).toFixed(2) *
+                                        100) /
+                                        100}
                                     </span>
                                   )}
                                 </h6>
@@ -2424,21 +2188,17 @@ const BillingDetails = () => {
                             ) : totalDiscount == 0 ? (
                               <h6 className="BillPrintFontPrint">
                                 Bill Amount :{" "}
-                                {item?.ItemDetails && (
-                                  <span>
-                                    {parseFloat(
-                                      item?.ItemDetails?.packageGuestCount.reduce(
-                                        (acc, count, index) => {
-                                          return (
-                                            acc +
-                                            count *
-                                              item?.ItemDetails?.Price[index]
-                                          );
-                                        },
-                                        0
-                                      )
-                                    ).toFixed(2)}
-                                  </span>
+                                {parseFloat(
+                                  (item?.ItemDetails?.packageGuestCount
+                                    .reduce(
+                                      (acc, count, index) =>
+                                        acc +
+                                        count * item?.ItemDetails?.Price[index],
+                                      0
+                                    )
+                                    .toFixed(2) *
+                                    100) /
+                                    100
                                 )}
                               </h6>
                             ) : (
@@ -2447,17 +2207,18 @@ const BillingDetails = () => {
                                 {item?.ItemDetails && (
                                   <span>
                                     {parseFloat(
-                                      item?.ItemDetails?.packageGuestCount.reduce(
-                                        (acc, count, index) => {
-                                          return (
+                                      (item?.ItemDetails?.packageGuestCount
+                                        .reduce(
+                                          (acc, count, index) =>
                                             acc +
                                             count *
-                                              item?.ItemDetails?.Price[index]
-                                          );
-                                        },
-                                        0
-                                      )
-                                    ).toFixed(2)}
+                                              item?.ItemDetails?.Price[index],
+                                          0
+                                        )
+                                        .toFixed(2) *
+                                        100) /
+                                        100
+                                    )}
                                   </span>
                                 )}
                               </h6>

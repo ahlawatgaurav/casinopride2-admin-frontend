@@ -24,6 +24,7 @@ import { checkCurrentOutletFn } from "../../../Redux/actions/users";
 import { Oval } from "react-loader-spinner";
 import { checkActiveOutlet } from "../../../Redux/actions/users";
 import { cashierReport } from "../../../Redux/actions/billing";
+import { cashierReportShiftWise } from "../../../Redux/actions/billing";
 
 const Shifts = () => {
   const location = useLocation();
@@ -90,6 +91,10 @@ const Shifts = () => {
   const [openCloseOtletModal, setOpenCloseOutletModal] = useState(false);
   const [showGenerateCashierModal, setShowGenerateCashierModal] =
     useState(false);
+
+  const [showShiftReportModal, setShowShiftReportModal] = useState(false);
+
+  const [shiftId, setShiftId] = useState(0);
 
   const openOutletModal = () => {
     setOutletModalOpen(true);
@@ -219,12 +224,17 @@ const Shifts = () => {
     dispatch(
       closeShiftFn(data, loginDetails?.logindata?.Token, (callback) => {
         if (callback.status) {
-          console.log("Close shift called------------->", callback);
+          console.log(
+            "Close shift called------------->",
+            callback?.response?.Details[0]
+          );
           setCheckShift1Close(true);
           setShiftDetails(callback?.response?.Details[0]);
+          setShiftId(1);
           setCheckShift2open(true);
-          toast.success("Shift 1 is Closed");
+          // setShowShiftReportModal(true);
 
+          toast.success("Shift 1 is Closed");
           dispatch(
             checkShiftForUser(
               checkActiveOtlet == true ? today : activeDateOfOutlet?.OutletDate,
@@ -260,14 +270,16 @@ const Shifts = () => {
                                 callback?.response?.Details
                               );
                               setLoader(false);
-                              window.location.reload();
+                              setShowShiftReportModal(true);
+                              // window.location.reload();
                             } else {
                               console.log(
                                 "Else condition for recent shift open",
                                 callback?.response?.Details
                               );
                               setRecentShiftOpen(callback?.response?.Details);
-                              window.location.reload();
+                              // window.location.reload();
+                              setShowShiftReportModal(true);
 
                               setLoader(false);
                             }
@@ -283,7 +295,8 @@ const Shifts = () => {
                       callback?.response?.Details
                     );
                     setSHiftDetaislForUser(callback?.response?.Details);
-                    window.location.reload();
+                    // window.location.reload();
+                    setShowShiftReportModal(true);
 
                     setLoader(false);
                   }
@@ -295,7 +308,8 @@ const Shifts = () => {
               }
             )
           );
-          window.location.reload();
+          console.log("Hereeee");
+          // window.location.reload();
         } else {
           toast.error(callback.error);
         }
@@ -417,10 +431,12 @@ const Shifts = () => {
           console.log("Close 2 shift called------------->", callback);
 
           setShiftDetails(callback?.response?.Details[0]);
+          setShiftId(2);
           setCheckShift2Close(false);
           setCheckShift3Open(true);
           setReopenShift2(true);
           toast.success("Shift 2 is Closed");
+          // setShowShiftReportModal(true);
 
           dispatch(
             checkShiftForUser(
@@ -456,15 +472,17 @@ const Shifts = () => {
                               setSHiftDetaislForUser(
                                 callback?.response?.Details
                               );
+                              setShowShiftReportModal(true);
                               setLoader(false);
-                              window.location.reload();
+                              // window.location.reload();
                             } else {
                               console.log(
                                 "Else condition for recent shift open",
                                 callback?.response?.Details
                               );
                               setRecentShiftOpen(callback?.response?.Details);
-                              window.location.reload();
+                              // window.location.reload();
+                              setShowShiftReportModal(true);
 
                               setLoader(false);
                             }
@@ -480,7 +498,8 @@ const Shifts = () => {
                       callback?.response?.Details
                     );
                     setSHiftDetaislForUser(callback?.response?.Details);
-                    window.location.reload();
+                    // window.location.reload();
+                    setShowShiftReportModal(true);
 
                     setLoader(false);
                   }
@@ -493,7 +512,8 @@ const Shifts = () => {
             )
           );
 
-          window.location.reload();
+          // window.location.reload();
+          console.log("Hereeee");
 
           setReopenShift1(false);
         } else {
@@ -614,6 +634,7 @@ const Shifts = () => {
           console.log("Close shift called------------->", callback);
           setCheckShift3Close(true);
           setShiftDetails(callback?.response?.Details[0]);
+          setShiftId(3);
 
           dispatch(
             checkShiftForUser(
@@ -649,15 +670,17 @@ const Shifts = () => {
                               setSHiftDetaislForUser(
                                 callback?.response?.Details
                               );
+                              setShowShiftReportModal(true);
                               setLoader(false);
-                              window.location.reload();
+                              // window.location.reload();
                             } else {
                               console.log(
                                 "Else condition for recent shift open",
                                 callback?.response?.Details
                               );
                               setRecentShiftOpen(callback?.response?.Details);
-                              window.location.reload();
+                              // window.location.reload();
+                              setShowShiftReportModal(true);
 
                               setLoader(false);
                             }
@@ -673,7 +696,8 @@ const Shifts = () => {
                       callback?.response?.Details
                     );
                     setSHiftDetaislForUser(callback?.response?.Details);
-                    window.location.reload();
+                    // window.location.reload();
+                    setShowShiftReportModal(true);
 
                     setLoader(false);
                   }
@@ -2187,9 +2211,37 @@ const Shifts = () => {
     );
   };
 
+  const generateCashierReportShiftWise = () => {
+    console.log("Shiftttt", outletFormattedData, shiftId);
+    dispatch(
+      cashierReportShiftWise(
+        loginDetails?.logindata?.Token,
+        outletFormattedData,
+        shiftId,
+
+        (callback) => {
+          if (callback.status) {
+            console.log("cashierReport---shift wise>>", callback?.response);
+            window.open(callback?.response?.Details?.ReportFile, "_blank");
+
+            // window.location.reload();
+            setShowShiftReportModal(false);
+          } else {
+            console.log("cashierReport>>>Callback------", callback.error);
+            toast.error(callback.error);
+          }
+        }
+      )
+    );
+  };
+
   const closeCashierReportModal = () => {
     setShowGenerateCashierModal(false);
     window.location.reload();
+  };
+
+  const closeShiftReportModal = () => {
+    setShowShiftReportModal(false);
   };
   return (
     <div>
@@ -2451,7 +2503,6 @@ const Shifts = () => {
       >
         <Modal.Body>
           <div className="row">
-            {/* <img src={xcircle} alt="Check Circle" className="check-circle" /> */}
             <p className="outletTitle">Generate Cashier Report</p>
             <p className="outletTex">Generate Cashier Report</p>
           </div>
@@ -2467,6 +2518,37 @@ const Shifts = () => {
             <div>
               <Button
                 onClick={closeCashierReportModal}
+                className="closecancelBtn"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
+
+      <Modal
+        show={showShiftReportModal}
+        onHide={closeShiftReportModal}
+        centered
+      >
+        <Modal.Body>
+          <div className="row">
+            <p className="outletTitle">Generate Shift Report</p>
+            <p className="outletTex">Generate Shift Report</p>
+          </div>
+          <div className="row">
+            <div>
+              <Button
+                onClick={generateCashierReportShiftWise}
+                className="closeConfirmBtn"
+              >
+                Generate
+              </Button>
+            </div>
+            <div>
+              <Button
+                onClick={closeShiftReportModal}
                 className="closecancelBtn"
               >
                 Cancel

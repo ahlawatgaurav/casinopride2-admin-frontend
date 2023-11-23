@@ -36,6 +36,8 @@ const AgentSettlementList = () => {
   const [filteredAgentDetails, setFilteredAgentDetails] = useState([]);
   const [filteredCouponDetails, setFilteredCouponDetails] = useState([]);
 
+  const [filterDate, setFilterDate] = useState(moment().format("YYYY-MM-DD"));
+
   const [loading, setLoading] = useState(true);
 
   const [userId, setUserId] = useState("");
@@ -50,10 +52,11 @@ const AgentSettlementList = () => {
   const currentDate = moment().format("YYYY-MM-DD");
 
   const fetchAgentSettlementDetails = () => {
+    console.log("filterDate", filterDate);
     dispatch(
       fetchAgentSettlement(
         loginDetails?.logindata?.Token,
-        currentDate,
+        filterDate,
         (callback) => {
           if (callback.status) {
             setLoading(false);
@@ -72,7 +75,7 @@ const AgentSettlementList = () => {
 
   useEffect(() => {
     fetchAgentSettlementDetails();
-  }, [dispatch]);
+  }, [dispatch, filterDate]);
 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -178,7 +181,8 @@ const AgentSettlementList = () => {
       <h3 className="mb-4">Travel Agent settlement List</h3>
       <div className="container">
         <div className="row">
-          <div className="col-md-8 col-lg-6 mb-3">
+          <div className="col-md-8 col-lg-6 mb-2">
+            <p style={{ fontWeight: "bold" }}>Search</p>
             <div className="input-group">
               <input
                 type="text"
@@ -189,6 +193,22 @@ const AgentSettlementList = () => {
                   // filterCouponListDetails();
                   filterAgentSettlementDetails(e.target.value);
                 }}
+              />
+            </div>
+          </div>
+          <div className="col-md-2 col-lg-2 mb-2">
+            <p style={{ fontWeight: "bold" }}>Date</p>
+            <div className="input-group">
+              <input
+                type="date"
+                className="form-control"
+                placeholder="Search name"
+                // onChange={(e) => {
+                //   setSearchQuery(e.target.value);
+                //   filterPackageDetailsFn();
+                // }}
+                max={filterDate}
+                onChange={(e) => setFilterDate(e.target.value)}
               />
             </div>
           </div>

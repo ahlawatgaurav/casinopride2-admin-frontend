@@ -1307,7 +1307,10 @@ const TeensBilling = () => {
               <h5 style={{ fontSize: "15px" }}>
                 Website : www.casinoprideofficial.com
               </h5>
-              <h5 style={{ fontSize: "15px" }}>Instagram :</h5>
+              <h5 style={{ fontSize: "15px" }}>
+                {" "}
+                Instagram : casinoprideofficial
+              </h5>
               <h5 style={{ fontSize: "12px" }}>
                 CIN No: U55101GA2005PTC004274{" "}
               </h5>
@@ -1346,7 +1349,7 @@ const TeensBilling = () => {
                   )}
 
                   <p className="BillPrintFont">
-                    Total Number of Guests :{" "}
+                    Total Number of Kids :{" "}
                     <span className="BillPrintFont">
                       {item.TotalGuestCount}
                     </span>
@@ -1377,7 +1380,10 @@ const TeensBilling = () => {
                     </span>
                   </p>
 
-                  <p className="bill-number BillPrintFont">
+                  <p
+                    className="bill-number BillPrintFont"
+                    style={{ marginRight: "35px" }}
+                  >
                     BILL#: {item.BillNumber}
                   </p>
                 </div>
@@ -1396,7 +1402,7 @@ const TeensBilling = () => {
                   <tbody>
                     <tr>
                       <td style={{ textAlign: "center" }}>
-                        <p className="BillPrintFont">Teens</p>
+                        <p className="BillPrintFont">Kids</p>
                       </td>
 
                       <td
@@ -1447,13 +1453,13 @@ const TeensBilling = () => {
                   </h6>
 
                   {item?.AmountAfterDiscount == 0 ? (
-                    <h4>Bill Amountt: {item?.TeensPrice}</h4>
+                    <h6>Bill Amountt: {item?.TeensPrice}</h6>
                   ) : (
-                    <h4>
+                    <h6>
                       Bill Amountt:{" "}
                       {item?.TeensPrice -
                         (item?.ActualAmount - item?.AmountAfterDiscount)}
-                    </h4>
+                    </h6>
                   )}
                 </div>
 
@@ -1566,7 +1572,10 @@ const TeensBilling = () => {
                   <h5 className="BillPrintFontPrint">
                     Website : www.casinoprideofficial.com
                   </h5>
-                  <h5 className="BillPrintFontPrint">Instagram : </h5>
+                  <h5 className="BillPrintFontPrint">
+                    {" "}
+                    Instagram : casinoprideofficial
+                  </h5>
                   <h5 className="BillPrintFontPrint">
                     CIN No: U55101GA2005PTC004274{" "}
                   </h5>
@@ -1578,12 +1587,19 @@ const TeensBilling = () => {
                       fontSize: "12px",
                       lineHeight: "10px",
                       fontWeight: "bold",
+                      marginTop: "10px",
                     }}
                   >
                     TAX INVOICE
                   </h5>
-                  <div className="row">
-                    <div className="col-6 bill-details">
+                  <div className="row" style={{ marginTop: "10px" }}>
+                    <div className="col-12 bill-details">
+                      <p
+                        className="bill-number BillPrintFontPrint"
+                        style={{ marginRight: "15px" }}
+                      >
+                        BILL#: {item.BillNumber}
+                      </p>
                       <p className="BillPrintFontPrint">
                         GUEST NAME :
                         <span className="BillPrintFontPrint">
@@ -1618,46 +1634,26 @@ const TeensBilling = () => {
                       )}
 
                       <p className="BillPrintFontPrint">
-                        Total Number of Guests :{" "}
+                        Total Number of Kids :{" "}
                         <span className="BillPrintFontPrint">
                           {item.TotalGuestCount}
                         </span>
                       </p>
                     </div>
-                    <div className="col-6">
-                      <div className="d-flex justify-content-end qr-code">
-                        {qrCodeImage && (
-                          <div className="qr-code-image">
-                            <img
-                              src={qrCodeImage}
-                              alt="QR Code"
-                              style={{ width: "80px", height: "80px" }}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </div>
                   </div>
                   <div className="bill-details">
                     <div className="date-time-bill-row">
-                      <p className="BillPrintFontPrint">
+                      <p
+                        className="BillPrintFontPrint"
+                        style={{ marginTop: "5px" }}
+                      >
                         Date & Time:
-                        <span
-                          style={{ fontWeight: "bold" }}
-                          className="BillPrintFontPrint"
-                        >
+                        <span className="BillPrintFontPrint">
                           {" "}
                           {moment
-                            .utc(item?.BillingDate)
+                            .utc(item?.BillDateTime)
                             .format("DD/MM/YYYY HH:mm")}
                         </span>
-                      </p>
-
-                      <p
-                        className="bill-number BillPrintFontPrint"
-                        style={{ marginRight: "15px" }}
-                      >
-                        BILL#: {item.BillNumber}
                       </p>
                     </div>
                     <hr />
@@ -1696,7 +1692,7 @@ const TeensBilling = () => {
                       <tbody>
                         <tr>
                           <td style={{ textAlign: "center" }}>
-                            <p className="BillPrintFontPrint">Teens</p>
+                            <p className="BillPrintFontPrint">Kids</p>
                           </td>
 
                           <td className="BillPrintFontPrint">
@@ -1747,26 +1743,40 @@ const TeensBilling = () => {
                       className="terms"
                       style={{ marginTop: "20px", textAlign: "center" }}
                     >
-                      <h6 className="BillPrintFontPrint">
+                      <h6 className="BillPrintFontPrintterms">
                         TERMS AND CONDITIONS
                       </h6>
-                      <p className="BillPrintFontPrint">
+                      <p className="BillPrintFontPrintterms">
                         (1) BUFFET IS OPEN FROM 1:30PM TO 3:30PM AND FROM 8:00PM
                         TO 1:30AM DURING WEEKDAYS.
                       </p>
-                      <p className="BillPrintFontPrint">
+                      <p className="BillPrintFontPrintterms">
                         (2) BUFFET IS OPEN FROM 1:30PM TO 4:00PM AND FROM 8:00PM
                         TO 2:00AM DURING WEEKEND.
                       </p>
-                      <p className="BillPrintFontPrint">
+                      <p className="BillPrintFontPrintterms">
                         (3) ANY PERSON ABOVE 21 YEARS OLD INTEND TO PLAY MAY
                         ENTER GAMING AREA & PURCHASE CHIPS SEPARATELY.
                       </p>
-                      <p className="BillPrintFontPrint">
+                      <p className="BillPrintFontPrintterms">
                         (4) THIS INVOICE DOES NOT ENTITLE ANY LIQUOR, GAMING
                         CHIPS OR ANY OTHER SERVICES. HOWEVER, LIMITED COUPONS
                         APPLIED ON SELECTIVE LIQUOR PACKAGES.
                       </p>
+                    </div>
+                  </div>
+
+                  <div className="col-12">
+                    <div className="d-flex justify-content-center qr-code">
+                      {qrCodeImage && (
+                        <div className="qr-code-image text-center">
+                          <img
+                            src={qrCodeImage}
+                            alt="QR Code"
+                            style={{ width: "120px", height: "120px" }}
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

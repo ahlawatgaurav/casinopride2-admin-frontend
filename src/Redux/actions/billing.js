@@ -396,6 +396,36 @@ export const cashierReport = (token, date, callback) => async (dispatch) => {
     });
 };
 
+export const cashierReportShiftWise =
+  (token, date, shiftId, callback) => async (dispatch) => {
+    api.BILLING_PORT.get(
+      `/billing/cashierReportShiftWise?date=${date}&shiftId=${shiftId}&reportTypeId=7`,
+      {
+        headers: { AuthToken: token },
+      }
+    )
+      .then((response) => {
+        console.log("generate report shift wise", response.data);
+        if (response.data?.Details) {
+          console.log(response.data?.Details);
+          callback({
+            status: true,
+            response: response?.data,
+          });
+        } else if (response.data?.Error) {
+          callback({
+            status: false,
+            error: response.data?.Error?.ErrorMessage,
+          });
+        }
+      })
+      .catch((err) => {
+        {
+          console.log("inside resp of getVoidBillingList error", err);
+        }
+      });
+  };
+
 export const updateItemDetailsBillFn =
   (token, data, callback) => async (dispatch) => {
     console.log("Item details updated------>", data);
