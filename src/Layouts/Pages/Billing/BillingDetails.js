@@ -2641,7 +2641,7 @@ const BillingDetails = () => {
                             sendEmail(data, (callback) => {
                               if (callback.status) {
                                 toast.success("Email sent");
-                                // navigate("/NewBooking");
+                                navigate("/NewBooking");
 
                                 toast.error(callback.error);
                               } else {
