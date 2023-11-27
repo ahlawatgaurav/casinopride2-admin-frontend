@@ -3017,6 +3017,13 @@ const BillingDetails = () => {
       const sgstProperty = `SGST ${item?.ItemDetails?.ItemTax / 2} %`;
       const vatProperty = `VAT ${item?.ItemDetails?.ItemTax} %`;
 
+         // Using a for loop to add the values
+    // const taxBifurcation = item?.ItemDetails?.TaxBifurcation
+    let sumWhenDiscount = 0;
+    for (let i = 0; i < item?.ItemDetails?.TaxBifurcation?.length; i++) {
+      sumWhenDiscount += item?.ItemDetails?.TaxBifurcation[i];
+    }
+
       // Create an object to store the properties
       const properties = {
         ItemTax: item?.ItemDetails?.ItemTax,
@@ -3039,13 +3046,31 @@ const BillingDetails = () => {
           properties["KidsPrice"] = KidsPrice;
           properties[KidsCgstProperty] = KidsTax;
           properties[KidsSgstProperty] = KidsTax;
-          properties[cgstProperty] = adjustedTaxDiffSum / 2;
-          properties[sgstProperty] = adjustedTaxDiffSum / 2;
+          // properties[cgstProperty] = adjustedTaxDiffSum / 2;
+          properties[cgstProperty] = total / 2;
+          // properties[sgstProperty] = adjustedTaxDiffSum / 2;
+          properties[sgstProperty] = total / 2;
+          properties["TotalBillAmount"] = TotalKidsplusAdults;
+          properties["Rate"] = FinalRateResult;
+        }
+        else if (item?.ActualAmount - item?.AmountAfterDiscount > 0) {
+          properties["KidsItemName"] = KidsItemName;
+          properties["KidsCount"] = KidsCount;
+          properties["KidsRate"] = KidsRate;
+          properties["KidsPrice"] = KidsPrice;
+          properties[KidsCgstProperty] = KidsTax;
+          properties[KidsSgstProperty] = KidsTax;
+          // properties[cgstProperty] = adjustedTaxDiffSum / 2;
+          properties[cgstProperty] = sumWhenDiscount;
+          // properties[sgstProperty] = adjustedTaxDiffSum / 2;
+          properties[sgstProperty] = sumWhenDiscount;
           properties["TotalBillAmount"] = TotalKidsplusAdults;
           properties["Rate"] = FinalRateResult;
         } else {
-          properties[cgstProperty] = adjustedTaxDiffSum / 2;
-          properties[sgstProperty] = adjustedTaxDiffSum / 2;
+          // properties[cgstProperty] = adjustedTaxDiffSum / 2;
+          properties[cgstProperty] = total / 2;
+          // properties[sgstProperty] = adjustedTaxDiffSum / 2;
+          properties[sgstProperty] = total / 2;
           properties["TotalBillAmount"] = TotalBillAmount;
           properties["Rate"] = FinalRateResult;
         }
@@ -3470,10 +3495,10 @@ const BillingDetails = () => {
                               style={{ textAlign: "right" }}
                               className="BillPrintFont"
                             >
-                              {/* {item?.TeensRate.toFixed(2)} */}
-                              {item?.TeensRate &&
+                              {item?.TeensRate.toFixed(2)}
+                              {/* {item?.TeensRate &&
                                 item?.NumOfTeens &&
-                                Math.floor(item.TeensRate * 100) / 100}
+                                Math.floor(item.TeensRate * 100) / 100} */}
                             </td>
                           </tr>
                         )}
@@ -4480,7 +4505,7 @@ const BillingDetails = () => {
                                   </p>
                                 </td>
 
-                                <td style={{ textAlign: "right" }}>
+                                <td style={{ textAlign: "right",paddingRight:"5px" }}>
                                   <p className="BillPrintFontPrint">
                                     {/* {item?.TeensRate.toFixed(2)} */}
                                     {item?.TeensRate &&
@@ -4804,6 +4829,7 @@ const BillingDetails = () => {
                           </>
                         )}
                       </div>
+
                       <div
                         className="terms"
                         style={{ marginTop: "10px", textAlign: "center" }}
