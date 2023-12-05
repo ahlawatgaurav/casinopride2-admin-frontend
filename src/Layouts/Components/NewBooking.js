@@ -30,7 +30,10 @@ import { recentShiftForOutlet } from "../../Redux/actions/users";
 import { getEnabledPanelDiscount } from "../../Redux/actions/users";
 import { compose } from "@reduxjs/toolkit";
 import { Oval, MagnifyingGlass, RotatingLines } from "react-loader-spinner";
-import { AddBillingDetails } from "../../Redux/actions/billing";
+import {
+  AddBillingDetails,
+  AddupdateAgentSettlement,
+} from "../../Redux/actions/billing";
 import { checkActiveOutlet } from "../../Redux/actions/users";
 import { getUserById } from "../../Redux/actions/users";
 import { countDriverBookings } from "../../Redux/actions/users";
@@ -875,6 +878,54 @@ const NewBooking = () => {
                             // reject(callback);
                           }
                         }
+                      )
+                    );
+                  }
+
+                  /// settlement if Discountpercent
+                  if (Discountpercent) {
+                    let perc = localAgentId
+                      ? localAgentDetails?.DiscountPercent
+                      : TravelAgentId
+                      ? TravelDetails?.DiscountPercent
+                      : 0;
+
+                    const AgentSettlemetDiscount = perc - Discountpercent;
+
+                    console.log(
+                      "AgentSettlemetDiscount-------->",
+                      AgentSettlemetDiscount
+                    );
+
+                    const calculateAmountAfterDiscount =
+                      callback?.response?.Details?.AmountAfterDiscount *
+                      (1 -
+                        callback?.response?.Details?.AgentPanelDiscount / 100);
+
+                    console.log(
+                      "calculateAmountAfterDiscount",
+                      calculateAmountAfterDiscount
+                    );
+
+                    const AgentSettlementAmount =
+                      (calculateAmountAfterDiscount * AgentSettlemetDiscount) /
+                      100;
+
+                    const agentData = {
+                      userId: localAgentDetails?.Id || TravelDetails?.Id,
+                      agentName: localAgentDetails?.Name || TravelDetails?.Name,
+                      userTypeId:
+                        localAgentDetails?.UserType || TravelDetails?.UserType,
+                      settlementAmount: AgentSettlementAmount,
+                      bookingDate:
+                        callback?.response?.Details?.CreatedOn?.slice(0, 10),
+                      bookingId: callback?.response?.Details?.Id,
+                    };
+                    dispatch(
+                      AddupdateAgentSettlement(
+                        agentData,
+                        loginDetails?.logindata?.Token,
+                        (callback2) => {}
                       )
                     );
                   }

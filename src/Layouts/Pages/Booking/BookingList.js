@@ -697,7 +697,8 @@ const BookingList = () => {
                           item?.PaymentMode == null
                         ) {
                           window.open(
-                            `/acknowledgementDetails?BookingId=${item.Id}`
+                            `/acknowledgementDetails?BookingId=${item.Id}`,
+                            "_self"
                           );
                         } else {
                           GenerateBill(item);
