@@ -746,6 +746,7 @@ const NewBooking = () => {
       couponId: couponId,
       referredBy: referredBy,
       settledByCompany: 0,
+      agentPanelDiscount: Discountpercent != "" ?Discountpercent : 0,
       packageId:
         packageIds.length == 0
           ? JSON.stringify(teenpackageIdArray)
@@ -829,7 +830,9 @@ const NewBooking = () => {
               callback?.response?.Details?.AmountAfterDiscount,
             discount: callback?.response?.Details?.PanelDiscount
               ? callback?.response?.Details?.PanelDiscount
-              : callback?.response?.Details?.CouponDiscount,
+              : callback?.response?.Details?.CouponDiscount
+              ?  callback?.response?.Details?.CouponDiscount
+              : Discountpercent ,
             packageWeekdayPrice:
               callback?.response?.Details?.PackageWeekdayPrice,
             packageWeekendPrice:
