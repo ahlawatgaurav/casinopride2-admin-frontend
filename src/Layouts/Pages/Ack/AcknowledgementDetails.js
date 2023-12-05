@@ -7,10 +7,14 @@ import {
   fetchBookingDetailsById,
   updateBookingForPayAtCounterFn,
 } from "../../../Redux/actions/booking";
-import { AddBillingDetails } from "../../../Redux/actions/billing";
+import {
+  AddBillingDetails,
+  AddupdateAgentSettlement,
+} from "../../../Redux/actions/billing";
 import moment from "moment";
 import { toast } from "react-toastify";
 import { Modal, Button } from "react-bootstrap";
+import { getUserById } from "../../../Redux/actions/users";
 
 const AcknowledgementDetails = () => {
   const location = useLocation();
@@ -77,7 +81,9 @@ const AcknowledgementDetails = () => {
   const [isPresentDate, setIsPresentDate] = useState(false);
   const [bookingData, setBookingData] = useState(null);
 
-  const outletOpenDate = useSelector((state) => state.users?.saveOutletDate?.Details?.OutletDate);
+  const outletOpenDate = useSelector(
+    (state) => state.users?.saveOutletDate?.Details?.OutletDate
+  );
 
   const handleShow = () => setShow(true);
   const handleClose = () => {
@@ -124,7 +130,8 @@ const AcknowledgementDetails = () => {
   }
 
   console.log("comparisonResult------------>", comparisonResult);
-
+  const [localAgentDetails, setLocalAgentDetails] = useState("");
+  const [localAgentId, setLocalAgentId] = useState();
   useEffect(() => {
     if (!loginDetails) {
       navigate("/");
@@ -173,10 +180,10 @@ const AcknowledgementDetails = () => {
                 ? callback?.response?.Details.WebsiteDiscount
                 : callback?.response?.Details.CouponDiscount
                 ? callback?.response?.Details.CouponDiscount
-                : callback?.response?.Details.AgentPanelDiscount 
+                : callback?.response?.Details.AgentPanelDiscount
                 ? callback?.response?.Details.AgentPanelDiscount
                 : 0,
-                
+
               packageWeekdayPrice:
                 callback?.response?.Details.PackageWeekdayPrice,
               packageWeekendPrice:
@@ -187,11 +194,34 @@ const AcknowledgementDetails = () => {
             if (callback?.response?.Details?.PayAtCounter != 1) {
               setShow(true);
             } else {
-              setPay(true);
+              if (
+                callback?.response?.Details?.PayAtCounter == 1 &&
+                callback?.response?.Details?.PaymentMode == null
+              ) {
+                setPay(true);
+              } else {
+                setPay(false);
+
+                setShow(true);
+              }
             }
             console.log("Data-----from ack booking>", data);
             setBookingData(data);
-
+            dispatch(
+              getUserById(callback?.response?.Details?.UserId, (callback) => {
+                console.log("hii get user by Id>>callabck>>", callback);
+                if (callback.status) {
+                  console.log(
+                    "callabck.response.details>>",
+                    callback?.response?.Details
+                  );
+                  setLocalAgentId(callback?.response?.Details?.Id);
+                  setLocalAgentDetails(callback?.response?.Details);
+                } else {
+                  toast.error(callback.error);
+                }
+              })
+            );
             // dispatch(
             //   AddBillingDetails(
             //     loginDetails?.logindata?.Token,
@@ -390,7 +420,7 @@ const AcknowledgementDetails = () => {
                 ? callback?.response?.Details.WebsiteDiscount
                 : callback?.response?.Details.CouponDiscount
                 ? callback?.response?.Details.CouponDiscount
-                : callback?.response?.Details.AgentPanelDiscount 
+                : callback?.response?.Details.AgentPanelDiscount
                 ? callback?.response?.Details.AgentPanelDiscount
                 : 0,
               packageWeekdayPrice:
@@ -405,29 +435,88 @@ const AcknowledgementDetails = () => {
               AddBillingDetails(
                 loginDetails?.logindata?.Token,
                 data,
-                (callback) => {
-                  if (callback.status) {
+                (callback4) => {
+                  if (callback4.status) {
                     console.log(
                       "Generate Bill --------------?",
-                      callback?.response?.Details[0]?.NumOfTeens,
-                      callback?.response?.Details[0]?.TotalGuestCount
+                      callback4?.response?.Details[0]?.NumOfTeens,
+                      callback4?.response?.Details[0]?.TotalGuestCount
                     );
 
-                    if (
-                      callback?.response?.Details[0]?.NumOfTeens -
-                        callback?.response?.Details[0]?.TotalGuestCount ==
-                      0
-                    ) {
-                      navigate("/TeensBilling", {
-                        state: { BookingDetails: callback?.response?.Details },
-                      });
-                      setLoader(false);
-                    } else {
-                      navigate("/BillingDetails", {
-                        state: { BookingDetails: callback?.response?.Details },
-                      });
-                      setLoader(false);
-                    }
+                    const AgentSettlemetDiscount =
+                      localAgentDetails?.DiscountPercent -
+                      callback?.response?.Details?.AgentPanelDiscount;
+
+                    console.log(
+                      "AgentSettlemetDiscount-------->",
+                      AgentSettlemetDiscount
+                    );
+
+                    const calculateAmountAfterDiscount =
+                      callback?.response?.Details?.ActualAmount *
+                      (1 -
+                        callback?.response?.Details?.AgentPanelDiscount / 100);
+
+                    console.log(
+                      "calculateAmountAfterDiscount",
+                      calculateAmountAfterDiscount
+                    );
+
+                    const AgentSettlementAmount =
+                      (calculateAmountAfterDiscount * AgentSettlemetDiscount) /
+                      100;
+
+                    const agentData = {
+                      userId: localAgentDetails?.Id,
+                      agentName: localAgentDetails?.Name,
+                      userTypeId: localAgentDetails?.UserType,
+                      settlementAmount: AgentSettlementAmount,
+                      bookingDate:
+                        callback?.response?.Details?.CreatedOn?.slice(0, 10),
+                      bookingId: callback?.response?.Details?.Id,
+                    };
+                    dispatch(
+                      AddupdateAgentSettlement(
+                        agentData,
+                        loginDetails?.logindata?.Token,
+                        (callback2) => {
+                          if (callback2.status) {
+                            if (
+                              callback4?.response?.Details[0]?.NumOfTeens -
+                                callback4?.response?.Details[0]
+                                  ?.TotalGuestCount ==
+                              0
+                            ) {
+                              navigate("/TeensBilling", {
+                                state: {
+                                  BookingDetails: callback4?.response?.Details,
+                                },
+                              });
+                              setLoader(false);
+                            } else {
+                              navigate("/BillingDetails", {
+                                state: {
+                                  BookingDetails: callback4?.response?.Details,
+                                },
+                              });
+                              setLoader(false);
+                            }
+
+                            console.log(
+                              "Callback add update details of agent discount seetlement amopunt---->",
+                              callback2?.response?.Details
+                            );
+
+                            setLoader(false);
+
+                            // resolve(callback);
+                          } else {
+                            toast.error(callback2.error);
+                            // reject(callback);
+                          }
+                        }
+                      )
+                    );
 
                     toast.error(callback.error);
                   } else {
@@ -834,16 +923,16 @@ const AcknowledgementDetails = () => {
           ) : (
             <></>
           )}
+          <button
+            onClick={handleShowR}
+            style={{ paddingLeft: "100px", paddingRight: "100px" }}
+            className="btn btn_colour mt-5 btn-lg"
+          >
+            {" "}
+            Pay
+          </button>
         </div>
       )}
-      <button
-        onClick={handleShowR}
-        style={{ paddingLeft: "100px", paddingRight: "100px" }}
-        className="btn btn_colour mt-5 btn-lg"
-      >
-        {" "}
-        Pay
-      </button>
     </div>
   );
 };

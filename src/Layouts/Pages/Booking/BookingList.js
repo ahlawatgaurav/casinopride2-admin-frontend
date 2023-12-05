@@ -691,7 +691,18 @@ const BookingList = () => {
                 <td className="manager-list">
                   {item?.FutureDate == today ? (
                     <LiaFileInvoiceSolid
-                      onClick={() => GenerateBill(item)}
+                      onClick={() => {
+                        if (
+                          item?.PayAtCounter == 1 &&
+                          item?.PaymentMode == null
+                        ) {
+                          window.open(
+                            `/acknowledgementDetails?BookingId=${item.Id}`
+                          );
+                        } else {
+                          GenerateBill(item);
+                        }
+                      }}
                       style={{
                         height: "22px",
                         width: "22px",

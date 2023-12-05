@@ -29,6 +29,32 @@ export const AddBillingDetails =
       });
   };
 
+export const AddupdateAgentSettlement =
+  (data, token, callback) => async (dispatch) => {
+    api.CORE_PORT.post("/core/addUpdateAgentSettlement", data, {
+      headers: { AuthToken: token },
+    })
+      .then((response) => {
+        console.log("add Update Agent Settlement details ->", response.data);
+        if (response.data?.Details) {
+          console.log(response.data?.Details);
+          callback({
+            status: true,
+            response: response?.data,
+          });
+        } else if (response.data?.Error) {
+          callback({
+            status: false,
+            error: response.data?.Error?.ErrorMessage,
+          });
+        }
+      })
+      .catch((err) => {
+        {
+          console.log("error", err);
+        }
+      });
+  };
 // export const GetBillingDetails =
 //   (token, futureDate, shiftId, userId, callback) => async (dispatch) => {
 //     const queryParams = {

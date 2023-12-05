@@ -746,7 +746,7 @@ const NewBooking = () => {
       couponId: couponId,
       referredBy: referredBy,
       settledByCompany: 0,
-      agentPanelDiscount: Discountpercent != "" ?Discountpercent : 0,
+      agentPanelDiscount: Discountpercent != "" ? Discountpercent : 0,
       packageId:
         packageIds.length == 0
           ? JSON.stringify(teenpackageIdArray)
@@ -766,12 +766,13 @@ const NewBooking = () => {
       actualAmount: amount,
       paymentMode: paymentOption,
       cardAmount: cardAmount,
-      amountAfterDiscount:
-        amountAfterDiscount !== 0
-          ? amountAfterDiscount
-          : couponDiscount !== ""
-          ? couponDiscount
-          : amount,
+      amountAfterDiscount: Discountpercent
+        ? amount - (amount * Discountpercent) / 100
+        : amountAfterDiscount !== 0
+        ? amountAfterDiscount
+        : couponDiscount !== ""
+        ? couponDiscount
+        : amount,
       packageName:
         packageIds.length == 0
           ? JSON.stringify(teensPackageName)
@@ -831,8 +832,8 @@ const NewBooking = () => {
             discount: callback?.response?.Details?.PanelDiscount
               ? callback?.response?.Details?.PanelDiscount
               : callback?.response?.Details?.CouponDiscount
-              ?  callback?.response?.Details?.CouponDiscount
-              : Discountpercent ,
+              ? callback?.response?.Details?.CouponDiscount
+              : Discountpercent,
             packageWeekdayPrice:
               callback?.response?.Details?.PackageWeekdayPrice,
             packageWeekendPrice:
