@@ -77,7 +77,7 @@ const AcknowledgementDetails = () => {
   const [isPresentDate, setIsPresentDate] = useState(false);
   const [bookingData, setBookingData] = useState(null);
 
-  const outletOpenDetails = useSelector((state) => state.auth?.outeltDetails);
+  const outletOpenDate = useSelector((state) => state.users?.saveOutletDate?.Details?.OutletDate);
 
   const handleShow = () => setShow(true);
   const handleClose = () => {
@@ -88,12 +88,9 @@ const AcknowledgementDetails = () => {
 
   const [loader, setLoader] = useState(false);
   const today = moment().format("YYYY-MM-DD");
-  const todayOutletDate = moment(    outletOpenDetails &&
-    outletOpenDetails?.Details &&
-    outletOpenDetails?.Details[0]?.Date).format("YYYY-MM-DD");
+  const todayOutletDate = moment(outletOpenDate).format("YYYY-MM-DD");
 
   console.log("today----------->", dateFromBackend);
-
   useEffect(() => {
     compareDates();
   }, [dateFromBackend, today]);
