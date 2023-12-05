@@ -386,7 +386,8 @@ const AcknowledgementDetails = () => {
             dispatch(
               AddBillingDetails(
                 loginDetails?.logindata?.Token,
-                data,
+                // data,
+                bookingData,
                 (callback) => {
                   if (callback.status) {
                     console.log(
