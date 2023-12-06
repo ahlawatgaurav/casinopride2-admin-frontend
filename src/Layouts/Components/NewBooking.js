@@ -234,6 +234,7 @@ const NewBooking = () => {
 
     const Discount = url.searchParams.get("Discountpercent");
     setDiscountpercent(Discount);
+    setDiscountFigure(Discount)
   }, []);
 
   const [guestName, setGuestName] = useState("");
@@ -744,7 +745,7 @@ const NewBooking = () => {
       teensTax: teenstaxPercentage,
       teensTaxName: teensTaxName,
       bookingDate: activeDateOfOutlet?.OutletDate,
-      discount:Discountpercent != "" ? Discountpercent :  discountFigure,
+      discount:discountFigure,
       panelDiscountId: selectedOption,
       couponId: couponId,
       referredBy: referredBy,
