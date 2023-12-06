@@ -744,7 +744,7 @@ const NewBooking = () => {
       teensTax: teenstaxPercentage,
       teensTaxName: teensTaxName,
       bookingDate: activeDateOfOutlet?.OutletDate,
-      discount: discountFigure,
+      discount:Discountpercent != "" ? Discountpercent :  discountFigure,
       panelDiscountId: selectedOption,
       couponId: couponId,
       referredBy: referredBy,

@@ -45,7 +45,6 @@ const PackagesPage = ({
   const loginDetails = useSelector(
     (state) => state.auth?.userDetailsAfterLogin.Details
   );
-
   const fetchPackageDetails = () => {
     dispatch(
       getPackagesDetails(loginDetails?.logindata?.Token, 4, (callback) => {
@@ -595,7 +594,7 @@ const PackagesPage = ({
                             </div>
                           )}
 
-                          {Discountpercent == "" ? (
+                          {(Discountpercent == "" || Discountpercent == null)? (
                             <></>
                           ) : (
                             <div className="row package-item">
