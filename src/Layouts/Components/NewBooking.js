@@ -854,7 +854,7 @@ const NewBooking = () => {
                   console.log(
                     "Generate Bill --------------?",
                     callback?.response?.Details[0]?.NumOfTeens,
-                    callback?.response?.Details[0]?.TotalGuestCount
+                    callback?.response?.Details
                   );
 
                   if (localAgentId) {
@@ -898,9 +898,7 @@ const NewBooking = () => {
                     );
 
                     const calculateAmountAfterDiscount =
-                      callback?.response?.Details?.AmountAfterDiscount *
-                      (1 -
-                        callback?.response?.Details?.AgentPanelDiscount / 100);
+                      data?.actualAmount * (1 - AgentSettlemetDiscount / 100);
 
                     console.log(
                       "calculateAmountAfterDiscount",
@@ -918,8 +916,11 @@ const NewBooking = () => {
                         localAgentDetails?.UserType || TravelDetails?.UserType,
                       settlementAmount: AgentSettlementAmount,
                       bookingDate:
-                        callback?.response?.Details?.CreatedOn?.slice(0, 10),
-                      bookingId: callback?.response?.Details?.Id,
+                        callback?.response?.Details?.[0]?.BookingDate?.slice(
+                          0,
+                          10
+                        ),
+                      bookingId: callback?.response?.Details?.[0]?.BookingId,
                     };
                     dispatch(
                       AddupdateAgentSettlement(
@@ -930,21 +931,21 @@ const NewBooking = () => {
                     );
                   }
 
-                  if (
-                    callback?.response?.Details[0]?.NumOfTeens -
-                      callback?.response?.Details[0]?.TotalGuestCount ==
-                    0
-                  ) {
-                    navigate("/TeensBilling", {
-                      state: { BookingDetails: callback?.response?.Details },
-                    });
-                    setLoader(false);
-                  } else {
-                    navigate("/BillingDetails", {
-                      state: { BookingDetails: callback?.response?.Details },
-                    });
-                    setLoader(false);
-                  }
+                  // if (
+                  //   callback?.response?.Details[0]?.NumOfTeens -
+                  //     callback?.response?.Details[0]?.TotalGuestCount ==
+                  //   0
+                  // ) {
+                  //   navigate("/TeensBilling", {
+                  //     state: { BookingDetails: callback?.response?.Details },
+                  //   });
+                  //   setLoader(false);
+                  // } else {
+                  //   navigate("/BillingDetails", {
+                  //     state: { BookingDetails: callback?.response?.Details },
+                  //   });
+                  //   setLoader(false);
+                  // }
 
                   toast.error(callback.error);
                 } else {
