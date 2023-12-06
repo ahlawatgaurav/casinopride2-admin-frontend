@@ -757,7 +757,9 @@ const NewBooking = () => {
       packageGuestCount: JSON.stringify(packageGuestCount),
       userId: loginDetails?.logindata?.userId,
       userTypeId: loginDetails?.logindata?.UserType,
-
+      travelAgentName: Discountpercent
+        ? localAgentDetails?.Name || TravelDetails?.Name
+        : "",
       shiftId:
         shiftDetails?.ShiftTypeId === 1 && shiftDetails?.ShiftOpen === 1
           ? 1
