@@ -2243,85 +2243,94 @@ const Shifts = () => {
     setShowShiftReportModal(false);
   };
   return (
-    <div>
-      {loader ? (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100%",
-          }}
-        >
-          <Oval
-            height={80}
-            width={50}
-            color="#4fa94d"
-            visible={true}
-            ariaLabel="oval-loading"
-            secondaryColor="#4fa94d"
-            strokeWidth={2}
-            strokeWidthSecondary={2}
-          />
-        </div>
-      ) : (
-        <div
-          className="container mt-5"
-          // style={{ backgroundColor: "green" }}
-        >
-          <h5 className="mb-0" style={{ paddingBottom: "20px" }}>
-            Outlet Date :{" "}
-            {outletFormattedData != undefined || outletFormattedData != null
-              ? outletFormattedData
-              : ""}
-          </h5>
-          <div className="row d-flex justify-content-end">
-            {!outletOpenDetails?.Details[0]?.OutletStatus == 1 &&
-            !outletDetails == 1 ? (
-              <div className="col-md-4 mb-5 d-flex justify-content-end">
-                <Button variant="primary" onClick={openOutletModal}>
-                  Open Outlet
-                </Button>
-              </div>
-            ) : (
-              <></>
-            )}
-
-            {outletDetails == 1 &&
-            shifts &&
-            shifts[3] &&
-            shifts[3][0]?.ShiftOpen === 0 &&
-            shifts[3][0]?.ShiftTypeId == 3 ? (
-              <div className="col-md-4 mb-5 d-flex justify-content-end">
-                <Button variant="danger" onClick={OpenCLoseOutletModalFn}>
-                  Close Outlet
-                </Button>
-              </div>
-            ) : (
-              <></>
-            )}
+    console.log(
+      "activeDateOfOutlet?.OutletDate>>",
+      activeDateOfOutlet?.OutletDate
+    ),
+    (
+      <div>
+        {loader ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+            }}
+          >
+            <Oval
+              height={80}
+              width={50}
+              color="#4fa94d"
+              visible={true}
+              ariaLabel="oval-loading"
+              secondaryColor="#4fa94d"
+              strokeWidth={2}
+              strokeWidthSecondary={2}
+            />
           </div>
+        ) : (
+          <div
+            className="container mt-5"
+            // style={{ backgroundColor: "green" }}
+          >
+            {(activeDateOfOutlet?.OutletDate != undefined ||
+              activeDateOfOutlet?.OutletDate != null) && (
+              <h5 className="mb-0" style={{ paddingBottom: "20px" }}>
+                Outlet Date :{" "}
+                {activeDateOfOutlet?.OutletDate != undefined ||
+                activeDateOfOutlet?.OutletDate != null
+                  ? activeDateOfOutlet?.OutletDate
+                  : ""}
+              </h5>
+            )}
+            <div className="row d-flex justify-content-end">
+              {!outletOpenDetails?.Details[0]?.OutletStatus == 1 &&
+              !outletDetails == 1 ? (
+                <div className="col-md-4 mb-5 d-flex justify-content-end">
+                  <Button variant="primary" onClick={openOutletModal}>
+                    Open Outlet
+                  </Button>
+                </div>
+              ) : (
+                <></>
+              )}
 
-          {shiftOneComponent({
-            recentShiftOpen,
-            shiftDetailsForUser,
-            shifts,
-          })}
+              {outletDetails == 1 &&
+              shifts &&
+              shifts[3] &&
+              shifts[3][0]?.ShiftOpen === 0 &&
+              shifts[3][0]?.ShiftTypeId == 3 ? (
+                <div className="col-md-4 mb-5 d-flex justify-content-end">
+                  <Button variant="danger" onClick={OpenCLoseOutletModalFn}>
+                    Close Outlet
+                  </Button>
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
 
-          <div className="row mt-5 mx-auto">
-            <div className="col-lg mx-auto text-center">
-              <div className="d-flex justify-content-center align-items-center">
-                <button
-                  className="btn btn-primary m-4 p-4"
-                  onClick={() => navigate("/NewBooking")}
-                >
-                  Create New Booking
-                </button>
+            {shiftOneComponent({
+              recentShiftOpen,
+              shiftDetailsForUser,
+              shifts,
+            })}
+
+            <div className="row mt-5 mx-auto">
+              <div className="col-lg mx-auto text-center">
+                <div className="d-flex justify-content-center align-items-center">
+                  <button
+                    className="btn btn-primary m-4 p-4"
+                    onClick={() => navigate("/NewBooking")}
+                  >
+                    Create New Booking
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* <div className="row">
+            {/* <div className="row">
             <div className="col-md-4">
               <div class="Shiftcard">
                 <p className="outletTex">Shift One</p>
@@ -2445,201 +2454,202 @@ const Shifts = () => {
               </div>
             </div>
           </div> */}
-        </div>
-      )}
+          </div>
+        )}
 
-      <Modal show={outletModalOpen} onHide={closeOutletModal} centered>
-        <Modal.Body>
-          <div className="row">
-            <img
-              src={checkcircle}
-              alt="Check Circle"
-              className="check-circle"
-            />
-            <p className="outletTitle">Open Outlet </p>
-            <p className="outletTex">
-              Are you sure you want to open the outlet ?
-            </p>
-          </div>
-          <div className="row">
-            <div>
-              <Button onClick={openOutletFn} className="confirmbtn">
-                Yes
-              </Button>
-            </div>
-            <div>
-              <Button onClick={closeOutletModal} className="cancelBtn">
-                No
-              </Button>
-            </div>
-          </div>
-        </Modal.Body>
-      </Modal>
-
-      <Modal
-        show={openCloseOtletModal}
-        onHide={OpenCLoseOutletModalFn}
-        centered
-      >
-        <Modal.Body>
-          <div className="row">
-            <img src={xcircle} alt="Check Circle" className="check-circle" />
-            <p className="outletTitle">Close Outlet </p>
-            <p className="outletTex">
-              Are you sure you want to close the outlet ?
-            </p>
-          </div>
-          <div className="row">
-            <div>
-              <Button onClick={closeOutletFn} className="closeConfirmBtn">
-                Yes
-              </Button>
-            </div>
-            <div>
-              <Button onClick={closeOutletModal} className="closecancelBtn">
-                No
-              </Button>
-            </div>
-          </div>
-        </Modal.Body>
-      </Modal>
-
-      <Modal
-        show={showGenerateCashierModal}
-        onHide={closeCashierReportModal}
-        centered
-      >
-        <Modal.Body>
-          <div className="row">
-            <p className="outletTitle">Generate Cashier Report</p>
-            <p className="outletTex">Generate Cashier Report</p>
-          </div>
-          <div className="row">
-            <div>
-              <Button
-                onClick={generateCashierReport}
-                className="closeConfirmBtn"
-              >
-                Generate
-              </Button>
-            </div>
-            <div>
-              <Button
-                onClick={closeCashierReportModal}
-                className="closecancelBtn"
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </Modal.Body>
-      </Modal>
-
-      <Modal
-        show={showShiftReportModal}
-        onHide={closeShiftReportModal}
-        centered
-      >
-        <Modal.Body>
-          <div className="row">
-            <p className="outletTitle">Generate Shift Report</p>
-            <p className="outletTex">Generate Shift Report</p>
-          </div>
-          <div className="row">
-            <div>
-              <Button
-                onClick={generateCashierReportShiftWise}
-                className="closeConfirmBtn"
-              >
-                Generate
-              </Button>
-            </div>
-            <div>
-              <Button
-                onClick={closeShiftReportModal}
-                className="closecancelBtn"
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </Modal.Body>
-      </Modal>
-
-      <Modal show={showConfirmModal} onHide={handleConfirmClose}>
-        <Modal.Header>
-          <Modal.Title style={{ fontSize: "18px", textAlign: "center" }}>
-            Enter your credentials to close the shift
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="formUsername">
-              <Form.Label>Username</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+        <Modal show={outletModalOpen} onHide={closeOutletModal} centered>
+          <Modal.Body>
+            <div className="row">
+              <img
+                src={checkcircle}
+                alt="Check Circle"
+                className="check-circle"
               />
-            </Form.Group>
-            <Form.Group controlId="formPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Enter password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleConfirmClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleLogin}>
-            Confirm
-          </Button>
-        </Modal.Footer>
-      </Modal>
+              <p className="outletTitle">Open Outlet </p>
+              <p className="outletTex">
+                Are you sure you want to open the outlet ?
+              </p>
+            </div>
+            <div className="row">
+              <div>
+                <Button onClick={openOutletFn} className="confirmbtn">
+                  Yes
+                </Button>
+              </div>
+              <div>
+                <Button onClick={closeOutletModal} className="cancelBtn">
+                  No
+                </Button>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
 
-      <div>
-        <Modal show={showCloseShiftModal} onHide={handleCloseShift}>
+        <Modal
+          show={openCloseOtletModal}
+          onHide={OpenCLoseOutletModalFn}
+          centered
+        >
+          <Modal.Body>
+            <div className="row">
+              <img src={xcircle} alt="Check Circle" className="check-circle" />
+              <p className="outletTitle">Close Outlet </p>
+              <p className="outletTex">
+                Are you sure you want to close the outlet ?
+              </p>
+            </div>
+            <div className="row">
+              <div>
+                <Button onClick={closeOutletFn} className="closeConfirmBtn">
+                  Yes
+                </Button>
+              </div>
+              <div>
+                <Button onClick={closeOutletModal} className="closecancelBtn">
+                  No
+                </Button>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
+
+        <Modal
+          show={showGenerateCashierModal}
+          onHide={closeCashierReportModal}
+          centered
+        >
+          <Modal.Body>
+            <div className="row">
+              <p className="outletTitle">Generate Cashier Report</p>
+              <p className="outletTex">Generate Cashier Report</p>
+            </div>
+            <div className="row">
+              <div>
+                <Button
+                  onClick={generateCashierReport}
+                  className="closeConfirmBtn"
+                >
+                  Generate
+                </Button>
+              </div>
+              <div>
+                <Button
+                  onClick={closeCashierReportModal}
+                  className="closecancelBtn"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
+
+        <Modal
+          show={showShiftReportModal}
+          onHide={closeShiftReportModal}
+          centered
+        >
+          <Modal.Body>
+            <div className="row">
+              <p className="outletTitle">Generate Shift Report</p>
+              <p className="outletTex">Generate Shift Report</p>
+            </div>
+            <div className="row">
+              <div>
+                <Button
+                  onClick={generateCashierReportShiftWise}
+                  className="closeConfirmBtn"
+                >
+                  Generate
+                </Button>
+              </div>
+              <div>
+                <Button
+                  onClick={closeShiftReportModal}
+                  className="closecancelBtn"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
+
+        <Modal show={showConfirmModal} onHide={handleConfirmClose}>
           <Modal.Header>
-            <Modal.Title>Close Shift</Modal.Title>
+            <Modal.Title style={{ fontSize: "18px", textAlign: "center" }}>
+              Enter your credentials to close the shift
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p>Are you sure you want to close the shift?</p>
+            <Form>
+              <Form.Group controlId="formUsername">
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group controlId="formPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Enter password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Form.Group>
+            </Form>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseShift}>
+            <Button variant="secondary" onClick={handleConfirmClose}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={handleLogin}>
+              Confirm
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        <div>
+          <Modal show={showCloseShiftModal} onHide={handleCloseShift}>
+            <Modal.Header>
+              <Modal.Title>Close Shift</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p>Are you sure you want to close the shift?</p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseShift}>
+                Cancel
+              </Button>
+              <Button variant="primary" onClick={handleClose}>
+                Confirm
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </div>
+
+        <Modal show={showOpenShiftModal} onHide={handleCloseOpenShift}>
+          <Modal.Header>
+            <Modal.Title>Open Shift</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>Are you sure you want to open the shift?</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseOpenShift}>
               Cancel
             </Button>
-            <Button variant="primary" onClick={handleClose}>
+            <Button variant="primary" onClick={handleOpenShift}>
               Confirm
             </Button>
           </Modal.Footer>
         </Modal>
       </div>
-
-      <Modal show={showOpenShiftModal} onHide={handleCloseOpenShift}>
-        <Modal.Header>
-          <Modal.Title>Open Shift</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>Are you sure you want to open the shift?</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseOpenShift}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={handleOpenShift}>
-            Confirm
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </div>
+    )
   );
 };
 
