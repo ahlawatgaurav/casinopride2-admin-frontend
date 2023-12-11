@@ -52,8 +52,8 @@ const Shifts = () => {
 
   const formattedDate = moment().format("YYYY-MM-DD");
 
-  const parsedDate = moment(outletOpenDetails?.Details[0]?.Date);
-  const outletFormattedData = parsedDate.format("YYYY-MM-DD");
+  const parsedDate = moment(activeDateOfOutlet?.OutletDate);
+  const outletFormattedData = parsedDate?.format("YYYY-MM-DD");
 
   const [outletOpen, setOutletOpen] = useState(false);
 
@@ -2190,7 +2190,6 @@ const Shifts = () => {
   };
 
   const generateCashierReport = () => {
-    console.log("outletFormattedData>>", outletFormattedData);
     dispatch(
       cashierReport(
         loginDetails?.logindata?.Token,
@@ -2266,7 +2265,16 @@ const Shifts = () => {
           />
         </div>
       ) : (
-        <div className="container mt-5">
+        <div
+          className="container mt-5"
+          // style={{ backgroundColor: "green" }}
+        >
+          <h5 className="mb-0" style={{ paddingBottom: "20px" }}>
+            Outlet Date :{" "}
+            {outletFormattedData != undefined || outletFormattedData != null
+              ? outletFormattedData
+              : ""}
+          </h5>
           <div className="row d-flex justify-content-end">
             {!outletOpenDetails?.Details[0]?.OutletStatus == 1 &&
             !outletDetails == 1 ? (
