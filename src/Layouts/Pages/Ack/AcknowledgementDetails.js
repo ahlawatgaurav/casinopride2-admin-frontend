@@ -539,6 +539,41 @@ const AcknowledgementDetails = () => {
       )
     );
   };
+  const handlePartCard = (e) => {
+    let inputValue = parseFloat(e.target.value);
+
+    if (isNaN(inputValue) || inputValue < 0) {
+      inputValue = "";
+    } else if (inputValue > bookingData?.amountAfterDiscount) {
+      //checking if the discount that is added is more than the discount percent of the agent
+      inputValue =bookingData?.amountAfterDiscount;
+    }
+    
+    setCardAmount(inputValue);
+  };
+  const handlePartCash= (e) => {
+    let inputValue = parseFloat(e.target.value);
+
+    if (isNaN(inputValue) || inputValue < 0) {
+      inputValue = "";
+    } else if (inputValue > bookingData?.amountAfterDiscount) {
+      //checking if the discount that is added is more than the discount percent of the agent
+      inputValue =bookingData?.amountAfterDiscount;
+    }
+    setCashAmount(inputValue);
+  };
+  const handlePartUPI= (e) => {
+    let inputValue = parseFloat(e.target.value);
+
+    if (isNaN(inputValue) || inputValue < 0) {
+      inputValue = "";
+    } else if (inputValue > bookingData?.amountAfterDiscount) {
+      //checking if the discount that is added is more than the discount percent of the agent
+      inputValue =bookingData?.amountAfterDiscount;
+    }
+    setUpiAmount(inputValue);
+  };
+
   return (
     <div>
       <Modal show={show} onHide={handleClose}>
@@ -741,9 +776,12 @@ const AcknowledgementDetails = () => {
                 </label>
                 <input
                   class="form-control mt-2"
-                  type="text"
+                  type="number"
                   placeholder="Enter the amount"
-                  onChange={(e) => setCardAmount(e.target.value)}
+                  // onChange={(e) => setCardAmount(e.target.value)}
+                  value={cardAmount}
+                  onChange={handlePartCard}
+                  onWheel={(e) => e.target.blur()}
                 />
               </div>
 
@@ -755,7 +793,10 @@ const AcknowledgementDetails = () => {
                   class="form-control mt-2"
                   type="number"
                   placeholder="Enter the amount"
-                  onChange={(e) => setCashAmount(e.target.value)}
+                  // onChange={(e) => setCashAmount(e.target.value)}
+                  value={cashAmount}
+                  onChange={handlePartCash}
+                  onWheel={(e) => e.target.blur()}
                 />
               </div>
               <div className="col-lg-6 mt-3">
@@ -812,7 +853,10 @@ const AcknowledgementDetails = () => {
                   class="form-control mt-2"
                   type="text"
                   placeholder="Enter the amount"
-                  onChange={(e) => setCardAmount(e.target.value)}
+                  // onChange={(e) => setCardAmount(e.target.value)}
+                  value={cardAmount}
+                  onChange={handlePartCard}
+                  onWheel={(e) => e.target.blur()}
                 />
               </div>
               <div className="col-lg-6 mt-3">
@@ -824,7 +868,10 @@ const AcknowledgementDetails = () => {
                   class="form-control mt-2"
                   type="text"
                   placeholder="Enter the amount"
-                  onChange={(e) => setUpiAmount(e.target.value)}
+                  // onChange={(e) => setUpiAmount(e.target.value)}
+                  value={upiAmount}
+                  onChange={handlePartUPI}
+                  onWheel={(e) => e.target.blur()}
                 />
               </div>
 
@@ -894,7 +941,10 @@ const AcknowledgementDetails = () => {
                   class="form-control mt-2"
                   type="text"
                   placeholder="Enter the amount"
-                  onChange={(e) => setCashAmount(e.target.value)}
+                  // onChange={(e) => setCashAmount(e.target.value)}
+                  value={cashAmount}
+                  onChange={handlePartCash}
+                  onWheel={(e) => e.target.blur()}
                 />
               </div>
               <div className="col-lg-6 mt-3">
@@ -905,7 +955,10 @@ const AcknowledgementDetails = () => {
                   class="form-control mt-2"
                   type="text"
                   placeholder="Enter the amount"
-                  onChange={(e) => setUpiAmount(e.target.value)}
+                  // onChange={(e) => setUpiAmount(e.target.value)}
+                  value={upiAmount}
+                  onChange={handlePartUPI}
+                  onWheel={(e) => e.target.blur()}
                 />
               </div>
               <div className="col-lg-6 mt-3">

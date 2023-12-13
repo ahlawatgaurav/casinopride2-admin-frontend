@@ -4535,7 +4535,10 @@ const BillingDetails = () => {
                         </p> */}
                       </div>
                       <hr />
-                      <table className="ticket_table">
+                      <table 
+                      className="ticket_table"
+                      // className="table table-bordered"
+                      >
                         <thead>
                           <tr>
                             <th style={{ textAlign: "center" }}>
@@ -4557,16 +4560,20 @@ const BillingDetails = () => {
                             </th>
                           </tr>
                         </thead>
-                        <tbody>
+                        <tbody
+                        >
                           <tr>
-                            <td style={{ textAlign: "center" }}>
+                            <td style={{ textAlign: "center",}}>
                               {item?.ItemDetails &&
                                 item?.ItemDetails?.ItemName.map((item) => (
-                                  <p className="BillPrintFontPrint">{item}</p>
+                                  <p className="BillPrintFontPrint" >{item}</p>
                                 ))}
                             </td>
 
-                            <td style={{ textAlign: "center" }}>
+                            <td style={{ textAlign: "center" }}
+                                      // style={{borderBottom: "1px solid black"}}
+                            
+                            >
                               {item?.ItemDetails &&
                               item?.ItemDetails.packageGuestCount ? (
                                 item.ItemDetails.packageGuestCount.map(
@@ -4574,6 +4581,7 @@ const BillingDetails = () => {
                                     <p
                                       key={index}
                                       className="BillPrintFontPrint"
+                                      // style={{borderBottom: "1px solid black"}}
                                     >
                                       {guest}
                                     </p>

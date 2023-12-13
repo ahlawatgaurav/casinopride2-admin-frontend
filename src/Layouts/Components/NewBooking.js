@@ -607,6 +607,18 @@ const NewBooking = () => {
         setCashAmount("");
         setUpiAmount("");
       }
+      else if (paymentOption == "Part Card / Part Cash" ) {
+        setCardAmount("");
+        setCashAmount("");
+      }
+      else if (paymentOption == "Part Card / Part UPI" ) {
+        setCardAmount("");
+        setUpiAmount("");
+      }
+      else if (paymentOption == "Part Cash / Part UPI" ) {
+        setCashAmount("");
+        setUpiAmount("");
+      }
     }
   };
 
@@ -1381,6 +1393,44 @@ const NewBooking = () => {
   console.log("cashAmount------>", cashAmount);
   console.log("finalAmountofPackage------------>", finalAmountofPackage);
 
+
+  
+  const handlePartCard = (e) => {
+    let inputValue = parseFloat(e.target.value);
+
+    if (isNaN(inputValue) || inputValue < 0) {
+      inputValue = "";
+    } else if (inputValue > finalAmountofPackage) {
+      //checking if the discount that is added is more than the discount percent of the agent
+      inputValue =finalAmountofPackage;
+    }
+    
+    setCardAmount(inputValue);
+  };
+  const handlePartCash= (e) => {
+    let inputValue = parseFloat(e.target.value);
+
+    if (isNaN(inputValue) || inputValue < 0) {
+      inputValue = "";
+    } else if (inputValue > finalAmountofPackage) {
+      //checking if the discount that is added is more than the discount percent of the agent
+      inputValue =finalAmountofPackage;
+    }
+    console.log('okkkk',inputValue);
+    setCashAmount(inputValue);
+  };
+  const handlePartUPI= (e) => {
+    let inputValue = parseFloat(e.target.value);
+
+    if (isNaN(inputValue) || inputValue < 0) {
+      inputValue = "";
+    } else if (inputValue > finalAmountofPackage) {
+      //checking if the discount that is added is more than the discount percent of the agent
+      inputValue =finalAmountofPackage;
+    }
+    setUpiAmount(inputValue);
+  };
+
   return (
     <div>
       <div>
@@ -1975,9 +2025,12 @@ const NewBooking = () => {
               </label>
               <input
                 class="form-control mt-2"
-                type="text"
+                type="number"
                 placeholder="Enter the amount"
-                onChange={(e) => setCardAmount(e.target.value)}
+                // onChange={(e) => setCardAmount(e.target.value)}
+                value={cardAmount}
+                onChange={handlePartCard}
+                onWheel={(e) => e.target.blur()}
               />
             </div>
 
@@ -1989,7 +2042,11 @@ const NewBooking = () => {
                 class="form-control mt-2"
                 type="number"
                 placeholder="Enter the amount"
-                onChange={(e) => setCashAmount(e.target.value)}
+                // onChange={(e) => setCashAmount(e.target.value)}
+                value={cashAmount}
+                onChange={handlePartCash}
+                onWheel={(e) => e.target.blur()}
+
               />
             </div>
             <div className="col-lg-6 mt-3">
@@ -2044,9 +2101,13 @@ const NewBooking = () => {
               </label>
               <input
                 class="form-control mt-2"
-                type="text"
+                type="number"
                 placeholder="Enter the amount"
-                onChange={(e) => setCardAmount(e.target.value)}
+                // onChange={(e) => setCardAmount(e.target.value)}
+                value={cardAmount}
+                onChange={handlePartCard}
+                onWheel={(e) => e.target.blur()}
+
               />
             </div>
             <div className="col-lg-6 mt-3">
@@ -2055,9 +2116,13 @@ const NewBooking = () => {
               </label>
               <input
                 class="form-control mt-2"
-                type="text"
+                type="number"
                 placeholder="Enter the amount"
-                onChange={(e) => setUpiAmount(e.target.value)}
+                // onChange={(e) => setUpiAmount(e.target.value)}
+                value={upiAmount}
+                onChange={handlePartUPI}
+                onWheel={(e) => e.target.blur()}
+
               />
             </div>
 
@@ -2125,9 +2190,13 @@ const NewBooking = () => {
               </label>
               <input
                 class="form-control mt-2"
-                type="text"
+                type="number"
                 placeholder="Enter the amount"
-                onChange={(e) => setCashAmount(e.target.value)}
+                // onChange={(e) => setCashAmount(e.target.value)}
+                value={cashAmount}
+                onChange={handlePartCash}
+                onWheel={(e) => e.target.blur()}
+
               />
             </div>
             <div className="col-lg-6 mt-3">
@@ -2136,9 +2205,13 @@ const NewBooking = () => {
               </label>
               <input
                 class="form-control mt-2"
-                type="text"
+                type="number"
                 placeholder="Enter the amount"
-                onChange={(e) => setUpiAmount(e.target.value)}
+                // onChange={(e) => setUpiAmount(e.target.value)}
+                value={upiAmount}
+                onChange={handlePartUPI}
+                onWheel={(e) => e.target.blur()}
+
               />
             </div>
             <div className="col-lg-6 mt-3">

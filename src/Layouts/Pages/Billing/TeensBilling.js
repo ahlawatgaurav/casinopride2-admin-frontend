@@ -1356,6 +1356,15 @@ const TeensBilling = () => {
                       {item.TotalGuestCount}
                     </span>
                   </p>
+                  <p className="BillPrintFont">
+                      Payment Mode :{" "}
+                      <span
+                        style={{ fontWeight: "bold" }}
+                        className="BillPrintFont"
+                      >
+                        {item.PaymentMode}
+                      </span>
+                    </p>
                 </div>
                 <div className="col-6">
                   <div className="d-flex justify-content-end qr-code">
@@ -1641,6 +1650,15 @@ const TeensBilling = () => {
                           {item.TotalGuestCount}
                         </span>
                       </p>
+                      <p className="BillPrintFontPrint">
+                      Payment Mode :{" "}
+                      <span
+                        style={{ fontWeight: "bold" }}
+                        className="BillPrintFontPrint"
+                      >
+                        {item.PaymentMode}
+                      </span>
+                    </p>
                     </div>
                   </div>
                   <div className="bill-details">
