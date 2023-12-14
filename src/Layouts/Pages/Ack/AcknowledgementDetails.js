@@ -539,6 +539,7 @@ const AcknowledgementDetails = () => {
       )
     );
   };
+
   const handlePartCard = (e) => {
     let inputValue = parseFloat(e.target.value);
 
@@ -546,30 +547,30 @@ const AcknowledgementDetails = () => {
       inputValue = "";
     } else if (inputValue > bookingData?.amountAfterDiscount) {
       //checking if the discount that is added is more than the discount percent of the agent
-      inputValue =bookingData?.amountAfterDiscount;
+      inputValue = bookingData?.amountAfterDiscount;
     }
-    
+
     setCardAmount(inputValue);
   };
-  const handlePartCash= (e) => {
+  const handlePartCash = (e) => {
     let inputValue = parseFloat(e.target.value);
 
     if (isNaN(inputValue) || inputValue < 0) {
       inputValue = "";
     } else if (inputValue > bookingData?.amountAfterDiscount) {
       //checking if the discount that is added is more than the discount percent of the agent
-      inputValue =bookingData?.amountAfterDiscount;
+      inputValue = bookingData?.amountAfterDiscount;
     }
     setCashAmount(inputValue);
   };
-  const handlePartUPI= (e) => {
+  const handlePartUPI = (e) => {
     let inputValue = parseFloat(e.target.value);
 
     if (isNaN(inputValue) || inputValue < 0) {
       inputValue = "";
     } else if (inputValue > bookingData?.amountAfterDiscount) {
       //checking if the discount that is added is more than the discount percent of the agent
-      inputValue =bookingData?.amountAfterDiscount;
+      inputValue = bookingData?.amountAfterDiscount;
     }
     setUpiAmount(inputValue);
   };

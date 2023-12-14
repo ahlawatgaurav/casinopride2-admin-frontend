@@ -234,7 +234,7 @@ const NewBooking = () => {
 
     const Discount = url.searchParams.get("Discountpercent");
     setDiscountpercent(Discount);
-    setDiscountFigure(Discount)
+    setDiscountFigure(Discount);
   }, []);
 
   const [guestName, setGuestName] = useState("");
@@ -606,16 +606,13 @@ const NewBooking = () => {
         setCardAmount(DiscountedAmount);
         setCashAmount("");
         setUpiAmount("");
-      }
-      else if (paymentOption == "Part Card / Part Cash" ) {
+      } else if (paymentOption == "Part Card / Part Cash") {
         setCardAmount("");
         setCashAmount("");
-      }
-      else if (paymentOption == "Part Card / Part UPI" ) {
+      } else if (paymentOption == "Part Card / Part UPI") {
         setCardAmount("");
         setUpiAmount("");
-      }
-      else if (paymentOption == "Part Cash / Part UPI" ) {
+      } else if (paymentOption == "Part Cash / Part UPI") {
         setCashAmount("");
         setUpiAmount("");
       }
@@ -757,7 +754,7 @@ const NewBooking = () => {
       teensTax: teenstaxPercentage,
       teensTaxName: teensTaxName,
       bookingDate: activeDateOfOutlet?.OutletDate,
-      discount:discountFigure,
+      discount: discountFigure,
       panelDiscountId: selectedOption,
       couponId: couponId,
       referredBy: referredBy,
@@ -1393,43 +1390,106 @@ const NewBooking = () => {
   console.log("cashAmount------>", cashAmount);
   console.log("finalAmountofPackage------------>", finalAmountofPackage);
 
-
-  
   const handlePartCard = (e) => {
     let inputValue = parseFloat(e.target.value);
 
     if (isNaN(inputValue) || inputValue < 0) {
       inputValue = "";
-    } else if (inputValue > finalAmountofPackage) {
-      //checking if the discount that is added is more than the discount percent of the agent
-      inputValue =finalAmountofPackage;
     }
-    
+
+    if (inputValue > parseFloat(finalAmountofPackage)) {
+      //checking if the discount that is added is more than the discount percent of the agent
+      inputValue = finalAmountofPackage;
+    }
+
+    if (paymentOption === "Part Card / Part Cash") {
+      setCashAmount(parseFloat(finalAmountofPackage) - inputValue);
+    }
+
+    if (paymentOption === "Part Card / Part UPI") {
+      setUpiAmount(parseFloat(finalAmountofPackage) - inputValue);
+    }
+
     setCardAmount(inputValue);
   };
-  const handlePartCash= (e) => {
+
+  const handlePartCash = (e) => {
     let inputValue = parseFloat(e.target.value);
 
     if (isNaN(inputValue) || inputValue < 0) {
       inputValue = "";
-    } else if (inputValue > finalAmountofPackage) {
+    } else if (inputValue > parseFloat(finalAmountofPackage)) {
       //checking if the discount that is added is more than the discount percent of the agent
-      inputValue =finalAmountofPackage;
+      inputValue = finalAmountofPackage;
     }
-    console.log('okkkk',inputValue);
+
+    if (paymentOption === "Part Card / Part Cash") {
+      setCardAmount(parseFloat(finalAmountofPackage) - inputValue);
+    }
+
+    if (paymentOption === "Part Cash / Part UPI") {
+      setUpiAmount(parseFloat(finalAmountofPackage) - inputValue);
+    }
+
     setCashAmount(inputValue);
   };
-  const handlePartUPI= (e) => {
+
+  const handlePartUPI = (e) => {
     let inputValue = parseFloat(e.target.value);
 
     if (isNaN(inputValue) || inputValue < 0) {
       inputValue = "";
-    } else if (inputValue > finalAmountofPackage) {
+    } else if (inputValue > parseFloat(finalAmountofPackage)) {
       //checking if the discount that is added is more than the discount percent of the agent
-      inputValue =finalAmountofPackage;
+      inputValue = finalAmountofPackage;
     }
+
+    if (paymentOption === "Part Card / Part UPI") {
+      setCardAmount(parseFloat(finalAmountofPackage) - inputValue);
+    }
+
+    if (paymentOption === "Part Cash / Part UPI") {
+      setCashAmount(parseFloat(finalAmountofPackage) - inputValue);
+    }
+
     setUpiAmount(inputValue);
   };
+
+  // const handlePartCard = (e) => {
+  //   let inputValue = parseFloat(e.target.value);
+
+  //   if (isNaN(inputValue) || inputValue < 0) {
+  //     inputValue = "";
+  //   } else if (inputValue > finalAmountofPackage) {
+  //     //checking if the discount that is added is more than the discount percent of the agent
+  //     inputValue =finalAmountofPackage;
+  //   }
+
+  //   setCardAmount(inputValue);
+  // };
+  // const handlePartCash= (e) => {
+  //   let inputValue = parseFloat(e.target.value);
+
+  //   if (isNaN(inputValue) || inputValue < 0) {
+  //     inputValue = "";
+  //   } else if (inputValue > finalAmountofPackage) {
+  //     //checking if the discount that is added is more than the discount percent of the agent
+  //     inputValue =finalAmountofPackage;
+  //   }
+  //   console.log('okkkk',inputValue);
+  //   setCashAmount(inputValue);
+  // };
+  // const handlePartUPI= (e) => {
+  //   let inputValue = parseFloat(e.target.value);
+
+  //   if (isNaN(inputValue) || inputValue < 0) {
+  //     inputValue = "";
+  //   } else if (inputValue > finalAmountofPackage) {
+  //     //checking if the discount that is added is more than the discount percent of the agent
+  //     inputValue =finalAmountofPackage;
+  //   }
+  //   setUpiAmount(inputValue);
+  // };
 
   return (
     <div>
@@ -2046,7 +2106,6 @@ const NewBooking = () => {
                 value={cashAmount}
                 onChange={handlePartCash}
                 onWheel={(e) => e.target.blur()}
-
               />
             </div>
             <div className="col-lg-6 mt-3">
@@ -2107,7 +2166,6 @@ const NewBooking = () => {
                 value={cardAmount}
                 onChange={handlePartCard}
                 onWheel={(e) => e.target.blur()}
-
               />
             </div>
             <div className="col-lg-6 mt-3">
@@ -2122,7 +2180,6 @@ const NewBooking = () => {
                 value={upiAmount}
                 onChange={handlePartUPI}
                 onWheel={(e) => e.target.blur()}
-
               />
             </div>
 
@@ -2196,7 +2253,6 @@ const NewBooking = () => {
                 value={cashAmount}
                 onChange={handlePartCash}
                 onWheel={(e) => e.target.blur()}
-
               />
             </div>
             <div className="col-lg-6 mt-3">
@@ -2211,7 +2267,6 @@ const NewBooking = () => {
                 value={upiAmount}
                 onChange={handlePartUPI}
                 onWheel={(e) => e.target.blur()}
-
               />
             </div>
             <div className="col-lg-6 mt-3">
