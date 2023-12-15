@@ -1284,9 +1284,9 @@ const BookingList = () => {
             </div>
             <div className="col-6">
               <p className="table-modal-list ">
-                Booking Date :{" "}
-                {moment(selectedUserDetails.BookingDate).format(
-                  "YYYY-MM-DD HH:mm"
+                Event Date :{" "}
+                {moment(selectedUserDetails?.BookingDate != null ? selectedUserDetails?.BookingDate : selectedUserDetails?.FutureDate).format(
+                  "YYYY-MM-DD"
                 )}
               </p>
             </div>
