@@ -540,38 +540,103 @@ const AcknowledgementDetails = () => {
     );
   };
 
+  // const handlePartCard = (e) => {
+  //   let inputValue = parseFloat(e.target.value);
+
+  //   if (isNaN(inputValue) || inputValue < 0) {
+  //     inputValue = "";
+  //   } else if (inputValue > bookingData?.amountAfterDiscount) {
+  //     //checking if the discount that is added is more than the discount percent of the agent
+  //     inputValue = bookingData?.amountAfterDiscount;
+  //   }
+
+  //   setCardAmount(inputValue);
+  // };
+  // const handlePartCash = (e) => {
+  //   let inputValue = parseFloat(e.target.value);
+
+  //   if (isNaN(inputValue) || inputValue < 0) {
+  //     inputValue = "";
+  //   } else if (inputValue > bookingData?.amountAfterDiscount) {
+  //     //checking if the discount that is added is more than the discount percent of the agent
+  //     inputValue = bookingData?.amountAfterDiscount;
+  //   }
+  //   setCashAmount(inputValue);
+  // };
+  // const handlePartUPI = (e) => {
+  //   let inputValue = parseFloat(e.target.value);
+
+  //   if (isNaN(inputValue) || inputValue < 0) {
+  //     inputValue = "";
+  //   } else if (inputValue > bookingData?.amountAfterDiscount) {
+  //     //checking if the discount that is added is more than the discount percent of the agent
+  //     inputValue = bookingData?.amountAfterDiscount;
+  //   }
+  //   setUpiAmount(inputValue);
+  // };
+
   const handlePartCard = (e) => {
     let inputValue = parseFloat(e.target.value);
 
     if (isNaN(inputValue) || inputValue < 0) {
       inputValue = "";
-    } else if (inputValue > bookingData?.amountAfterDiscount) {
+    }
+
+    if (inputValue > parseFloat(bookingData?.AmountAfterDiscount)) {
       //checking if the discount that is added is more than the discount percent of the agent
-      inputValue = bookingData?.amountAfterDiscount;
+      inputValue = bookingData?.AmountAfterDiscount;
+    }
+
+    if (paymentOption === "Part Card / Part Cash") {
+      setCashAmount(parseFloat(bookingData?.AmountAfterDiscount) - inputValue);
+    }
+
+    if (paymentOption === "Part Card / Part UPI") {
+      setUpiAmount(parseFloat(bookingData?.AmountAfterDiscount) - inputValue);
     }
 
     setCardAmount(inputValue);
   };
+
   const handlePartCash = (e) => {
     let inputValue = parseFloat(e.target.value);
 
     if (isNaN(inputValue) || inputValue < 0) {
       inputValue = "";
-    } else if (inputValue > bookingData?.amountAfterDiscount) {
+    } else if (inputValue > parseFloat(bookingData?.AmountAfterDiscount)) {
       //checking if the discount that is added is more than the discount percent of the agent
-      inputValue = bookingData?.amountAfterDiscount;
+      inputValue = bookingData?.AmountAfterDiscount;
     }
+
+    if (paymentOption === "Part Card / Part Cash") {
+      setCardAmount(parseFloat(bookingData?.AmountAfterDiscount) - inputValue);
+    }
+
+    if (paymentOption === "Part Cash / Part UPI") {
+      setUpiAmount(parseFloat(bookingData?.AmountAfterDiscount) - inputValue);
+    }
+
     setCashAmount(inputValue);
   };
+
   const handlePartUPI = (e) => {
     let inputValue = parseFloat(e.target.value);
 
     if (isNaN(inputValue) || inputValue < 0) {
       inputValue = "";
-    } else if (inputValue > bookingData?.amountAfterDiscount) {
+    } else if (inputValue > parseFloat(bookingData?.AmountAfterDiscount)) {
       //checking if the discount that is added is more than the discount percent of the agent
-      inputValue = bookingData?.amountAfterDiscount;
+      inputValue = bookingData?.AmountAfterDiscount;
     }
+
+    if (paymentOption === "Part Card / Part UPI") {
+      setCardAmount(parseFloat(bookingData?.AmountAfterDiscount) - inputValue);
+    }
+
+    if (paymentOption === "Part Cash / Part UPI") {
+      setCashAmount(parseFloat(bookingData?.AmountAfterDiscount) - inputValue);
+    }
+
     setUpiAmount(inputValue);
   };
 
