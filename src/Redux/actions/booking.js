@@ -203,3 +203,29 @@ export const updateBookingForPayAtCounterFn =
         }
       });
   };
+export const updateShiftForBooking =
+  (token, data, callback) => async (dispatch) => {
+    api.BOOKING_PORT.put("/booking/updateShiftForBooking", data, {
+      headers: { AuthToken: token },
+    })
+      .then((response) => {
+        console.log("updateShiftForBooking>>>>>", response.data);
+        if (response.data?.Details) {
+          console.log(response.data?.Details);
+          callback({
+            status: true,
+            response: response?.data,
+          });
+        } else if (response.data?.Error) {
+          callback({
+            status: false,
+            error: response.data?.Error?.ErrorMessage,
+          });
+        }
+      })
+      .catch((err) => {
+        {
+          console.log("error", err);
+        }
+      });
+  };

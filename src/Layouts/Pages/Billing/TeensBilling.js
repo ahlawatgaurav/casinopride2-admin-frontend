@@ -1308,8 +1308,7 @@ const TeensBilling = () => {
                 A unit of Goa Coastal Resorts & Recreation Pvt.Ltd
               </p>
               <h5 style={{ fontSize: "15px" }}>
-                Hotel Neo Majestic, Plot No. 104/1A, Porvorim, Bardez, Goa - 403
-                521 <br></br>Tel. + 91 9158885000
+              H.No. 838/1(3), 2nd floor Edificio Da Silva E Menezes Near Holly Family church Porvorim Goa 403521 <br></br>Tel. + 91 9158885000
               </h5>
               <h5 style={{ fontSize: "15px" }}>
                 Email : info@casinoprideofficial.com
@@ -1582,8 +1581,7 @@ const TeensBilling = () => {
                     A unit of Goa Coastal Resorts & Recreation Pvt.Ltd
                   </p>
                   <h5 className="BillPrintFontPrint">
-                    Hotel Neo Majestic, Plot No. 104/1A, Porvorim, Bardez, Goa -
-                    403 521 <br></br>Tel. + 91 9158885000
+                  H.No. 838/1(3), 2nd floor Edificio Da Silva E Menezes Near Holly Family church Porvorim Goa 403521 <br></br>Tel. + 91 9158885000
                   </h5>
                   <h5 className="BillPrintFontPrint">
                     Email : info@casinoprideofficial.com

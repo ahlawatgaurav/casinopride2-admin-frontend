@@ -91,6 +91,7 @@ export const AddupdateAgentSettlement =
 export const GetBillingDetails =
   (
     token,
+    billDate,
     futureDate,
     userId,
     shiftId,
@@ -104,7 +105,7 @@ export const GetBillingDetails =
       "futureDate-----------------from redux***********************************************************>",
       futureDate
     );
-
+      console.log('okkkk',online);
     console.log("searchBillId--->", parseInt(searchBillId));
 
     api.BILLING_PORT.get(
@@ -114,7 +115,7 @@ export const GetBillingDetails =
         userId ? parseInt(userId) : 0
       }&billingDate=${futureDate}&shiftId=${
         shiftId ? parseInt(shiftId) : 0
-      }&isBookingWebsite=${online}`,
+      }&isBookingWebsite=${online}&futureDate=${billDate}`,
       {
         headers: { AuthToken: token },
       }

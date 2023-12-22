@@ -67,6 +67,7 @@ const BillingList = () => {
   const todayDate = moment().format("YYYY-MM-DD");
 
   const [futureDate, setFutureDate] = useState(
+    loginDetails?.logindata?.UserType == 1 ||
     loginDetails?.logindata?.UserType == 2 ||
       loginDetails?.logindata?.UserType == 3
       ? activeDateOfOutlet?.OutletDate
@@ -98,17 +99,23 @@ const BillingList = () => {
   const [eventDate, setEventDate] = useState(null);
   const [online, setOnline] = useState(reportId == 4 ? 1 : 0);
   const [voidBillReason, setVoidBillReason] = useState();
+  const [billDate, setBillDate] = useState("");
+
 
   const fetchBillingDetailsFn = () => {
+    console.log('billdateeee',billDate);
+    console.log('online>>',online);
+    console.log('futureDate>>>',futureDate);
     dispatch(
       GetBillingDetails(
         loginDetails?.logindata?.Token,
+        billDate,
         futureDate,
         userId,
         shiftId,
         billId,
         searchBillId,
-        online,
+        reportId == 4 ? 1 : 0,
 
         (callback) => {
           if (callback.status) {
@@ -163,6 +170,14 @@ const BillingList = () => {
   };
 
   const handleReportTypeChange = (selectedOption) => {
+    clearFilters()
+    console.log('selectedOption>>',selectedOption);
+    setBillDate("")
+    setFutureDate("")
+    setShitId(0);
+    setUserId(0);
+    setBillId(0);
+    setSearhBillId(0);
     setReportId(selectedOption?.value);
   };
 
@@ -241,13 +256,12 @@ const BillingList = () => {
 
   useEffect(() => {
     searchBtn();
-  }, [searchBillId, futureDate, userId, shiftId]);
+  }, [searchBillId, futureDate, userId, shiftId,billDate]);
 
   useEffect(() => {
     setDisableInput(true);
   }, [futureDate, handleSelectChange, handleShiftChange]);
 
-  const [billDate, setBillDate] = useState("");
 
   const clearFilters = () => {
     console.log("All clear");
@@ -255,7 +269,8 @@ const BillingList = () => {
     setShitId(0);
     setUserId(0);
     setBillId(0);
-    setSearhBillId(0);
+    setOnline(0)
+    setBillDate("")
     fetchBillingDetailsFn();
   };
 
@@ -307,6 +322,7 @@ const BillingList = () => {
   };
 
   const handleToggle = (field) => {
+    clearFilters()
     // Toggle the state of the corresponding field
     if (field === "allBill") {
       setAllBill(!allBill); // Toggle the state
@@ -716,7 +732,10 @@ const BillingList = () => {
                         className="form-control"
                         placeholder="Search name"
                         onChange={(e) => setBillDate(e.target.value)}
+                        // onChange={(e) => {console.log('billfuuu',e.target.value)}}
                         value={billDate}
+                        // onChange={(e) => setFutureDate(e.target.value)}
+                        // value={futureDate}
                       />
                     </div>
                   </div>
@@ -1250,7 +1269,8 @@ const BillingList = () => {
                   />
                 </div>
               </div>
-              {!displayNoShowGuestList.length > 0 ? (
+              {/* {!displayNoShowGuestList.length > 0 ? ( */}
+              {displayNoShowGuestList.length > 0 ? (
                 <div className="col-lg-2 col-md-4 col-sm-6">
                   <button
                     className="btn btn-primary mt-4"
