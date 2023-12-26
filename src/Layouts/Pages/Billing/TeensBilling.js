@@ -1189,12 +1189,14 @@ const TeensBilling = () => {
   const KidsCgstProperty = `CGST ${BookingDetails[0]?.TeensTax / 2} %`;
 
   const KidsSgstProperty = `SGST ${BookingDetails[0]?.TeensTax / 2} %`;
+  const KidsItemName = "Entry,Food";
 
   const updatededBillDetails = {
     ItemTax: BookingDetails[0]?.TeensTax,
-
+    KidsItemName:KidsItemName,
     KidsPrice: BookingDetails[0]?.TeensPrice,
-    KidsRate: BookingDetails[0]?.TeensRate * BookingDetails[0]?.NumOfTeens,
+    // KidsRate: BookingDetails[0]?.TeensRate * BookingDetails[0]?.NumOfTeens,
+    KidsRate: BookingDetails[0]?.TeensRate,
     ItemTaxName: BookingDetails[0]?.TeensTaxName,
 
     PackageId: BookingDetails[0]?.PackageId,
@@ -1214,7 +1216,6 @@ const TeensBilling = () => {
   };
 
   console.log("updatededBillDetails---->", updatededBillDetails);
-
   const BillIdDetails = {
     billId: BookingDetails.map((item) => {
       return item?.BillingId; // You can directly access and return the BillingId
@@ -1420,7 +1421,8 @@ const TeensBilling = () => {
                   <tbody>
                     <tr>
                       <td style={{ textAlign: "center" }}>
-                        <p className="BillPrintFont">Kids</p>
+                        {/* <p className="BillPrintFont">Kids</p> */}
+                        <p className="BillPrintFont">Entry, Food</p>
                       </td>
 
                       <td
@@ -1450,7 +1452,7 @@ const TeensBilling = () => {
                           fontSize: "18px",
                         }}
                       >
-                        {(item?.TeensRate/item?.TotalGuestCount).toFixed(2) * item?.TotalGuestCount}
+                        {((item?.TeensRate/item?.TotalGuestCount).toFixed(2) * item?.TotalGuestCount).toFixed(2)}
                         {/* {item?.TeensRate.toFixed(2)} */}
                       </td>
                     </tr>
@@ -1459,7 +1461,7 @@ const TeensBilling = () => {
 
                 <div className="totals" style={{ textAlign: "right" }}>
                   {/* <h6>Total Amount: {item?.TeensRate.toFixed(2)}</h6> */}
-                  <h6>Total Amount: {(item?.TeensRate/item?.TotalGuestCount).toFixed(2) * item?.TotalGuestCount}</h6>
+                  <h6>Total Amount: {((item?.TeensRate/item?.TotalGuestCount).toFixed(2) * item?.TotalGuestCount).toFixed(2)}</h6>
 
                   <h6>
                     {" "}
@@ -1718,7 +1720,8 @@ const TeensBilling = () => {
                       <tbody>
                         <tr>
                           <td style={{ textAlign: "center" }}>
-                            <p className="BillPrintFontPrint">Kids</p>
+                            {/* <p className="BillPrintFontPrint">Kids</p> */}
+                            <p className="BillPrintFontPrint">Entry, Food</p>
                           </td>
 
                           <td className="BillPrintFontPrint">
@@ -1731,7 +1734,7 @@ const TeensBilling = () => {
 
                           <td className="BillPrintFontPrint">
                             {/* {item?.TeensRate.toFixed(2)} */}
-                            {(item?.TeensRate/item?.TotalGuestCount).toFixed(2) * item?.TotalGuestCount}
+                            {((item?.TeensRate/item?.TotalGuestCount).toFixed(2) * item?.TotalGuestCount).toFixed(2)}
                           </td>
                         </tr>
                       </tbody>
@@ -1740,7 +1743,7 @@ const TeensBilling = () => {
                     <div className="totals" style={{ textAlign: "right" }}>
                       <h6 className="BillPrintFontPrint">
                         {/* Total Amount: {item?.TeensRate.toFixed(2)} */}
-                        Total Amount: {(item?.TeensRate/item?.TotalGuestCount).toFixed(2) * item?.TotalGuestCount}
+                        Total Amount: {((item?.TeensRate/item?.TotalGuestCount).toFixed(2) * item?.TotalGuestCount).toFixed(2)}
                       </h6>
 
                       <h6 className="BillPrintFontPrint">

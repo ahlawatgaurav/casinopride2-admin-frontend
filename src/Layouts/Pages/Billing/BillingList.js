@@ -67,9 +67,9 @@ const BillingList = () => {
   const todayDate = moment().format("YYYY-MM-DD");
 
   const [futureDate, setFutureDate] = useState(
-    loginDetails?.logindata?.UserType == 1 ||
-    loginDetails?.logindata?.UserType == 2 ||
-      loginDetails?.logindata?.UserType == 3
+    (loginDetails?.logindata?.UserType == 1 && activeDateOfOutlet?.OutletDate != undefined) ||
+    (loginDetails?.logindata?.UserType == 2 && activeDateOfOutlet?.OutletDate != undefined) ||
+      (loginDetails?.logindata?.UserType == 3 && activeDateOfOutlet?.OutletDate != undefined)
       ? activeDateOfOutlet?.OutletDate
       : ""
   );
@@ -103,6 +103,7 @@ const BillingList = () => {
 
 
   const fetchBillingDetailsFn = () => {
+    console.log('activeDateOfOutlet?.OutletDate>>',activeDateOfOutlet?.OutletDate);
     console.log('billdateeee',billDate);
     console.log('online>>',online);
     console.log('futureDate>>>',futureDate);

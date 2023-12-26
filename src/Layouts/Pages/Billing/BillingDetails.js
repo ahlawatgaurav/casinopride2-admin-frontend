@@ -3000,7 +3000,8 @@ const BillingDetails = () => {
       const itemTeensTaxName = item?.TeensTaxName;
       console.log("Teens Tax name", itemTeensTaxName);
 
-      const KidsItemName = "Kids";
+      // const KidsItemName = "Kids";
+      const KidsItemName = "Entry,Food";
 
       const KidsCount = item?.NumOfTeens;
       console.log("Kids count==>", KidsCount);
@@ -3031,7 +3032,41 @@ const BillingDetails = () => {
       // const taxBifurcation = item?.ItemDetails?.TaxBifurcation
       let sumWhenDiscount = 0;
       for (let i = 0; i < item?.ItemDetails?.TaxBifurcation?.length; i++) {
-        sumWhenDiscount += item?.ItemDetails?.TaxBifurcation[i];
+        console.log('item?.ItemDetails?.packageGuestCount?.length>>',item?.ItemDetails?.packageGuestCount?.length);
+        if (item?.ItemDetails?.packageGuestCount?.length > 1 && item?.NumOfTeens == 0) {
+          console.log('ooo');
+          sumWhenDiscount += (item?.ItemDetails?.TaxBifurcation[i] * item?.ItemDetails?.packageGuestCount[i]);
+          
+        }
+        else if (item?.ItemDetails?.packageGuestCount?.length == 1 && item?.ItemDetails?.packageGuestCount[i] == 1 && item?.NumOfTeens == 0) {
+          console.log('bbb');
+          sumWhenDiscount += item?.ItemDetails?.TaxBifurcation[i] / 2;
+        }
+        else if (item?.ItemDetails?.packageGuestCount?.length == 1 && item?.ItemDetails?.packageGuestCount[i] > 1 && item?.NumOfTeens == 0) {
+          console.log('sss');
+          sumWhenDiscount += item?.ItemDetails?.TaxBifurcation[i];
+        }
+        else if (item?.ItemDetails?.packageGuestCount?.length == 1 && item?.ItemDetails?.packageGuestCount[i] > 1 && item?.NumOfTeens == 0) {
+          console.log('vvv');
+          sumWhenDiscount += item?.ItemDetails?.TaxBifurcation[i];
+        }
+        else if (item?.ItemDetails?.packageGuestCount?.length == 1 && item?.ItemDetails?.packageGuestCount[i] > 1 && item?.NumOfTeens > 0) {
+          console.log('mmm');
+          sumWhenDiscount += (item?.ItemDetails?.TaxBifurcation[i] * item?.ItemDetails?.packageGuestCount[i]) /2;
+        }
+        else if (item?.ItemDetails?.packageGuestCount?.length == 1 && item?.ItemDetails?.packageGuestCount[i] == 1 && item?.NumOfTeens > 0) {
+          console.log('ppp');
+          sumWhenDiscount += item?.ItemDetails?.TaxBifurcation[i] / 2;
+        }
+        if (item?.ItemDetails?.packageGuestCount?.length > 1 && item?.NumOfTeens > 0) {
+          console.log('qqq');
+          sumWhenDiscount += (item?.ItemDetails?.TaxBifurcation[i] * item?.ItemDetails?.packageGuestCount[i]);
+          
+        }
+        // else{
+        //   console.log('nnn');
+        // sumWhenDiscount += item?.ItemDetails?.TaxBifurcation[i] / 2;
+        // }
       }
 
       // Create an object to store the properties
@@ -3047,19 +3082,20 @@ const BillingDetails = () => {
         PackageId: item?.PackageId,
         packageGuestCount: packageGuestCount,
       };
-
       if (itemTaxName[0] === "GST") {
         if (KidsCount > 0) {
+          if (KidsCount == 1 && item?.ActualAmount - item?.AmountAfterDiscount > 0 && JSON.parse(item?.PackageGuestCount).length == 1) {
+            console.log('okok');
           properties["KidsItemName"] = KidsItemName;
           properties["KidsCount"] = KidsCount;
           properties["KidsRate"] = KidsRate;
           properties["KidsPrice"] = KidsPrice;
-          properties[KidsCgstProperty] = KidsTax;
-          properties[KidsSgstProperty] = KidsTax;
+          properties[KidsCgstProperty] = KidsTax/2;
+          properties[KidsSgstProperty] = KidsTax/2;
           // properties[cgstProperty] = adjustedTaxDiffSum / 2;
-          properties[cgstProperty] = total / 2;
+          properties[cgstProperty] = sumWhenDiscount;
           // properties[sgstProperty] = adjustedTaxDiffSum / 2;
-          properties[sgstProperty] = total / 2;
+          properties[sgstProperty] = sumWhenDiscount;
           properties["TotalBillAmount"] = TotalKidsplusAdults - Discount;
           properties["Rate"] = FinalRateResult;
           properties["cashAmount"] = CashAmount;
@@ -3069,7 +3105,187 @@ const BillingDetails = () => {
           properties["cardHoldersName"] = CardHoldersName;
           properties["cardNumber"] = CardNumber;
           properties["cardType"] = CardType;
-        } else if (item?.ActualAmount - item?.AmountAfterDiscount > 0) {
+          }
+          else if (KidsCount > 1 && item?.ActualAmount - item?.AmountAfterDiscount > 0 && JSON.parse(item?.PackageGuestCount).length == 1) {
+            console.log('pkpk');
+          properties["KidsItemName"] = KidsItemName;
+          properties["KidsCount"] = KidsCount;
+          properties["KidsRate"] = KidsRate;
+          properties["KidsPrice"] = KidsPrice;
+          properties[KidsCgstProperty] = item?.TeensTaxBifurcation /2;
+          properties[KidsSgstProperty] = item?.TeensTaxBifurcation /2;
+          // properties[cgstProperty] = adjustedTaxDiffSum / 2;
+          properties[cgstProperty] = sumWhenDiscount;
+          // properties[sgstProperty] = adjustedTaxDiffSum / 2;
+          properties[sgstProperty] = sumWhenDiscount;
+          properties["TotalBillAmount"] = TotalKidsplusAdults - Discount;
+          properties["Rate"] = FinalRateResult;
+          properties["cashAmount"] = CashAmount;
+          properties["cardAmount"] = CardAmount;
+          properties["upiAmount"] = UPIAmount;
+          properties["upiId"] = UPIId;
+          properties["cardHoldersName"] = CardHoldersName;
+          properties["cardNumber"] = CardNumber;
+          properties["cardType"] = CardType;
+          }
+          else if (KidsCount > 1 && item?.ActualAmount - item?.AmountAfterDiscount > 0 && JSON.parse(item?.PackageGuestCount).length > 1) {
+            console.log('nknk');
+          properties["KidsItemName"] = KidsItemName;
+          properties["KidsCount"] = KidsCount;
+          properties["KidsRate"] = KidsRate;
+          properties["KidsPrice"] = KidsPrice;
+          properties[KidsCgstProperty] = item?.TeensTaxBifurcation /2;
+          properties[KidsSgstProperty] = item?.TeensTaxBifurcation /2;
+          // properties[cgstProperty] = adjustedTaxDiffSum / 2;
+          properties[cgstProperty] = sumWhenDiscount/2;
+          // properties[sgstProperty] = adjustedTaxDiffSum / 2;
+          properties[sgstProperty] = sumWhenDiscount/2;
+          properties["TotalBillAmount"] = TotalKidsplusAdults - Discount;
+          properties["Rate"] = FinalRateResult;
+          properties["cashAmount"] = CashAmount;
+          properties["cardAmount"] = CardAmount;
+          properties["upiAmount"] = UPIAmount;
+          properties["upiId"] = UPIId;
+          properties["cardHoldersName"] = CardHoldersName;
+          properties["cardNumber"] = CardNumber;
+          properties["cardType"] = CardType;
+          }
+          else if (KidsCount == 1 && item?.ActualAmount - item?.AmountAfterDiscount > 0 && JSON.parse(item?.PackageGuestCount).length > 1) {
+            console.log('fkfk');
+            properties["KidsItemName"] = KidsItemName;
+            properties["KidsCount"] = KidsCount;
+            properties["KidsRate"] = KidsRate;
+            properties["KidsPrice"] = KidsPrice;
+            properties[KidsCgstProperty] = item?.TeensTaxBifurcation/2;
+            properties[KidsSgstProperty] = item?.TeensTaxBifurcation/2;
+            // properties[cgstProperty] = adjustedTaxDiffSum / 2;
+            properties[cgstProperty] = sumWhenDiscount / 2;
+            // properties[sgstProperty] = adjustedTaxDiffSum / 2;
+            properties[sgstProperty] = sumWhenDiscount / 2;
+            properties["TotalBillAmount"] = TotalKidsplusAdults - Discount;
+            properties["Rate"] = FinalRateResult;
+            properties["cashAmount"] = CashAmount;
+            properties["cardAmount"] = CardAmount;
+            properties["upiAmount"] = UPIAmount;
+            properties["upiId"] = UPIId;
+            properties["cardHoldersName"] = CardHoldersName;
+            properties["cardNumber"] = CardNumber;
+            properties["cardType"] = CardType;
+          }
+          else if (KidsCount == 1 && item?.ActualAmount - item?.AmountAfterDiscount == 0 && JSON.parse(item?.PackageGuestCount).length == 1) {
+            console.log('gkgk');
+            properties["KidsItemName"] = KidsItemName;
+            properties["KidsCount"] = KidsCount;
+            properties["KidsRate"] = KidsRate;
+            properties["KidsPrice"] = KidsPrice;
+            properties[KidsCgstProperty] = item?.TeensTaxBifurcation/2;
+            properties[KidsSgstProperty] = item?.TeensTaxBifurcation/2;
+            // properties[cgstProperty] = adjustedTaxDiffSum / 2;
+            properties[cgstProperty] = total / 2;
+            // properties[sgstProperty] = adjustedTaxDiffSum / 2;
+            properties[sgstProperty] = total / 2;
+            properties["TotalBillAmount"] = TotalKidsplusAdults - Discount;
+            properties["Rate"] = FinalRateResult;
+            properties["cashAmount"] = CashAmount;
+            properties["cardAmount"] = CardAmount;
+            properties["upiAmount"] = UPIAmount;
+            properties["upiId"] = UPIId;
+            properties["cardHoldersName"] = CardHoldersName;
+            properties["cardNumber"] = CardNumber;
+            properties["cardType"] = CardType;
+          }
+          else if (KidsCount == 1 && item?.ActualAmount - item?.AmountAfterDiscount == 0 && JSON.parse(item?.PackageGuestCount).length > 1) {
+            console.log('zkzk');
+            properties["KidsItemName"] = KidsItemName;
+            properties["KidsCount"] = KidsCount;
+            properties["KidsRate"] = KidsRate;
+            properties["KidsPrice"] = KidsPrice;
+            properties[KidsCgstProperty] = item?.TeensTaxBifurcation/2;
+            properties[KidsSgstProperty] = item?.TeensTaxBifurcation/2;
+            // properties[cgstProperty] = adjustedTaxDiffSum / 2;
+            properties[cgstProperty] = total / 2;
+            // properties[sgstProperty] = adjustedTaxDiffSum / 2;
+            properties[sgstProperty] = total / 2;
+            properties["TotalBillAmount"] = TotalKidsplusAdults - Discount;
+            properties["Rate"] = FinalRateResult;
+            properties["cashAmount"] = CashAmount;
+            properties["cardAmount"] = CardAmount;
+            properties["upiAmount"] = UPIAmount;
+            properties["upiId"] = UPIId;
+            properties["cardHoldersName"] = CardHoldersName;
+            properties["cardNumber"] = CardNumber;
+            properties["cardType"] = CardType;
+          }
+          else if (KidsCount > 1 && item?.ActualAmount - item?.AmountAfterDiscount == 0 && JSON.parse(item?.PackageGuestCount).length == 1) {
+            console.log('gkgk');
+            properties["KidsItemName"] = KidsItemName;
+            properties["KidsCount"] = KidsCount;
+            properties["KidsRate"] = KidsRate;
+            properties["KidsPrice"] = KidsPrice;
+            properties[KidsCgstProperty] = item?.TeensTaxBifurcation/2;
+            properties[KidsSgstProperty] = item?.TeensTaxBifurcation/2;
+            // properties[cgstProperty] = adjustedTaxDiffSum / 2;
+            properties[cgstProperty] = total / 2;
+            // properties[sgstProperty] = adjustedTaxDiffSum / 2;
+            properties[sgstProperty] = total / 2;
+            properties["TotalBillAmount"] = TotalKidsplusAdults - Discount;
+            properties["Rate"] = FinalRateResult;
+            properties["cashAmount"] = CashAmount;
+            properties["cardAmount"] = CardAmount;
+            properties["upiAmount"] = UPIAmount;
+            properties["upiId"] = UPIId;
+            properties["cardHoldersName"] = CardHoldersName;
+            properties["cardNumber"] = CardNumber;
+            properties["cardType"] = CardType;
+          }
+          else if (KidsCount > 1 && item?.ActualAmount - item?.AmountAfterDiscount == 0 && JSON.parse(item?.PackageGuestCount).length > 1) {
+            console.log('gkgk');
+            properties["KidsItemName"] = KidsItemName;
+            properties["KidsCount"] = KidsCount;
+            properties["KidsRate"] = KidsRate;
+            properties["KidsPrice"] = KidsPrice;
+            properties[KidsCgstProperty] = item?.TeensTaxBifurcation/2;
+            properties[KidsSgstProperty] = item?.TeensTaxBifurcation/2;
+            // properties[cgstProperty] = adjustedTaxDiffSum / 2;
+            properties[cgstProperty] = total / 2;
+            // properties[sgstProperty] = adjustedTaxDiffSum / 2;
+            properties[sgstProperty] = total / 2;
+            properties["TotalBillAmount"] = TotalKidsplusAdults - Discount;
+            properties["Rate"] = FinalRateResult;
+            properties["cashAmount"] = CashAmount;
+            properties["cardAmount"] = CardAmount;
+            properties["upiAmount"] = UPIAmount;
+            properties["upiId"] = UPIId;
+            properties["cardHoldersName"] = CardHoldersName;
+            properties["cardNumber"] = CardNumber;
+            properties["cardType"] = CardType;
+          }
+          else{
+            console.log('sksk');
+            properties["KidsItemName"] = KidsItemName;
+            properties["KidsCount"] = KidsCount;
+            properties["KidsRate"] = KidsRate;
+            properties["KidsPrice"] = KidsPrice;
+            properties[KidsCgstProperty] = KidsTax;
+            properties[KidsSgstProperty] = KidsTax;
+            // properties[cgstProperty] = adjustedTaxDiffSum / 2;
+            properties[cgstProperty] = total / 2;
+            // properties[sgstProperty] = adjustedTaxDiffSum / 2;
+            properties[sgstProperty] = total / 2;
+            properties["TotalBillAmount"] = TotalKidsplusAdults - Discount;
+            properties["Rate"] = FinalRateResult;
+            properties["cashAmount"] = CashAmount;
+            properties["cardAmount"] = CardAmount;
+            properties["upiAmount"] = UPIAmount;
+            properties["upiId"] = UPIId;
+            properties["cardHoldersName"] = CardHoldersName;
+            properties["cardNumber"] = CardNumber;
+            properties["cardType"] = CardType;
+          }
+
+        } 
+        else if (item?.ActualAmount - item?.AmountAfterDiscount > 0 && JSON.parse(item?.PackageGuestCount).length == 1) {
+          console.log('<<packageguestcount>>',JSON.parse(item?.PackageGuestCount).length);
           properties["KidsItemName"] = KidsItemName;
           properties["KidsCount"] = KidsCount;
           properties["KidsRate"] = KidsRate;
@@ -3089,7 +3305,53 @@ const BillingDetails = () => {
           properties["cardHoldersName"] = CardHoldersName;
           properties["cardNumber"] = CardNumber;
           properties["cardType"] = CardType;
-        } else {
+        } 
+        else if (item?.ActualAmount - item?.AmountAfterDiscount > 0 && JSON.parse(item?.PackageGuestCount).length > 1) {
+console.log('item?.packageGuestCount>>',JSON.parse(item?.PackageGuestCount).length);
+
+          properties["KidsItemName"] = KidsItemName;
+          properties["KidsCount"] = KidsCount;
+          properties["KidsRate"] = KidsRate;
+          properties["KidsPrice"] = KidsPrice;
+          properties[KidsCgstProperty] = KidsTax;
+          properties[KidsSgstProperty] = KidsTax;
+          // properties[cgstProperty] = adjustedTaxDiffSum / 2;
+          properties[cgstProperty] = sumWhenDiscount/2;
+          // properties[sgstProperty] = adjustedTaxDiffSum / 2;
+          properties[sgstProperty] = sumWhenDiscount/2;
+          properties["TotalBillAmount"] = TotalKidsplusAdults - Discount;
+          properties["Rate"] = FinalRateResult;
+          properties["cashAmount"] = CashAmount;
+          properties["cardAmount"] = CardAmount;
+          properties["upiAmount"] = UPIAmount;
+          properties["upiId"] = UPIId;
+          properties["cardHoldersName"] = CardHoldersName;
+          properties["cardNumber"] = CardNumber;
+          properties["cardType"] = CardType;
+        } 
+        else if (item?.ActualAmount - item?.AmountAfterDiscount > 0 && JSON.parse(item?.PackageGuestCount).length == 1) {
+          console.log('<<packageguestcount>>',JSON.parse(item?.PackageGuestCount).length);
+          properties["KidsItemName"] = KidsItemName;
+          properties["KidsCount"] = KidsCount;
+          properties["KidsRate"] = KidsRate;
+          properties["KidsPrice"] = KidsPrice;
+          properties[KidsCgstProperty] = KidsTax;
+          properties[KidsSgstProperty] = KidsTax;
+          // properties[cgstProperty] = adjustedTaxDiffSum / 2;
+          properties[cgstProperty] = sumWhenDiscount;
+          // properties[sgstProperty] = adjustedTaxDiffSum / 2;
+          properties[sgstProperty] = sumWhenDiscount;
+          properties["TotalBillAmount"] = TotalKidsplusAdults - Discount;
+          properties["Rate"] = FinalRateResult;
+          properties["cashAmount"] = CashAmount;
+          properties["cardAmount"] = CardAmount;
+          properties["upiAmount"] = UPIAmount;
+          properties["upiId"] = UPIId;
+          properties["cardHoldersName"] = CardHoldersName;
+          properties["cardNumber"] = CardNumber;
+          properties["cardType"] = CardType;
+        } 
+        else {
           // properties[cgstProperty] = adjustedTaxDiffSum / 2;
           properties[cgstProperty] = total / 2;
           // properties[sgstProperty] = adjustedTaxDiffSum / 2;
@@ -3509,7 +3771,8 @@ const BillingDetails = () => {
                               style={{ textAlign: "center" }}
                               className="BillPrintFont"
                             >
-                              <p>Kids</p>
+                              {/* <p>Kids</p> */}
+                              <p>Entry, Food</p>
                             </td>
 
                             <td
@@ -4686,7 +4949,8 @@ const BillingDetails = () => {
                             item?.TeensPrice > 0 && (
                               <tr>
                                 <td style={{ textAlign: "center" }}>
-                                  <p className="BillPrintFontPrint">Kids</p>
+                                  {/* <p className="BillPrintFontPrint">Kids</p> */}
+                                  <p className="BillPrintFontPrint">Entry, Food</p>
                                 </td>
 
                                 <td
