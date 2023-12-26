@@ -848,7 +848,16 @@ const BookingList = () => {
         teensCount: item.NumOfTeens,
         actualAmount: item.ActualAmount,
         amountAfterDiscount: item.AmountAfterDiscount,
-        discount: item.PanelDiscount ? item.PanelDiscount : item.CouponDiscount,
+        // discount: item.PanelDiscount ? item.PanelDiscount : item.CouponDiscount,
+        discount: item.PanelDiscount
+        ? item.PanelDiscount
+        : item.WebsiteDiscount
+        ? item.WebsiteDiscount
+        : item.CouponDiscount
+        ? item.CouponDiscount
+        : item.AgentPanelDiscount
+        ? item.AgentPanelDiscount
+        : 0,
         packageWeekdayPrice: JSON.stringify(item.PackageWeekdayPrice),
         packageWeekendPrice: JSON.stringify(item.PackageWeekendPrice),
       };
