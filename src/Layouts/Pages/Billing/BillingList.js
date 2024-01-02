@@ -1038,7 +1038,7 @@ const BillingList = () => {
                               ? item?.Items[0]?.ActualAmount
                               : item?.Items[0]?.AmountAfterDiscount}
                           </td> */}
-
+                          {/*Date & Time*/}
                           <td className="manager-list">
                             {item?.Items[0]?.BillingDate.slice(0, 10)}{" "}
                             {item?.Items[0]?.ActualBillingTime}
@@ -1091,7 +1091,7 @@ const BillingList = () => {
                               -
                             </p>
                           )}
-
+                          {/*Reprint Bill */}
                           {loginDetails?.logindata?.UserType === 1 ||
                           loginDetails?.logindata?.UserType === 2 ||
                           loginDetails?.logindata?.UserType === 3 ? (

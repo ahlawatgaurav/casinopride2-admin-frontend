@@ -3632,9 +3632,12 @@ console.log('item?.packageGuestCount>>',JSON.parse(item?.PackageGuestCount).leng
                         className="BillPrintFont"
                       >
                         {" "}
-                        {moment
+                        {/* {moment
                           .utc(item?.BillDateTime)
-                          .format("DD/MM/YYYY HH:mm")}
+                          .format("DD/MM/YYYY HH:mm")} */}
+                        {moment(item?.BillingDate.slice(0, 10))
+                          .format("DD/MM/YYYY")}{" "}
+                          {item?.ActualBillingTime}
                       </span>
                     </p>
 
@@ -4827,9 +4830,12 @@ console.log('item?.packageGuestCount>>',JSON.parse(item?.PackageGuestCount).leng
                           Date & Time:
                           <span className="BillPrintFontPrint">
                             {" "}
-                            {moment
+                            {/* {moment
                               .utc(item?.BillDateTime)
-                              .format("DD/MM/YYYY HH:mm")}
+                              .format("DD/MM/YYYY HH:mm")} */}
+                        {moment(item?.BillingDate.slice(0, 10))
+                          .format("DD/MM/YYYY")}{" "}
+                          {item?.ActualBillingTime}
                           </span>
                         </p>
 
