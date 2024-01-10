@@ -186,7 +186,77 @@ export const OTPpackage = ({
                           }}
                         >
                           Adults:{" "}
-                          {selectedPackages[packageDetail.Id]?.adults || 0}
+                          {/*Commented by manasi*/}
+                          {/* {selectedPackages[packageDetail.Id]?.adults || 0} */}
+                          {/* Replace the paragraph with an editable input field */}
+                          <input
+  type="text" // Change type to text to allow manual typing
+  value={selectedPackages[packageDetail.Id]?.adults || 0}
+onChange={(e) =>
+  handleCounterChange(
+    packageDetail.Id,
+    "adults",
+    true,
+    packageDetail?.PackageWeekdayPrice,
+    packageDetail?.PackageWeekendPrice,
+    packageDetail?.PackageName,
+    e.target.value // Pass the value from the input
+  )
+}
+
+  // onInput={(e) =>
+  //   handleCounterChange(
+  //     packageDetail.Id,
+  //     "adults",
+  //     true,
+  //     packageDetail?.PackageWeekdayPrice,
+  //     packageDetail?.PackageWeekendPrice,
+  //     packageDetail?.PackageName,
+  //     e.target.value
+  //   )
+  // }
+  // onBlur={(e) => {
+  //   const newValue = parseInt(e.target.value, 10) || 0; // Parse input value as an integer or default to 0
+  //   e.target.value = newValue.toString(); // Set the input value as a string
+  //   console.log('newValue>.',newValue);
+  //   handleCounterChange(
+  //     packageDetail.Id,
+  //     "adults",
+  //     true,
+  //     packageDetail?.PackageWeekdayPrice,
+  //     packageDetail?.PackageWeekendPrice,
+  //     packageDetail?.PackageName,
+  //     newValue
+  //   );
+  // }}
+  // onKeyDown={(e) => {
+  //   // Allow only numeric keys, backspace, and enter
+  //   if (
+  //     !(
+  //       (e.key >= '0' && e.key <= '9') ||
+  //       e.key === 'Backspace' ||
+  //       e.key === 'Enter' ||
+  //       e.key === 'Tab'
+  //     )
+  //   ) {
+  //     e.preventDefault();
+  //   }
+
+  //   // Clear input on backspace
+  //   if (e.key === 'Backspace') {
+  //     e.target.value = ''; // Clear the input value
+  //   }
+  // }}
+  style={{
+    width: "50px", // Adjust the width as needed
+    textAlign: "center",
+    fontWeight: "bold",
+  }}
+/>
+
+
+
+
                         </p>
                       </div>
                       <div className="text-center col-lg-3 col-md-3 col-sm-3 col-3">

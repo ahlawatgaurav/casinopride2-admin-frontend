@@ -85,55 +85,130 @@ const PackagesPage = ({
     groupedData[0]?.Id
   );
   const [selectedPackages, setSelectedPackages] = useState({});
-
   const handleCounterChange = (
     packageId,
     counterType,
     increment,
     PackageWeekdayPrice,
     PackageWeekendPrice,
-    PackageName
+    PackageName,
+    newValue // Add the new parameter for the value
   ) => {
+    console.log('check>>>',newValue);
+    console.log('increment-->>>',increment);
     setSelectedPackages((prevSelectedPackages) => {
       const updatedPackages = { ...prevSelectedPackages };
-
-      const currentCount = updatedPackages[packageId]?.[counterType] || 0;
-
+  
       console.log(
         "PackageName------------------------------<<>>>>>>>>>>><<<<<<<<<<>>>>>>>>>>>>",
         PackageName
       );
-
+  
       console.log(
         "PackageWeekdayPrice------------------------------<<>>>>>>>>>>><<<<<<<<<<>>>>>>>>>>>>",
         PackageWeekdayPrice,
         PackageWeekendPrice
       );
+  
       if (outletDate != undefined || outletDate != null) {
-        if (increment || currentCount > 0) {
+        // updatedPackages[packageId] = {
+        //   ...updatedPackages[packageId],
+        //   [counterType]: parseInt(newValue, 10) || 0,
+        //   PackageName,
+        //   PackageWeekdayPrice,
+        //   PackageWeekendPrice,
+        // };
+
+        if (newValue != undefined || newValue != null) {
           updatedPackages[packageId] = {
             ...updatedPackages[packageId],
-            [counterType]: currentCount + (increment ? 1 : -1),
+            [counterType]: parseInt(newValue, 10) || 0,
             PackageName,
             PackageWeekdayPrice,
             PackageWeekendPrice,
           };
-  
-          if (updatedPackages[packageId][counterType] <= 0) {
+        }
+        else{
+          const currentCount = updatedPackages[packageId]?.[counterType] || 0;
+          if (increment || currentCount > 0) {
+            updatedPackages[packageId] = {
+              ...updatedPackages[packageId],
+              [counterType]: currentCount + (increment ? 1 : -1),
+              PackageName,
+              PackageWeekdayPrice,
+              PackageWeekendPrice,
+            };
+    
+            if (updatedPackages[packageId][counterType] <= 0) {
+              delete updatedPackages[packageId];
+            }
+          } else {
             delete updatedPackages[packageId];
           }
-        } else {
+        }
+  
+        if (updatedPackages[packageId][counterType] <= 0) {
           delete updatedPackages[packageId];
         }
-      }
-      else{
-        toast.error("Please Check if outlet is open");
-      }
 
 
+      } else {
+        toast.error("Please Check if the outlet is open");
+      }
+  
       return updatedPackages;
     });
   };
+  
+
+  // const handleCounterChange = (
+  //   packageId,
+  //   counterType,
+  //   increment,
+  //   PackageWeekdayPrice,
+  //   PackageWeekendPrice,
+  //   PackageName
+  // ) => {
+  //   setSelectedPackages((prevSelectedPackages) => {
+  //     const updatedPackages = { ...prevSelectedPackages };
+
+  //     const currentCount = updatedPackages[packageId]?.[counterType] || 0;
+
+  //     console.log(
+  //       "PackageName------------------------------<<>>>>>>>>>>><<<<<<<<<<>>>>>>>>>>>>",
+  //       PackageName
+  //     );
+
+  //     console.log(
+  //       "PackageWeekdayPrice------------------------------<<>>>>>>>>>>><<<<<<<<<<>>>>>>>>>>>>",
+  //       PackageWeekdayPrice,
+  //       PackageWeekendPrice
+  //     );
+  //     if (outletDate != undefined || outletDate != null) {
+  //       if (increment || currentCount > 0) {
+  //         updatedPackages[packageId] = {
+  //           ...updatedPackages[packageId],
+  //           [counterType]: currentCount + (increment ? 1 : -1),
+  //           PackageName,
+  //           PackageWeekdayPrice,
+  //           PackageWeekendPrice,
+  //         };
+  
+  //         if (updatedPackages[packageId][counterType] <= 0) {
+  //           delete updatedPackages[packageId];
+  //         }
+  //       } else {
+  //         delete updatedPackages[packageId];
+  //       }
+  //     }
+  //     else{
+  //       toast.error("Please Check if outlet is open");
+  //     }
+
+
+  //     return updatedPackages;
+  //   });
+  // };
 
   const packageIds = [];
   const packageGuestCounts = [];
@@ -406,7 +481,7 @@ const PackagesPage = ({
                         </div>
 
                         <div className="text-center col-lg-6 col-md-6 col-sm-6 col-6">
-                          <p
+                          <span
                             className="text-uppercase"
                             style={{
                               fontSize: "12px",
@@ -416,8 +491,33 @@ const PackagesPage = ({
                               fontWeight: "bold",
                             }}
                           >
-                            Kids: {teensCount}
-                          </p>
+                            {/* Kids: {teensCount} */}
+                            Kids: {""}
+                          </span>
+                              {/* Replace the paragraph with an editable input field */}
+                            <input
+                              type="text"
+                              value={teensCount}
+                              onChange={(e) => setTeensCount(parseInt(e.target.value, 10) || 0)}
+                              style={{
+                                width: "40px", // Adjust the width as needed
+                                textAlign: "center",
+                                fontWeight: "bold",
+                                fontSize: "12px",
+                                marginTop: "10px",
+                                
+                              }}
+                                onKeyDown={(e) => {
+                            // Clear input on backspace
+                            if (e.key === 'Backspace') {
+                              e.target.value = ''; // Clear the input value
+                              if (e.target.value == '') {
+                              setTeensCount(0);
+                                
+                              }
+                            }
+                          }}
+                            />
                         </div>
                         <div className="text-center col-lg-3 col-md-3 col-sm-3 col-3">
                           <button
