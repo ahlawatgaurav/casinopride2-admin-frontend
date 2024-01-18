@@ -3061,7 +3061,8 @@ const BillingDetails = () => {
         }
         else if (item?.ItemDetails?.packageGuestCount?.length == 1 && item?.ItemDetails?.packageGuestCount[i] > 1 && item?.NumOfTeens == 0) {
           console.log('sss');
-          sumWhenDiscount += item?.ItemDetails?.TaxBifurcation[i];
+          // sumWhenDiscount += item?.ItemDetails?.TaxBifurcation[i];
+          sumWhenDiscount += (item?.ItemDetails?.packageGuestCount[i] * item?.ItemDetails?.TaxBifurcation[i])/2;
         }
         else if (item?.ItemDetails?.packageGuestCount?.length == 1 && item?.ItemDetails?.packageGuestCount[i] > 1 && item?.NumOfTeens == 0) {
           console.log('vvv');
