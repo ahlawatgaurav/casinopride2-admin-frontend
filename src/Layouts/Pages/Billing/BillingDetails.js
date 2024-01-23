@@ -3026,7 +3026,6 @@ const BillingDetails = () => {
       console.log("Kids rate", KidsRate);
 
       const KidsPrice = item?.TeensPrice;
-      console.log("Kids Price", KidsPrice);
 
       const KidsCgstProperty = `CGST ${item?.TeensTax / 2} %`;
       console.log("Kids cgst", KidsCgstProperty);
@@ -3038,7 +3037,10 @@ const BillingDetails = () => {
 
       const TotalKidsplusAdults = TotalBillAmount + KidsPrice;
 
-      console.log("TotalKidsplusAdults", TotalKidsplusAdults);
+      console.log("Kids Price>>>>>>---->>>>", KidsPrice);
+      console.log('TotalBillAmount========>>>',TotalBillAmount);
+      console.log("TotalKidsplusAdult-------->", TotalKidsplusAdults);
+      console.log("Discount<<<<<<<-------->>>>>", Discount);
 
       // Define dynamic property names
       const cgstProperty = `CGST ${item?.ItemDetails?.ItemTax / 2} %`;
@@ -3664,6 +3666,15 @@ console.log('item?.packageGuestCount>>',JSON.parse(item?.PackageGuestCount).leng
                         {item.PaymentMode}
                       </span>
                     </p>
+                    {item?.GSTNumber != null && <p className="BillPrintFont">
+                      GST Number :{" "}
+                      <span
+                        style={{ fontWeight: "bold" }}
+                        className="BillPrintFont"
+                      >
+                        {item?.GSTNumber}
+                      </span>
+                    </p>}
                   </div>
                   <div className="col-6">
                     <div className="d-flex justify-content-end qr-code">
@@ -4869,6 +4880,13 @@ console.log('item?.packageGuestCount>>',JSON.parse(item?.PackageGuestCount).leng
                             {item.PaymentMode}
                           </span>
                         </p>
+                        {item?.GSTNumber != null &&<p className="BillPrintFontPrint">
+                        GST Number  :{" "}
+                          <span className="BillPrintFontPrint">
+                            {item?.GSTNumber}
+                          </span>
+                        </p>}
+   
                       </div>
                       {/* <div className="col-6">
                         <div className="d-flex justify-content-end qr-code">

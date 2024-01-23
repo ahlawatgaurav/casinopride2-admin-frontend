@@ -1391,6 +1391,15 @@ const TeensBilling = () => {
                         {item.PaymentMode}
                       </span>
                     </p>
+                    {item?.GSTNumber != null && <p className="BillPrintFont">
+                        GST Number :{" "}
+                      <span
+                        style={{ fontWeight: "bold" }}
+                        className="BillPrintFont"
+                      >
+                        {item?.GSTNumber}
+                      </span>
+                    </p>}
                 </div>
                 <div className="col-6">
                   <div className="d-flex justify-content-end qr-code">
@@ -1685,6 +1694,16 @@ const TeensBilling = () => {
                         {item.PaymentMode}
                       </span>
                     </p>
+                      {item?.GSTNumber != null &&<p className="BillPrintFontPrint">
+                      GST Number :{" "}
+                      <span
+                        style={{ fontWeight: "bold" }}
+                        className="BillPrintFontPrint"
+                      >
+                        {item?.GSTNumber}
+                      </span>
+                    </p>}
+
                     </div>
                   </div>
                   <div className="bill-details">

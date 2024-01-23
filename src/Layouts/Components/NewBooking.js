@@ -294,6 +294,8 @@ const NewBooking = () => {
   const [cardHoldersName, setcardHoldersName] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [cardType, setCardType] = useState("");
+  const [discountFigure, setDiscountFigure] = useState("");
+
 
   const [loader, setLoader] = useState(false);
   console.log("cardType------->", cardType);
@@ -389,7 +391,6 @@ const NewBooking = () => {
       setSettledBy(1)
       setReferredByToggle(!referredByToggle);
       if (!referredByToggle) {
-        console.log('lesbien');
         setDiscountToggle(false);
         setCouponToggle(false);
         setCouponCode("");
@@ -403,7 +404,6 @@ const NewBooking = () => {
         //   setUpiAmount(amount);
         // }
       } else if (referredByToggle) {
-        console.log('gay');
         setSelectedOption("");
         setCouponDiscout("");
         setamountAfterDiscount("");
@@ -569,7 +569,6 @@ const NewBooking = () => {
     }
   };
 
-  const [discountFigure, setDiscountFigure] = useState("");
 
   console.log(
     "discountFigure_____________________(((((((((((((((((((((((((({{{{{{{{{{{{{{{}}}}}}}}}}}}}}}______________________------------>>>>>>>>>>>>>",
@@ -789,13 +788,20 @@ const NewBooking = () => {
       actualAmount: amount,
       paymentMode: paymentOption,
       cardAmount: cardAmount,
-      amountAfterDiscount: Discountpercent
-        ? amount - (amount * Discountpercent) / 100
-        : amountAfterDiscount !== 0
-        ? amountAfterDiscount
-        : couponDiscount !== ""
-        ? couponDiscount
-        : amount,
+      // amountAfterDiscount: Discountpercent
+      //   ? amount - (amount * Discountpercent) / 100
+      //   : amountAfterDiscount !== 0
+      //   ? amountAfterDiscount
+      //   : couponDiscount !== ""
+      //   ? couponDiscount
+      //   : amount,
+      amountAfterDiscount: (Discountpercent != "" || Discountpercent != null)
+      ? amount - (amount * Discountpercent) / 100
+      : amountAfterDiscount !== 0
+      ? amountAfterDiscount
+      : couponDiscount !== ""
+      ? couponDiscount
+      : amount,
       packageName:
         packageIds.length == 0
           ? JSON.stringify(teensPackageName)
