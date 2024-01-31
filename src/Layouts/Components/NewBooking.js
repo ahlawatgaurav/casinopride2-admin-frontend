@@ -305,9 +305,9 @@ const NewBooking = () => {
   console.log("remainingCoupons------------>remaining", remainingCoupons);
 
   const handleToggle = (field) => {
+
     const DiscountedAmount =
       amount - amountAfterDiscount == amount ? amount : amountAfterDiscount;
-
     if (paymentOption == "Cash") {
       setCashAmount(DiscountedAmount);
     } else if (paymentOption == "UPI") {
@@ -795,13 +795,20 @@ const NewBooking = () => {
       //   : couponDiscount !== ""
       //   ? couponDiscount
       //   : amount,
-      amountAfterDiscount: (Discountpercent != "" || Discountpercent != null)
+      amountAfterDiscount: (Discountpercent != "" && Discountpercent != null)
       ? amount - (amount * Discountpercent) / 100
-      : amountAfterDiscount !== 0
+      : amountAfterDiscount != 0
       ? amountAfterDiscount
-      : couponDiscount !== ""
+      : couponDiscount != ""
       ? couponDiscount
       : amount,
+      // amountAfterDiscount: Discountpercent != "" 
+      // ? amount - (amount * Discountpercent) / 100
+      // : amountAfterDiscount != 0
+      // ? amountAfterDiscount
+      // : couponDiscount != ""
+      // ? couponDiscount
+      // : amount,
       packageName:
         packageIds.length == 0
           ? JSON.stringify(teensPackageName)
@@ -843,7 +850,7 @@ const NewBooking = () => {
           toast.success("Booking details success");
           
 
-          if (couponToggle) {
+          if (couponToggle && couponDiscount != "") {
             couponCodeAppend();
           }
 
@@ -856,7 +863,7 @@ const NewBooking = () => {
             bookingDate: callback?.response?.Details?.BookingDate != null ? 
             moment(callback?.response?.Details?.BookingDate).format("YYYY-MM-DD") :
             moment(callback?.response?.Details?.FutureDate
-              ),
+              ).format("YYYY-MM-DD"),
             billingDate: activeDateOfOutlet?.OutletDate,
             teensCount: callback?.response?.Details?.NumOfTeens,
             actualAmount: callback?.response?.Details?.ActualAmount,
@@ -1046,9 +1053,18 @@ const NewBooking = () => {
 
     const DiscountedAmount = Discountpercent
       ? amount - (amount * Discountpercent) / 100
+    : couponDiscount != ""
+    ? couponDiscount
       : amount - amountAfterDiscount == amount
       ? amount
       : amountAfterDiscount;
+    // const DiscountedAmount = Discountpercent
+    // ? amount - (amount * Discountpercent) / 100
+    // : amountAfterDiscount != 0
+    // ? amountAfterDiscount
+    // : couponDiscount != ""
+    // ? couponDiscount
+    // : amount;
 
     setcardHoldersName("");
     setCardNumber("");

@@ -105,7 +105,6 @@ const AddCoupon = () => {
         isActive: 1,
         isCouponEnabled: 1,
       };
-
       dispatch(
         AddCouponDetails(data, loginDetails?.logindata?.Token, (callback) => {
           if (callback.status) {
@@ -124,6 +123,7 @@ const AddCoupon = () => {
     const startNumber = parseInt(seriesStart);
     const endNumber = parseInt(seriesEnd);
     const totalCoupons = endNumber - startNumber + 1;
+    console.log('check >>startDate>>',startDate);
 
     if (
       couponTitle == "" ||
@@ -144,8 +144,10 @@ const AddCoupon = () => {
         initial: initial,
         seriesStart: seriesStart,
         seriesEnd: seriesEnd,
-        startDate: addWeekToDate(startDate),
-        endDate: addWeekToDate(endDate),
+        // startDate: addWeekToDate(startDate),
+        // endDate: addWeekToDate(endDate),
+        startDate: moment(startDate).format("YYYY-MM-DD"),
+        endDate: moment(endDate).format("YYYY-MM-DD"),
         totalCoupons: totalCoupons,
         usedCoupons: "[]",
         remainingCoupons: totalCoupons,

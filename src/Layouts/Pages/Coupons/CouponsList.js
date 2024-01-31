@@ -307,10 +307,12 @@ const CouponsList = () => {
             Series End: {selectedUserDetails?.SeriesEnd}
           </p>
           <p className="manager-list ">
-            Start Date: {addWeekToDate(selectedUserDetails?.StartDate)}
+            {/* Start Date: {addWeekToDate(selectedUserDetails?.StartDate)} */}
+            Start Date: {moment(selectedUserDetails?.StartDate).format("YYYY-MM-DD")}
           </p>
           <p className="manager-list ">
-            End Date: {addWeekToDate(selectedUserDetails?.EndDate)}
+            {/* End Date: {addWeekToDate(selectedUserDetails?.EndDate)} */}
+            End Date: {moment(selectedUserDetails?.EndDate).format("YYYY-MM-DD")}
           </p>
 
           <p className="manager-list ">
