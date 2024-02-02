@@ -811,6 +811,8 @@ const BookingList = () => {
   }
 
   const GenerateBill = (item) => {
+    console.log('item?.FutureDate>>',item?.FutureDate);
+    console.log('item?.BookingDate-------',item?.BookingDate);
     console.log("Generate Bill--------->", shiftStatus);
     console.log('GenerateBill>>item>>',item);
     //checking if its Travel Agent
@@ -853,8 +855,7 @@ const BookingList = () => {
           // bookingDate: item.CreatedOn?.slice(0, 10),
           bookingDate: item?.BookingDate != null ? 
           moment(item?.BookingDate).format("YYYY-MM-DD") :
-          moment(item?.FutureDate
-            ),
+          moment(item?.FutureDate).format("YYYY-MM-DD"),
           billingDate: today,
           teensCount: item.NumOfTeens,
           actualAmount: item.ActualAmount,
@@ -1048,8 +1049,7 @@ const BookingList = () => {
           // bookingDate: item.CreatedOn?.slice(0, 10),
           bookingDate: item?.BookingDate != null ? 
           moment(item?.BookingDate).format("YYYY-MM-DD") :
-          moment(item?.FutureDate
-            ),
+          moment(item?.FutureDate).format("YYYY-MM-DD"),
           billingDate: today,
           teensCount: item.NumOfTeens,
           actualAmount: item.ActualAmount,

@@ -234,16 +234,17 @@ console.log('today>>>>>>',today);
 
   const generateAgentSettlementReportFn = (item) => {
     console.log('inside generateAgentSettlementReportFn>>item>>',item);
-    console.log('inside generateAgentSettlementReportFn>>item>>settlementUpdateDate-->',moment(item?.Date).format("YYYY-MM-DD"));
-    console.log('inside generateAgentSettlementReportFn>>item>>settlementDate-->',moment(item?.SettlementDate).format("YYYY-MM-DD"));
+    console.log('inside generateAgentSettlementReportFn>>item>>settlementUpdateDate-->',moment.utc(item?.Date).format("YYYY-MM-DD HH:mm:ss"));
+    console.log('inside generateAgentSettlementReportFn>>item>>settlementDate-->',moment.utc(item?.SettlementDate).format("YYYY-MM-DD HH:mm:ss"));
 
       const data = {
         userId: item?.UserId,
         isSettlementReport: 1,
         // settlementDate: item?.SettlementDate == null ? today : moment.utc(item?.SettlementDate).format("YYYY-MM-DD HH:mm:ss"),
-        settlementDate:  moment.utc(item?.SettlementDate).format("YYYY-MM-DD HH:mm:ss"),
+        // settlementDate:  moment.utc(item?.SettlementDate).format("YYYY-MM-DD HH:mm:ss"),
+        settlementDate: item?.SettlementDate != null ? moment.utc(item?.SettlementDate).format("YYYY-MM-DD HH:mm:ss") : null,
         settlementUpdateDate: moment.utc(item?.Date).format("YYYY-MM-DD HH:mm:ss"),
-        reportTypeId: 1,
+        reportTypeId: 9,
       };
       console.log('generateAgentSettlementReportFn>>data>>',data);
       dispatch(
@@ -379,7 +380,9 @@ console.log('today>>>>>>',today);
                     Amount Settled
                   </td>
                 )}
-                {(item.IsSettled == 0 && item?.SettlementDate != null) ? (
+                {(item.IsSettled == 0 
+                // && item?.SettlementDate != null
+                ) ? (
                   <td
                     className="manager-list"
                     onClick={() => generateAgentSettlementReportFn(item)}

@@ -244,7 +244,7 @@ const AcknowledgementDetails = () => {
               packageId: callback?.response?.Details.PackageId,
               packageGuestCount: callback?.response?.Details.PackageGuestCount,
               totalGuestCount: callback?.response?.Details.TotalGuestCount,
-              bookingDate: callback?.response?.Details?.FutureDate,
+              bookingDate: moment(callback?.response?.Details?.FutureDate).format("YYYY-MM-DD"),
               // billingDate: today,
               billingDate: todayOutletDate,
               teensCount: callback?.response?.Details.NumOfTeens,
@@ -399,9 +399,11 @@ const AcknowledgementDetails = () => {
             agentName: localAgentDetails?.Name,
             userTypeId: localAgentDetails?.UserType,
             settlementAmount: AgentSettlementAmount,
+            // bookingDate:
+            //   bookingData?.bookingDate
+            //   ?.slice(0, 10),
             bookingDate:
-              bookingData?.bookingDate
-              ?.slice(0, 10),
+              moment(bookingData?.bookingDate).format("YYYY-MM-DD"),
             bookingId:bookingData?.bookingId,
           };
           dispatch(
@@ -600,8 +602,7 @@ const AcknowledgementDetails = () => {
               // bookingDate: callback?.response?.Details?.CreatedOn?.slice(0, 10),
               bookingDate: callback?.response?.Details?.BookingDate != null ? 
               moment(callback?.response?.Details?.BookingDate).format("YYYY-MM-DD") :
-              moment(callback?.response?.Details?.FutureDate
-                ),
+              moment(callback?.response?.Details?.FutureDate).format("YYYY-MM-DD"),
               // billingDate: today,
               billingDate: todayOutletDate,
               teensCount: callback?.response?.Details?.NumOfTeens,
