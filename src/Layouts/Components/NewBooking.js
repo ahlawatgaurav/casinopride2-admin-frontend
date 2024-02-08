@@ -45,13 +45,16 @@ const NewBooking = () => {
   // const { userType } = location.state;
 
   const [show, setShow] = useState(false);
-
+  const [shiftOneOpen,setShiftOneOpen]=useState(false)
+  const [shiftTwoOpen,setShiftTwoOpen]=useState(false)
+  const [shiftThreeOpen,setShiftThreeOpen]=useState(false)
   const handleClose = () => setShow(false);
 
   const loginDetails = useSelector(
     (state) => state.auth?.userDetailsAfterLogin.Details
   );
 
+  
   console.log("loginDetails-------------->", loginDetails);
 
   useEffect(() => {
@@ -741,7 +744,7 @@ const NewBooking = () => {
     const teenpackageIdArray = [];
 
     teenpackageIdArray.push(teenpackageId);
-
+    console.log('onsubmit>>>shiftDetails>>',shiftDetails);
     const data = {
       guestName: guestName,
       address: address,
@@ -777,14 +780,22 @@ const NewBooking = () => {
       travelAgentName: Discountpercent
         ? localAgentDetails?.Name || TravelDetails?.Name
         : "",
+      // shiftId:
+      //   shiftDetails?.ShiftTypeId === 1 && shiftDetails?.ShiftOpen === 1
+      //     ? 1
+      //     : shiftDetails?.ShiftTypeId === 2 && shiftDetails?.ShiftOpen === 1
+      //     ? 2
+      //     : shiftDetails?.ShiftTypeId === 3 && shiftDetails?.ShiftOpen === 1
+      //     ? 3
+      //     : 0,
       shiftId:
-        shiftDetails?.ShiftTypeId === 1 && shiftDetails?.ShiftOpen === 1
-          ? 1
-          : shiftDetails?.ShiftTypeId === 2 && shiftDetails?.ShiftOpen === 1
-          ? 2
-          : shiftDetails?.ShiftTypeId === 3 && shiftDetails?.ShiftOpen === 1
-          ? 3
-          : 0,
+      (shifts && shifts[1] && shifts[1][0]?.ShiftOpen === 1) 
+      ? 1 
+      : (shifts && shifts[2] && shifts[2][0]?.ShiftOpen === 1) 
+      ? 2
+      : (shifts && shifts[3] && shifts[3][0]?.ShiftOpen === 1)
+      ? 3
+      : 0,
       actualAmount: amount,
       paymentMode: paymentOption,
       cardAmount: cardAmount,
@@ -1159,6 +1170,7 @@ const NewBooking = () => {
 
   const [shiftForUserOne, setShiftForUserOne] = useState(false);
   const checkShiftFn = () => {
+    console.log('inside>>checkShiftFn>>>');
     dispatch(
       checkShiftForUser(
         checkActiveOtlet == true ? today : activeDateOfOutlet?.OutletDate,
@@ -1230,6 +1242,7 @@ const NewBooking = () => {
 
   const shifts = {};
   if (shiftDetailsForUser) {
+    console.log('hello>>inside>>shiftDetailsForUser>>',shiftDetailsForUser);
     shiftDetailsForUser.forEach((item) => {
       const { ShiftTypeId, OpenTime, CloseTime, ShiftOpen } = item;
       if (!shifts[ShiftTypeId]) {
@@ -1240,6 +1253,7 @@ const NewBooking = () => {
   }
 
   const handleOpenShift = () => {
+    console.log('check shifts now>>',shifts);
     if (
       shiftDetailsForUser &&
       shiftDetailsForUser?.length > 0 &&
@@ -1266,7 +1280,7 @@ const NewBooking = () => {
           </div>
         );
       } else if (shifts && shifts[2] && shifts[2][0]?.ShiftOpen === 1) {
-        console.log("Shift 3 is open");
+        console.log("Shift 2 is open");
         // setShiftDisable(false);
         return (
           <div>
@@ -1526,6 +1540,7 @@ const NewBooking = () => {
   // };
 
   return (
+    console.log('Madhubala>>>>>',shiftForUserOne),
     <div>
       <div>
         <input
@@ -2443,6 +2458,40 @@ const NewBooking = () => {
           type="submit"
           className="btn btn_colour mt-5 btn-lg"
           onClick={handleShow}
+          // disabled={
+          //   (shifts && shifts[1] && !shifts[1][0]?.ShiftOpen === 1) ||
+          //   (shifts && shifts[3] && !shifts[3][0]?.ShiftOpen === 1) ||
+          //   (shifts && shifts[2] && !shifts[2][0]?.ShiftOpen === 1) ||
+          //   (recentShiftOpen &&
+          //     recentShiftOpen[0]?.ShiftTypeId === 2 &&
+          //     recentShiftOpen &&
+          //     recentShiftOpen[0]?.ShiftOpen === 0) ||
+          //   (recentShiftOpen &&
+          //     recentShiftOpen[0]?.ShiftTypeId === 2 &&
+          //     recentShiftOpen &&
+          //     recentShiftOpen[0]?.ShiftOpen === 1) ||
+          //   (recentShiftOpen &&
+          //     recentShiftOpen[0]?.ShiftTypeId === 3 &&
+          //     recentShiftOpen &&
+          //     recentShiftOpen[0]?.ShiftOpen === 1) ||
+          //   (recentShiftOpen &&
+          //     recentShiftOpen[0]?.ShiftTypeId === 1 &&
+          //     recentShiftOpen &&
+          //     recentShiftOpen[0]?.ShiftOpen === 0) ||
+          //   (recentShiftOpen &&
+          //     recentShiftOpen[0]?.ShiftTypeId === 1 &&
+          //     recentShiftOpen &&
+          //     recentShiftOpen[0]?.ShiftOpen === 1) ||
+          //   (shifts &&
+          //     shifts[2] &&
+          //     shifts[2][0]?.ShiftOpen === 0 &&
+          //     !shifts[3]) ||
+          //   (shifts &&
+          //     shifts[1] &&
+          //     shifts[1][0]?.ShiftOpen === 0 &&
+          //     !shifts[2]) ||
+          //   shiftForUserOne
+          // }
           disabled={
             (shifts && shifts[1] && !shifts[1][0]?.ShiftOpen === 1) ||
             (shifts && shifts[3] && !shifts[3][0]?.ShiftOpen === 1) ||
@@ -2467,7 +2516,12 @@ const NewBooking = () => {
               recentShiftOpen[0]?.ShiftTypeId === 1 &&
               recentShiftOpen &&
               recentShiftOpen[0]?.ShiftOpen === 1) ||
+            // (shifts &&
+            //   shifts[2] &&
+            //   shifts[2][0]?.ShiftOpen === 0 &&
+            //   !shifts[3]) ||
             (shifts &&
+              shifts[1] && shifts[1][0]?.ShiftOpen === 0 &&
               shifts[2] &&
               shifts[2][0]?.ShiftOpen === 0 &&
               !shifts[3]) ||
@@ -2475,6 +2529,11 @@ const NewBooking = () => {
               shifts[1] &&
               shifts[1][0]?.ShiftOpen === 0 &&
               !shifts[2]) ||
+              (shifts &&
+                shifts[1] && shifts[1][0]?.ShiftOpen === 0 &&
+                shifts[2] &&
+                shifts[2][0]?.ShiftOpen === 0 &&
+                shifts[3] && shifts[3][0]?.ShiftOpen === 0) ||
             shiftForUserOne
           }
         >

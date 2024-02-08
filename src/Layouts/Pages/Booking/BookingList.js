@@ -875,11 +875,19 @@ const BookingList = () => {
         };
         const shiftData = {
           bookingId: item.Id,
-          shiftTypeId : shiftDetails?.ShiftTypeId === 1 && shiftDetails?.ShiftOpen === 1
-          ? 1
-          : shiftDetails?.ShiftTypeId === 2 && shiftDetails?.ShiftOpen === 1
+          // shiftTypeId : shiftDetails?.ShiftTypeId === 1 && shiftDetails?.ShiftOpen === 1
+          // ? 1
+          // : shiftDetails?.ShiftTypeId === 2 && shiftDetails?.ShiftOpen === 1
+          // ? 2
+          // : shiftDetails?.ShiftTypeId === 3 && shiftDetails?.ShiftOpen === 1
+          // ? 3
+          // : 0,
+          shiftTypeId:
+          (shifts && shifts[1] && shifts[1][0]?.ShiftOpen === 1) 
+          ? 1 
+          : (shifts && shifts[2] && shifts[2][0]?.ShiftOpen === 1) 
           ? 2
-          : shiftDetails?.ShiftTypeId === 3 && shiftDetails?.ShiftOpen === 1
+          : (shifts && shifts[3] && shifts[3][0]?.ShiftOpen === 1)
           ? 3
           : 0,
         };
@@ -1069,11 +1077,19 @@ const BookingList = () => {
         };
         const shiftData = {
           bookingId: item.Id,
-          shiftTypeId : shiftDetails?.ShiftTypeId === 1 && shiftDetails?.ShiftOpen === 1
-          ? 1
-          : shiftDetails?.ShiftTypeId === 2 && shiftDetails?.ShiftOpen === 1
+          // shiftTypeId : shiftDetails?.ShiftTypeId === 1 && shiftDetails?.ShiftOpen === 1
+          // ? 1
+          // : shiftDetails?.ShiftTypeId === 2 && shiftDetails?.ShiftOpen === 1
+          // ? 2
+          // : shiftDetails?.ShiftTypeId === 3 && shiftDetails?.ShiftOpen === 1
+          // ? 3
+          // : 0,
+          shiftTypeId:
+          (shifts && shifts[1] && shifts[1][0]?.ShiftOpen === 1) 
+          ? 1 
+          : (shifts && shifts[2] && shifts[2][0]?.ShiftOpen === 1) 
           ? 2
-          : shiftDetails?.ShiftTypeId === 3 && shiftDetails?.ShiftOpen === 1
+          : (shifts && shifts[3] && shifts[3][0]?.ShiftOpen === 1)
           ? 3
           : 0,
         };
