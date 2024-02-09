@@ -270,7 +270,7 @@ const NewBooking = () => {
 
   const [usedCouponArr, setUsedCouponArr] = useState([]);
 
-  const [remainingCoupons, setRemainingCoupons] = useState("");
+  const [remainingCoupons, setRemainingCoupons] = useState();
   const [bookingData, setBookingData] = useState("");
   const [couponDiscount, setCouponDiscout] = useState("");
   const [totalteensPrice, setTotalTeensPrice] = useState("");
@@ -523,7 +523,16 @@ const NewBooking = () => {
                 callback?.response?.Details
               );
 
-              const discount =
+              const inputString = callback?.response?.Details?.UsedCoupons;
+              const stringWithoutBrackets = inputString.slice(1, -1);
+              const arrayFromString = stringWithoutBrackets.split(",");
+              const isCouponUsed = arrayFromString.includes(couponCode);
+              console.log("isCouponUsed-------------->", isCouponUsed);
+
+              if (isCouponUsed) {
+                toast.error("Coupon code is already used");
+              } else {
+                const discount =
                 (amount * callback?.response?.Details?.CouponDiscount) / 100;
               const discountedAmount = amount - discount;
               setCouponDiscout(discountedAmount);
@@ -541,26 +550,40 @@ const NewBooking = () => {
                 "remaing------------------->length------------->",
                 callback?.response?.Details?.UsedCoupons
               );
-              setRemainingCoupons(
-                callback?.response?.Details?.TotalCoupons -
-                  callback?.response?.Details?.UsedCoupons?.length
+
+              const usedCouponsArray = callback?.response?.Details?.UsedCoupons?.substring(1, callback?.response?.Details?.UsedCoupons?.length - 1).split(',');
+              // Remove double quotes from each element of the array
+              const sanitizedUsedCouponsArray = usedCouponsArray.map(coupon => coupon.replace(/"/g, ''));
+              // let usedCoupons = callback?.response?.Details?.UsedCoupons.replace(/^"(.*)"$/, '$1');
+              // console.log('jhumka-->',usedCoupons.length);
+              // console.log('parsinggg>>',JSON.parse(callback?.response?.Details?.UsedCoupons));
+              console.log(
+                "Used Coupon length-->",
+                callback?.response?.Details?.UsedCoupons?.length
               );
+              if (sanitizedUsedCouponsArray?.length === 1 && sanitizedUsedCouponsArray[0]==='') {
+                setRemainingCoupons(callback?.response?.Details?.TotalCoupons - 1)
+              }
+            else{
+
+              setRemainingCoupons(
+                (callback?.response?.Details?.TotalCoupons -
+                sanitizedUsedCouponsArray?.length) - 1
+              );
+            }
+              // console.log('Check remaining======>',callback?.response?.Details?.TotalCoupons - JSON.parse(callback?.response?.Details?.UsedCoupons)?.length);
+              // setRemainingCoupons(
+              //   callback?.response?.Details?.TotalCoupons -
+              //     callback?.response?.Details?.UsedCoupons?.length
+              // );
               setCouponId(callback?.response?.Details?.Id);
               setUsedCouponArr(
                 callback?.response?.Details?.UsedCoupons.slice(1, -1).split(",")
               );
-
-              const inputString = callback?.response?.Details?.UsedCoupons;
-              const stringWithoutBrackets = inputString.slice(1, -1);
-              const arrayFromString = stringWithoutBrackets.split(",");
-              const isCouponUsed = arrayFromString.includes(couponCode);
-              console.log("isCouponUsed-------------->", isCouponUsed);
-
-              if (isCouponUsed) {
-                toast.error("Coupon code is already used");
-              } else {
                 toast.success("Coupon code is available");
               }
+
+
             } else {
               toast.error("This Coupon does not exists");
             }
@@ -1019,18 +1042,27 @@ const NewBooking = () => {
   console.log("numberofteens-------------------->", numberofteens);
 
   const couponCodeAppend = () => {
+    console.log('...usedCouponArr-------',typeof{...usedCouponArr});
+    console.log('...usedCouponArr>>>>>',{...usedCouponArr} == {0 : ''} ? true : false);
     const updatedCouponData = [...usedCouponArr, couponCode];
+    const filteredUpdatedCouponData = updatedCouponData.filter(item => item !== ''); // Filter out empty strings
+    console.log('lets-->check-->updatedCouponData-->',updatedCouponData);
+    // const dataArray = Array.from(
+    //   { length: updatedCouponData.length },
+    //   (_, index) => updatedCouponData[index]
+    // );
     const dataArray = Array.from(
-      { length: updatedCouponData.length },
-      (_, index) => updatedCouponData[index]
+      { length: filteredUpdatedCouponData.length },
+      (_, index) => filteredUpdatedCouponData[index]
     );
+    console.log('dataArray--->',dataArray);
     const stringRepresentation = "[" + dataArray.join(",") + "]";
     const couponData = {
       couponId: couponId,
       usedCoupons: stringRepresentation,
       remainingCoupons: remainingCoupons,
     };
-
+    console.log('check--->>couponData-->>',couponData);
     dispatch(
       EditUsedCoupon(couponData, loginDetails?.logindata?.Token, (callback) => {
         if (callback.status) {

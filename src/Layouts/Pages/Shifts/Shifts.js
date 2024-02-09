@@ -124,7 +124,6 @@ const Shifts = () => {
     onsubmit();
   };
 
-  
   useEffect(() => {
     dispatch(
       checkActiveOutlet(loginDetails?.logindata?.Token, (callback) => {
@@ -2007,6 +2006,7 @@ console.log('openShiftTwo>>data>>',data);
       } 
       else if (recentShiftOpen[0]?.ShiftTypeId == 2 &&
         recentShiftOpen[0]?.ShiftOpen == 0) {
+          console.log('checkingggg>>>');
           return (
             <div className="row">
               <div className="col-md-4">
@@ -2448,12 +2448,29 @@ console.log('openShiftTwo>>data>>',data);
                 <></>
               )}
 
-              {outletDetails == 1 &&
+              {/* {outletDetails == 1 &&
               shifts &&
               shifts[3] &&
               shifts[3][0]?.ShiftOpen === 0 &&
               shifts[3][0]?.ShiftTypeId == 3 && 
               shifts[2][0]?.ShiftOpen === 0 ? (
+                <div className="col-md-4 mb-5 d-flex justify-content-end">
+                  <Button variant="danger" onClick={OpenCLoseOutletModalFn}>
+                    Close Outlet
+                  </Button>
+                </div>
+              ) : (
+                <></>
+              )} */}
+              {outletDetails == 1 &&
+              shifts &&
+              ((shifts[3] &&
+              shifts[3][0]?.ShiftOpen === 0 &&
+              shifts[3][0]?.ShiftTypeId == 3) ||
+              (shifts[3] &&
+                shifts[3][0]?.ShiftOpen === 0 &&
+                shifts[3][0]?.ShiftTypeId == 3 && 
+                shifts[2][0]?.ShiftOpen === 0)) ? (
                 <div className="col-md-4 mb-5 d-flex justify-content-end">
                   <Button variant="danger" onClick={OpenCLoseOutletModalFn}>
                     Close Outlet

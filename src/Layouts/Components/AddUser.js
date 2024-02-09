@@ -397,14 +397,14 @@ const AddUser = () => {
             type="text"
             disabled={userData ? disabled : ""}
             placeholder="Full Name"
-            // onChange={(e) => setFullName(e.target.value)}
-            onChange={(e) => handleInputChange(e)}
-            onkeydown={(event) => {
-              // if (event.key == "." || event.key === "-") {
-              if (event.key == /^[0-9]{0,2}$/) {
-                event.preventdefault();
-              }
-            }}
+            onChange={(e) => setFullName(e.target.value)}
+            // onChange={(e) => handleInputChange(e)}
+            // onkeydown={(event) => {
+            //   // if (event.key == "." || event.key === "-") {
+            //   if (event.key == /^[0-9]{0,2}$/) {
+            //     event.preventdefault();
+            //   }
+            // }}
             defaultValue={userData?.Name}
           />
         </div>
