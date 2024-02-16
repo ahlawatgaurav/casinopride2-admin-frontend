@@ -537,22 +537,27 @@ const BillingList = () => {
 
   const combinedData = {};
 
-  filteredBillingList.forEach((item) => {
+  filteredBillingList?.forEach((item) => {
     const bookingId = item.BookingId;
     if (!combinedData[bookingId]) {
       combinedData[bookingId] = {
         BookingId: bookingId,
         Items: [item],
+        BillingId : item?.BillingId
+
       };
     } else {
       combinedData[bookingId].Items.push(item);
+      if (item?.BillingId > combinedData[bookingId].BillingId) {
+        combinedData[bookingId].BillingId = item?.BillingId;
+      }
     }
   });
 
   const dataArray = Object.values(combinedData);
-  console.log('dataArray-->',dataArray);
 
-  dataArray.sort((a, b) => b.BookingId - a.BookingId);
+  // dataArray.sort((a, b) => b.BookingId - a.BookingId);
+  dataArray.sort((a, b) => b.BillingId - a.BillingId);
 
   dataArray.forEach((group) => {
     group.Items.sort((a, b) => {
