@@ -218,13 +218,43 @@ const AddCoupon = () => {
           <label for="formGroupExampleInput " className="form_text">
             Initial <span style={{ color: "red" }}>*</span>
           </label>
-          <input
+          {/* <input
             class="form-control mt-2"
             type="text"
             placeholder="Enter Initial"
             onChange={(e) => setinitial(e.target.value)}
             defaultValue={userData?.Initial}
+          /> */}
+          
+          {/* Restrict Numbers from entering */}
+          <input
+            class="form-control mt-2"
+            type="text"
+            placeholder="Enter Initial"
+            onKeyDown={(e) => {
+              const allowedKeys = [
+                'Backspace',
+                'ArrowLeft',
+                'ArrowRight',
+                'ArrowUp',
+                'ArrowDown',
+                'Delete',
+              ];
+
+              if (
+                !(/[a-zA-Z]/.test(e.key) || allowedKeys.includes(e.key))
+              ) {
+                e.preventDefault();
+              }
+            }}
+            onChange={(e) => {
+              const inputValue = e.target.value;
+              setinitial(inputValue);
+            }}
+            value={initial}
           />
+
+
         </div>
 
         <div className="col-lg-6 mt-3">

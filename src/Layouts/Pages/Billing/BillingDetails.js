@@ -3712,7 +3712,7 @@ console.log('item?.packageGuestCount>>',JSON.parse(item?.PackageGuestCount).leng
                       className="bill-number BillPrintFont"
                       style={{ marginRight: "25px" }}
                     >
-                      BILL#: {item.BillNumber}
+                      BILL#: PSCP1 {item.BillNumber}
                     </p>
                   </div>
                   <hr />
@@ -4813,7 +4813,7 @@ console.log('item?.packageGuestCount>>',JSON.parse(item?.PackageGuestCount).leng
                           className="BillPrintFontPrint"
                           style={{ marginRight: "5px" }}
                         >
-                          BILL#: {item.BillNumber}
+                          BILL#: PSCP1 {item.BillNumber}
                         </p>
                         <p className="BillPrintFontPrint">
                           Guest Name :

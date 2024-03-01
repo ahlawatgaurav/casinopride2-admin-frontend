@@ -1430,7 +1430,7 @@ const TeensBilling = () => {
                     className="bill-number BillPrintFont"
                     style={{ marginRight: "35px" }}
                   >
-                    BILL#: {item.BillNumber}
+                    BILL#:PSCP1 {item.BillNumber}
                   </p>
                 </div>
                 <hr />
@@ -1644,7 +1644,7 @@ const TeensBilling = () => {
                         className="bill-number BillPrintFontPrint"
                         style={{ marginRight: "15px" }}
                       >
-                        BILL#: {item.BillNumber}
+                        BILL#:PSCP1 {item.BillNumber}
                       </p>
                       <p className="BillPrintFontPrint">
                         GUEST NAME :
