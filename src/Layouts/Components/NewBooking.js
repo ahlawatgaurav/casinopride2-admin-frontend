@@ -625,7 +625,6 @@ const NewBooking = () => {
 
       const DiscountedAmount =
         amount - discountedAmount == amount ? amount : discountedAmount;
-
       if (paymentOption == "Cash") {
         setCashAmount(DiscountedAmount);
         setUpiAmount("");
@@ -1171,8 +1170,6 @@ else{
     // Update the selected option when the user makes a selection
     setPaymentOption(event.target.value);
 
-    console.log("payment selection----->", event.target.value);
-
     const DiscountedAmount = Discountpercent
       ? amount - (amount * Discountpercent) / 100
     : couponDiscount != ""
@@ -1187,7 +1184,7 @@ else{
     // : couponDiscount != ""
     // ? couponDiscount
     // : amount;
-
+    console.log('check==>DiscountedAmount==>',DiscountedAmount);
     setcardHoldersName("");
     setCardNumber("");
     setCardType("");
@@ -1550,65 +1547,105 @@ else{
   console.log("finalAmountofPackage------------>", finalAmountofPackage);
 
   const handlePartCard = (e) => {
+    const DiscountedAmount = Discountpercent
+    ? amount - (amount * Discountpercent) / 100
+  : couponDiscount != ""
+  ? couponDiscount
+    : amount - amountAfterDiscount == amount
+    ? amount
+    : amountAfterDiscount;
+
     let inputValue = parseFloat(e.target.value);
 
     if (isNaN(inputValue) || inputValue < 0) {
       inputValue = "";
     }
 
-    if (inputValue > parseFloat(finalAmountofPackage)) {
+    // if (inputValue > parseFloat(finalAmountofPackage)) {
+    if (inputValue > parseFloat(DiscountedAmount)) {
       //checking if the discount that is added is more than the discount percent of the agent
-      inputValue = finalAmountofPackage;
+      // inputValue = finalAmountofPackage;
+      inputValue = DiscountedAmount;
     }
 
     if (paymentOption === "Part Card / Part Cash") {
-      setCashAmount(parseFloat(finalAmountofPackage) - inputValue);
+      // setCashAmount(parseFloat(finalAmountofPackage) - inputValue);
+      setCashAmount(parseFloat(DiscountedAmount) - inputValue);
+      setUpiAmount("")
     }
 
     if (paymentOption === "Part Card / Part UPI") {
-      setUpiAmount(parseFloat(finalAmountofPackage) - inputValue);
+      // setUpiAmount(parseFloat(finalAmountofPackage) - inputValue);
+      setUpiAmount(parseFloat(DiscountedAmount) - inputValue);
+      setCashAmount("")
     }
 
     setCardAmount(inputValue);
   };
 
   const handlePartCash = (e) => {
+    const DiscountedAmount = Discountpercent
+    ? amount - (amount * Discountpercent) / 100
+  : couponDiscount != ""
+  ? couponDiscount
+    : amount - amountAfterDiscount == amount
+    ? amount
+    : amountAfterDiscount;
     let inputValue = parseFloat(e.target.value);
 
     if (isNaN(inputValue) || inputValue < 0) {
       inputValue = "";
-    } else if (inputValue > parseFloat(finalAmountofPackage)) {
+    // } else if (inputValue > parseFloat(finalAmountofPackage)) {
+    } else if (inputValue > parseFloat(DiscountedAmount)) {
       //checking if the discount that is added is more than the discount percent of the agent
-      inputValue = finalAmountofPackage;
+      // inputValue = finalAmountofPackage;
+      inputValue = DiscountedAmount;
     }
 
     if (paymentOption === "Part Card / Part Cash") {
-      setCardAmount(parseFloat(finalAmountofPackage) - inputValue);
+      // setCardAmount(parseFloat(finalAmountofPackage) - inputValue);
+      setCardAmount(parseFloat(DiscountedAmount) - inputValue);
+      setUpiAmount("")
     }
 
     if (paymentOption === "Part Cash / Part UPI") {
-      setUpiAmount(parseFloat(finalAmountofPackage) - inputValue);
+      // setUpiAmount(parseFloat(finalAmountofPackage) - inputValue);
+      setUpiAmount(parseFloat(DiscountedAmount) - inputValue);
+      setCardAmount("")
     }
 
     setCashAmount(inputValue);
   };
 
   const handlePartUPI = (e) => {
+    const DiscountedAmount = Discountpercent
+    ? amount - (amount * Discountpercent) / 100
+  : couponDiscount != ""
+  ? couponDiscount
+    : amount - amountAfterDiscount == amount
+    ? amount
+    : amountAfterDiscount;
     let inputValue = parseFloat(e.target.value);
 
     if (isNaN(inputValue) || inputValue < 0) {
       inputValue = "";
-    } else if (inputValue > parseFloat(finalAmountofPackage)) {
+    // } else if (inputValue > parseFloat(finalAmountofPackage)) {
+    } else if (inputValue > parseFloat(DiscountedAmount)) {
       //checking if the discount that is added is more than the discount percent of the agent
-      inputValue = finalAmountofPackage;
+      // inputValue = finalAmountofPackage;
+      inputValue = DiscountedAmount;
     }
 
     if (paymentOption === "Part Card / Part UPI") {
-      setCardAmount(parseFloat(finalAmountofPackage) - inputValue);
+      // setCardAmount(parseFloat(finalAmountofPackage) - inputValue);
+      setCardAmount(parseFloat(DiscountedAmount) - inputValue);
+      setCashAmount("")
     }
 
     if (paymentOption === "Part Cash / Part UPI") {
-      setCashAmount(parseFloat(finalAmountofPackage) - inputValue);
+      // setCashAmount(parseFloat(finalAmountofPackage) - inputValue);
+      setCashAmount(parseFloat(DiscountedAmount) - inputValue);
+      setCardAmount("")
     }
 
     setUpiAmount(inputValue);
