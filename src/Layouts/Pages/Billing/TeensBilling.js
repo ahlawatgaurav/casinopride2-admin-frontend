@@ -1193,7 +1193,7 @@ const TeensBilling = () => {
 
   const updatededBillDetails = {
     ItemTax: BookingDetails[0]?.TeensTax,
-    KidsItemName:KidsItemName,
+    KidsItemName: KidsItemName,
     KidsPrice: BookingDetails[0]?.TeensPrice,
     // KidsRate: BookingDetails[0]?.TeensRate * BookingDetails[0]?.NumOfTeens,
     KidsRate: BookingDetails[0]?.TeensRate,
@@ -1203,34 +1203,69 @@ const TeensBilling = () => {
     packageGuestCount: BookingDetails[0]?.NumOfTeens,
     [KidsCgstProperty]: BookingDetails[0]?.TeensTaxBifurcation / 2,
     [KidsSgstProperty]: BookingDetails[0]?.TeensTaxBifurcation / 2,
-    TotalBillAmount: (BookingDetails[0]?.TeensPrice -
-      (BookingDetails[0]?.ActualAmount - BookingDetails[0]?.AmountAfterDiscount)),
+    TotalBillAmount:
+      BookingDetails[0]?.TeensPrice -
+      (BookingDetails[0]?.ActualAmount -
+        BookingDetails[0]?.AmountAfterDiscount),
     //adding cash, card, UPI details
-    cashAmount : BookingDetails[0]?.SettledByCompany == 0 && 
-    ((BookingDetails[0]?.PayAtCounter == 1 && BookingDetails[0]?.UserTypeId == 5) || 
-    BookingDetails[0]?.PayAtCounter != 1 && (BookingDetails[0]?.UserTypeId != 0 && BookingDetails[0]?.UserTypeId != 5 && BookingDetails[0]?.UserTypeId != 6)) ? BookingDetails[0]?.CashAmount : 0,
+    cashAmount:
+      BookingDetails[0]?.SettledByCompany == 0 &&
+      ((BookingDetails[0]?.PayAtCounter == 1 &&
+        BookingDetails[0]?.UserTypeId == 5) ||
+        (BookingDetails[0]?.PayAtCounter != 1 &&
+          BookingDetails[0]?.UserTypeId != 0 &&
+          BookingDetails[0]?.UserTypeId != 5 &&
+          BookingDetails[0]?.UserTypeId != 6))
+        ? BookingDetails[0]?.CashAmount
+        : 0,
 
-    cardAmount : BookingDetails[0]?.SettledByCompany == 0 && 
-    ((BookingDetails[0]?.PayAtCounter == 1 && BookingDetails[0]?.UserTypeId == 5) || 
-    BookingDetails[0]?.PayAtCounter != 1 && (BookingDetails[0]?.UserTypeId != 0 && BookingDetails[0]?.UserTypeId != 5 && BookingDetails[0]?.UserTypeId != 6)) ? BookingDetails[0]?.CardAmount : 0,
+    cardAmount:
+      BookingDetails[0]?.SettledByCompany == 0 &&
+      ((BookingDetails[0]?.PayAtCounter == 1 &&
+        BookingDetails[0]?.UserTypeId == 5) ||
+        (BookingDetails[0]?.PayAtCounter != 1 &&
+          BookingDetails[0]?.UserTypeId != 0 &&
+          BookingDetails[0]?.UserTypeId != 5 &&
+          BookingDetails[0]?.UserTypeId != 6))
+        ? BookingDetails[0]?.CardAmount
+        : 0,
 
-    upiAmount : BookingDetails[0]?.SettledByCompany == 0 && 
-    ((BookingDetails[0]?.PayAtCounter == 1 && BookingDetails[0]?.UserTypeId == 5) || 
-    BookingDetails[0]?.PayAtCounter != 1 && (BookingDetails[0]?.UserTypeId != 0 && BookingDetails[0]?.UserTypeId != 5 && BookingDetails[0]?.UserTypeId != 6)) ? BookingDetails[0]?.UPIAmount : 0,
-    
-    upiId : BookingDetails[0]?.UPIId,
-    cardHoldersName : BookingDetails[0]?.CardHoldersName,
-    cardNumber : BookingDetails[0]?.CardNumber,
-    cardType : BookingDetails[0]?.CardType,
-    bookingCommission:BookingDetails[0]?.BookingCommision,
-    settledByCompany:BookingDetails[0]?.SettledByCompany == 1 ? 
-    (BookingDetails[0]?.CashAmount + BookingDetails[0]?.CardAmount + BookingDetails[0]?.UPIAmount != 0 ?
-      BookingDetails[0]?.CashAmount + BookingDetails[0]?.CardAmount + BookingDetails[0]?.UPIAmount : 
-      BookingDetails[0]?.AmountAfterDiscount) : 0,
+    upiAmount:
+      BookingDetails[0]?.SettledByCompany == 0 &&
+      ((BookingDetails[0]?.PayAtCounter == 1 &&
+        BookingDetails[0]?.UserTypeId == 5) ||
+        (BookingDetails[0]?.PayAtCounter != 1 &&
+          BookingDetails[0]?.UserTypeId != 0 &&
+          BookingDetails[0]?.UserTypeId != 5 &&
+          BookingDetails[0]?.UserTypeId != 6))
+        ? BookingDetails[0]?.UPIAmount
+        : 0,
 
-      OnlinePayu :BookingDetails[0]?.SettledByCompany == 0 && 
-      (BookingDetails[0]?.PayAtCounter != 1 && (BookingDetails[0]?.UserTypeId == 0 || BookingDetails[0]?.UserTypeId == 5 || BookingDetails[0]?.UserTypeId == 6)) ? 
-        (BookingDetails[0]?.UPIAmount + BookingDetails[0]?.CardAmount) : 0,
+    upiId: BookingDetails[0]?.UPIId,
+    cardHoldersName: BookingDetails[0]?.CardHoldersName,
+    cardNumber: BookingDetails[0]?.CardNumber,
+    cardType: BookingDetails[0]?.CardType,
+    bookingCommission: BookingDetails[0]?.BookingCommision,
+    settledByCompany:
+      BookingDetails[0]?.SettledByCompany == 1
+        ? BookingDetails[0]?.CashAmount +
+            BookingDetails[0]?.CardAmount +
+            BookingDetails[0]?.UPIAmount !=
+          0
+          ? BookingDetails[0]?.CashAmount +
+            BookingDetails[0]?.CardAmount +
+            BookingDetails[0]?.UPIAmount
+          : BookingDetails[0]?.AmountAfterDiscount
+        : 0,
+
+    OnlinePayu:
+      BookingDetails[0]?.SettledByCompany == 0 &&
+      BookingDetails[0]?.PayAtCounter != 1 &&
+      (BookingDetails[0]?.UserTypeId == 0 ||
+        BookingDetails[0]?.UserTypeId == 5 ||
+        BookingDetails[0]?.UserTypeId == 6)
+        ? BookingDetails[0]?.UPIAmount + BookingDetails[0]?.CardAmount
+        : 0,
   };
 
   console.log("updatededBillDetails---->", updatededBillDetails);
@@ -1327,7 +1362,8 @@ const TeensBilling = () => {
                 A unit of Goa Coastal Resorts & Recreation Pvt.Ltd
               </p>
               <h5 style={{ fontSize: "15px" }}>
-              H.No. 838/1(3), 2nd floor Edificio Da Silva E Menezes Near Holy Family church Porvorim Goa 403521 <br></br>Tel. + 91 9158885000
+                H.No. 838/1(3), 2nd floor Edificio Da Silva E Menezes Near Holy
+                Family church Porvorim Goa 403521 <br></br>Tel. + 91 9158885000
               </h5>
               <h5 style={{ fontSize: "15px" }}>
                 Email : info@casinoprideofficial.com
@@ -1383,23 +1419,25 @@ const TeensBilling = () => {
                     </span>
                   </p>
                   <p className="BillPrintFont">
-                      Payment Mode :{" "}
-                      <span
-                        style={{ fontWeight: "bold" }}
-                        className="BillPrintFont"
-                      >
-                        {item.PaymentMode}
-                      </span>
-                    </p>
-                    {item?.GSTNumber != null && <p className="BillPrintFont">
-                        GST Number :{" "}
+                    Payment Mode :{" "}
+                    <span
+                      style={{ fontWeight: "bold" }}
+                      className="BillPrintFont"
+                    >
+                      {item.PaymentMode}
+                    </span>
+                  </p>
+                  {item?.GSTNumber != null && (
+                    <p className="BillPrintFont">
+                      GST Number :{" "}
                       <span
                         style={{ fontWeight: "bold" }}
                         className="BillPrintFont"
                       >
                         {item?.GSTNumber}
                       </span>
-                    </p>}
+                    </p>
+                  )}
                 </div>
                 <div className="col-6">
                   <div className="d-flex justify-content-end qr-code">
@@ -1430,7 +1468,7 @@ const TeensBilling = () => {
                     className="bill-number BillPrintFont"
                     style={{ marginRight: "35px" }}
                   >
-                    BILL#:PSCP1 {item.BillNumber}
+                    BILL#:PSCP {item.BillNumber}
                   </p>
                 </div>
                 <hr />
@@ -1449,7 +1487,9 @@ const TeensBilling = () => {
                     <tr>
                       <td style={{ textAlign: "center" }}>
                         {/* <p className="BillPrintFont">Kids</p> */}
-                        <p className="BillPrintFont">Entry, Food</p>
+                        <p className="BillPrintFont">
+                          Entry, Food (HSN-996331)
+                        </p>
                       </td>
 
                       <td
@@ -1469,7 +1509,7 @@ const TeensBilling = () => {
                           fontSize: "18px",
                         }}
                       >
-                        {(item?.TeensRate/item?.TotalGuestCount).toFixed(2)}
+                        {(item?.TeensRate / item?.TotalGuestCount).toFixed(2)}
                       </td>
 
                       <td
@@ -1479,7 +1519,10 @@ const TeensBilling = () => {
                           fontSize: "18px",
                         }}
                       >
-                        {((item?.TeensRate/item?.TotalGuestCount).toFixed(2) * item?.TotalGuestCount).toFixed(2)}
+                        {(
+                          (item?.TeensRate / item?.TotalGuestCount).toFixed(2) *
+                          item?.TotalGuestCount
+                        ).toFixed(2)}
                         {/* {item?.TeensRate.toFixed(2)} */}
                       </td>
                     </tr>
@@ -1488,7 +1531,13 @@ const TeensBilling = () => {
 
                 <div className="totals" style={{ textAlign: "right" }}>
                   {/* <h6>Total Amount: {item?.TeensRate.toFixed(2)}</h6> */}
-                  <h6>Total Amount: {((item?.TeensRate/item?.TotalGuestCount).toFixed(2) * item?.TotalGuestCount).toFixed(2)}</h6>
+                  <h6>
+                    Total Amount:{" "}
+                    {(
+                      (item?.TeensRate / item?.TotalGuestCount).toFixed(2) *
+                      item?.TotalGuestCount
+                    ).toFixed(2)}
+                  </h6>
 
                   <h6>
                     {" "}
@@ -1506,7 +1555,7 @@ const TeensBilling = () => {
                     <h6>Bill Amount: {item?.TeensPrice}</h6>
                   ) : (
                     <h6>
-                     Bill Amount:{" "}
+                      Bill Amount:{" "}
                       {item?.TeensPrice -
                         (item?.ActualAmount - item?.AmountAfterDiscount)}
                     </h6>
@@ -1527,12 +1576,13 @@ const TeensBilling = () => {
                     TERMS AND CONDITIONS
                   </h6>
                   <p style={{ fontSize: "12px", fontWeight: "bold" }}>
-                    (1) BUFFET IS OPEN FROM 1:30PM TO 3:30PM AND FROM 8:30PM
-                        TO 1:30AM DURING THE WEEKDAYS.BUFFET IS OPEN FROM 1:30PM TO 4:00PM AND FROM 8:30PM
-                        TO 2:00AM DURING THE WEEKENDS.
+                    (1) BUFFET IS OPEN FROM 1:30PM TO 3:30PM AND FROM 8:30PM TO
+                    1:30AM DURING THE WEEKDAYS.BUFFET IS OPEN FROM 1:30PM TO
+                    4:00PM AND FROM 8:30PM TO 2:00AM DURING THE WEEKENDS.
                   </p>
                   <p style={{ fontSize: "12px", fontWeight: "bold" }}>
-                    (2) OTP (ONE TIME PLAY COUPON) CAN BE PLAYED ONLY BY 21 YEARS AND ABOVE.
+                    (2) OTP (ONE TIME PLAY COUPON) CAN BE PLAYED ONLY BY 21
+                    YEARS AND ABOVE.
                   </p>
                   <p style={{ fontSize: "12px", fontWeight: "bold" }}>
                     (3) THIS INVOICE DOES NOT ENTITLE ANY LIQUOR.
@@ -1610,7 +1660,9 @@ const TeensBilling = () => {
                     A unit of Goa Coastal Resorts & Recreation Pvt.Ltd
                   </p>
                   <h5 className="BillPrintFontPrint">
-                  H.No. 838/1(3), 2nd floor Edificio Da Silva E Menezes Near Holy Family church Porvorim Goa 403521 <br></br>Tel. + 91 9158885000
+                    H.No. 838/1(3), 2nd floor Edificio Da Silva E Menezes Near
+                    Holy Family church Porvorim Goa 403521 <br></br>Tel. + 91
+                    9158885000
                   </h5>
                   <h5 className="BillPrintFontPrint">
                     Email : info@casinoprideofficial.com
@@ -1644,7 +1696,7 @@ const TeensBilling = () => {
                         className="bill-number BillPrintFontPrint"
                         style={{ marginRight: "15px" }}
                       >
-                        BILL#:PSCP1 {item.BillNumber}
+                        BILL#:PSCP {item.BillNumber}
                       </p>
                       <p className="BillPrintFontPrint">
                         GUEST NAME :
@@ -1686,24 +1738,25 @@ const TeensBilling = () => {
                         </span>
                       </p>
                       <p className="BillPrintFontPrint">
-                      Payment Mode :{" "}
-                      <span
-                        style={{ fontWeight: "bold" }}
-                        className="BillPrintFontPrint"
-                      >
-                        {item.PaymentMode}
-                      </span>
-                    </p>
-                      {item?.GSTNumber != null &&<p className="BillPrintFontPrint">
-                      GST Number :{" "}
-                      <span
-                        style={{ fontWeight: "bold" }}
-                        className="BillPrintFontPrint"
-                      >
-                        {item?.GSTNumber}
-                      </span>
-                    </p>}
-
+                        Payment Mode :{" "}
+                        <span
+                          style={{ fontWeight: "bold" }}
+                          className="BillPrintFontPrint"
+                        >
+                          {item.PaymentMode}
+                        </span>
+                      </p>
+                      {item?.GSTNumber != null && (
+                        <p className="BillPrintFontPrint">
+                          GST Number :{" "}
+                          <span
+                            style={{ fontWeight: "bold" }}
+                            className="BillPrintFontPrint"
+                          >
+                            {item?.GSTNumber}
+                          </span>
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div className="bill-details">
@@ -1758,7 +1811,9 @@ const TeensBilling = () => {
                         <tr>
                           <td style={{ textAlign: "center" }}>
                             {/* <p className="BillPrintFontPrint">Kids</p> */}
-                            <p className="BillPrintFontPrint">Entry, Food</p>
+                            <p className="BillPrintFontPrint">
+                              Entry, Food (HSN-996331)
+                            </p>
                           </td>
 
                           <td className="BillPrintFontPrint">
@@ -1766,12 +1821,18 @@ const TeensBilling = () => {
                           </td>
 
                           <td className="BillPrintFontPrint">
-                          {(item?.TeensRate/item?.TotalGuestCount).toFixed(2)}
+                            {(item?.TeensRate / item?.TotalGuestCount).toFixed(
+                              2
+                            )}
                           </td>
 
                           <td className="BillPrintFontPrint">
                             {/* {item?.TeensRate.toFixed(2)} */}
-                            {((item?.TeensRate/item?.TotalGuestCount).toFixed(2) * item?.TotalGuestCount).toFixed(2)}
+                            {(
+                              (item?.TeensRate / item?.TotalGuestCount).toFixed(
+                                2
+                              ) * item?.TotalGuestCount
+                            ).toFixed(2)}
                           </td>
                         </tr>
                       </tbody>
@@ -1780,7 +1841,11 @@ const TeensBilling = () => {
                     <div className="totals" style={{ textAlign: "right" }}>
                       <h6 className="BillPrintFontPrint">
                         {/* Total Amount: {item?.TeensRate.toFixed(2)} */}
-                        Total Amount: {((item?.TeensRate/item?.TotalGuestCount).toFixed(2) * item?.TotalGuestCount).toFixed(2)}
+                        Total Amount:{" "}
+                        {(
+                          (item?.TeensRate / item?.TotalGuestCount).toFixed(2) *
+                          item?.TotalGuestCount
+                        ).toFixed(2)}
                       </h6>
 
                       <h6 className="BillPrintFontPrint">
@@ -1817,11 +1882,12 @@ const TeensBilling = () => {
                       </h6>
                       <p className="BillPrintFontPrintterms">
                         (1) BUFFET IS OPEN FROM 1:30PM TO 3:30PM AND FROM 8:30PM
-                        TO 1:30AM DURING THE WEEKDAYS.BUFFET IS OPEN FROM 1:30PM TO 4:00PM AND FROM 8:30PM
-                        TO 2:00AM DURING THE WEEKENDS.
+                        TO 1:30AM DURING THE WEEKDAYS.BUFFET IS OPEN FROM 1:30PM
+                        TO 4:00PM AND FROM 8:30PM TO 2:00AM DURING THE WEEKENDS.
                       </p>
                       <p className="BillPrintFontPrintterms">
-                        (2) OTP (ONE TIME PLAY COUPON) CAN BE PLAYED ONLY BY 21 YEARS AND ABOVE.
+                        (2) OTP (ONE TIME PLAY COUPON) CAN BE PLAYED ONLY BY 21
+                        YEARS AND ABOVE.
                       </p>
                       <p className="BillPrintFontPrintterms">
                         (3) THIS INVOICE DOES NOT ENTITLE ANY LIQUOR.
