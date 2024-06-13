@@ -7,6 +7,7 @@ import {
   getCouponsbyInitials,
   getPanelDiscounts,
   EditUsedCoupon,
+  getUserByPhone,
 } from "../../Redux/actions/users";
 import { AddBookingFn } from "../../Redux/actions/booking";
 import { connect, useSelector } from "react-redux";
@@ -37,6 +38,11 @@ import {
 import { checkActiveOutlet } from "../../Redux/actions/users";
 import { getUserById } from "../../Redux/actions/users";
 import { countDriverBookings } from "../../Redux/actions/users";
+import { ROLES } from "../../constants/roles";
+
+import debounce from "lodash.debounce";
+const DEBOUNCE_TIME_MS = 100;
+
 // import { QrReader } from "react-qr-reader";
 const NewBooking = () => {
   const location = useLocation();
@@ -304,6 +310,32 @@ const NewBooking = () => {
   console.log("phone--------------->", phone);
 
   console.log("remainingCoupons------------>remaining", remainingCoupons);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const fetchUserByPhone = (phoneNumber) => {
+      dispatch(
+        getUserByPhone(loginDetails?.logindata?.Token, phoneNumber, (callback) => {
+          if (callback.status) {
+            const userData = callback?.response?.Details;
+            setGuestName(userData?.Name);
+            setEmail(userData?.Email);
+            setAddress(userData?.Address);
+            setgstNumber(userData?.gstNumber)
+            console.log("Callback---------get user details", callback?.response);
+          }
+        })
+      );
+    };
+  
+    const onPhoneNumberChange = useMemo(
+      () =>
+        debounce((phoneNumber) => {
+          setPhone(phoneNumber);
+
+          fetchUserByPhone(phoneNumber.includes("+91") ? phoneNumber.replace("+91", "") : phoneNumber);
+        }, DEBOUNCE_TIME_MS),
+      [fetchUserByPhone]
+     );
 
   const handleToggle = (field) => {
     const DiscountedAmount =
@@ -698,7 +730,7 @@ const NewBooking = () => {
       toast.warning("Please enter a valid GST number");
       setLoader(false);
       handleClose();
-    } else if (!isValidEmail(email)) {
+    } else if (!isValidEmail(email) && loginDetails?.logindata?.UserType !== ROLES.GRE ) {
       toast.warning("Please enter a valid email address");
       setLoader(false);
       handleClose();
@@ -711,11 +743,11 @@ const NewBooking = () => {
       setLoader(false);
       handleClose();
     } else if (
-      paymentOption == "Card" &&
-      cardType == "" &&
-      cardNumber == "" &&
-      cardHoldersName == "" &&
-      cardAmount == ""
+      paymentOption === "Card" &&
+      (!cardType  ||
+      !cardNumber ||
+      !cardHoldersName ||
+      !cardAmount)
     ) {
       toast.warning("Please enter all card details");
       setLoader(false);
@@ -1816,6 +1848,7 @@ const NewBooking = () => {
             class="form-control mt-2 "
             type="text"
             placeholder="Full Name"
+            value={guestName}
             onChange={(e) => setGuestName(e.target.value)}
           />
         </div>
@@ -1834,7 +1867,7 @@ const NewBooking = () => {
           <PhoneInput
             className="form-control mt-2 "
             placeholder="Enter phone number"
-            onChange={setPhone}
+            onChange={onPhoneNumberChange}
             defaultCountry="IN"
           />
         </div>
@@ -1844,12 +1877,13 @@ const NewBooking = () => {
             className="form_text"
             style={{ fontSize: "15px", fontWeight: "600" }}
           >
-            Email <span style={{ color: "red" }}>*</span>
+            Email {loginDetails?.logindata?.UserType !== ROLES.GRE && <span style={{ color: "red" }}>*</span>}
           </label>
           <input
             class="form-control mt-2"
             type="text"
             placeholder="Enter Email"
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
@@ -1915,6 +1949,7 @@ const NewBooking = () => {
             class="form-control "
             type="text"
             placeholder="Enter your city"
+            value={selectedCity}
             onChange={(e) => setSelectedCity(e.target.value)}
           />
         </div>
@@ -1926,6 +1961,7 @@ const NewBooking = () => {
             class="form-control mt-2"
             type="text"
             placeholder="Enter your address"
+            value={address}
             onChange={(e) => setAddress(e.target.value)}
           />
         </div>
@@ -1937,6 +1973,7 @@ const NewBooking = () => {
             class="form-control mt-2"
             type="text"
             placeholder="Enter GST number"
+            value={gstNumber}
             onChange={(e) => setgstNumber(e.target.value)}
           />
         </div>

@@ -23,7 +23,7 @@ import { saveOutletDetails } from "../../../Redux/reducers/auth";
 import { checkCurrentOutletFn } from "../../../Redux/actions/users";
 import { Oval } from "react-loader-spinner";
 import { checkActiveOutlet } from "../../../Redux/actions/users";
-import { cashierReport } from "../../../Redux/actions/billing";
+import { cashierReport, generateCSVReport } from "../../../Redux/actions/billing";
 import { cashierReportShiftWise } from "../../../Redux/actions/billing";
 
 const Shifts = () => {
@@ -1279,6 +1279,38 @@ console.log('openShiftTwo>>data>>',data);
     }
   };
 
+  const generateReportFn = () => {
+    const reportData = {
+      userId: loginDetails.logindata.userId,
+      billDate: new Date().toJSON().slice(0, 10),
+      futureDate: "",
+      shiftId: shiftId,
+      fromDate: "",
+      toDate: "",
+      reportTypeId: "3",
+    };
+
+    dispatch(
+      generateCSVReport(
+        loginDetails?.logindata?.Token,
+        reportData,
+        (callback) => {
+          if (callback.status) {
+            console.log(
+              "Callback------generate report",
+              callback?.response?.Details?.ReportFile
+            );
+            window.open(callback?.response?.Details?.ReportFile, "_blank");
+            handleClose();
+          } else {
+            console.log("Callback------generate report error", callback.error);
+            toast.error(callback.error);
+          }
+        }
+      )
+    );
+  };
+
   const handleClose = () => {
     handleCloseShift();
 
@@ -1389,7 +1421,10 @@ console.log('openShiftTwo>>data>>',data);
                   </button>
                 </div>
               </div>
+      
             </div>
+
+ 
 
             <div className="col-md-4">
               <div class="Shiftcard">
@@ -2428,15 +2463,28 @@ console.log('openShiftTwo>>data>>',data);
           >
             {(activeDateOfOutlet?.OutletDate != undefined ||
               activeDateOfOutlet?.OutletDate != null) && (
-              <h5 className="mb-0" style={{ paddingBottom: "20px" }}>
-                Outlet Date :{" "}
-                {activeDateOfOutlet?.OutletDate != undefined ||
-                activeDateOfOutlet?.OutletDate != null
-                  ? activeDateOfOutlet?.OutletDate
-                  : ""}
-              </h5>
+              <div>
+                {!outletOpenDetails?.Details[0]?.OutletStatus == 1 &&
+              !outletDetails == 1 && <h5 className="mb-0 ml-auto" style={{ paddingBottom: "20px" }}>
+                  Welcome, {validateDetails?.Details?.Name}
+                </h5>}
+                <h5 className="mb-0" style={{ paddingBottom: "20px" }}>
+                  Outlet Date :{" "}
+                  {activeDateOfOutlet?.OutletDate != undefined ||
+                  activeDateOfOutlet?.OutletDate != null
+                    ? activeDateOfOutlet?.OutletDate
+                    : ""}   
+                </h5>
+                
+              </div>
             )}
-            <div className="row d-flex justify-content-end">
+            <div className="d-flex justify-content-between">
+              <div className="row d-flex ">
+            {outletOpenDetails?.Details[0]?.OutletStatus == 1 ||
+              outletDetails == 1 && <h5 className="mb-5">
+                  Welcome, {validateDetails?.Details?.Name}
+                </h5>}
+                </div>
               {!outletOpenDetails?.Details[0]?.OutletStatus == 1 &&
               !outletDetails == 1 ? (
                 <div className="col-md-4 mb-5 d-flex justify-content-end">
@@ -2486,6 +2534,34 @@ console.log('openShiftTwo>>data>>',data);
               shiftDetailsForUser,
               shifts,
             })}
+             <div className="row mt-3 mx-auto">
+              <div className="col-lg mx-auto d-flex text-center justify-content-around">
+                <div className="d-flex justify-content-center align-items-center">
+                  {<button
+                    className="btn btn-primary m-2 p-2"
+                    onClick={() => generateReportFn(1)}
+                  >
+                    Generate Report
+                  </button>}
+                </div>
+                <div className="d-flex justify-content-center align-items-center">
+                  <button
+                    className="btn btn-primary m-2 p-2"
+                    onClick={() => generateReportFn(2)}
+                  >
+                    Generate Report
+                  </button>
+                </div>
+                <div className="d-flex justify-content-center align-items-center">
+                  <button
+                    className="btn btn-primary m-2 p-2"
+                    onClick={() => generateReportFn(3)}
+                  >
+                    Generate Report
+                  </button>
+                </div>
+              </div>
+            </div>
 
             <div className="row mt-5 mx-auto">
               <div className="col-lg mx-auto text-center">

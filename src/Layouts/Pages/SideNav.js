@@ -115,7 +115,8 @@ const SideNav = () => {
           <Nav activeKey={activeKey} onSelect={setActiveKey}>
             {loginDetails?.logindata?.UserType == "1" ||
             loginDetails?.logindata?.UserType == "3" ||
-            loginDetails?.logindata?.UserType == "2" ? (
+            loginDetails?.logindata?.UserType == "2" || 
+            loginDetails?.logindata?.UserType == "7" ? (
               <Nav.Item
                 eventKey="10"
                 icon={<TagNumberIcon />}
