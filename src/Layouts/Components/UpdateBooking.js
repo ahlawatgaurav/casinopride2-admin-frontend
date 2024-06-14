@@ -338,17 +338,22 @@ const UpdateBooking = () => {
 
   console.log("remainingCoupons------------>remaining", remainingCoupons);
 
+  console.log({bookingDetails});
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const fetchUserByPhone = (phoneNumber) => {
       dispatch(
         getUserByPhone(loginDetails?.logindata?.Token, phoneNumber, (callback) => {
           if (callback.status) {
             const userData = callback?.response?.Details;
+            console.log({userData});
             setGuestName(userData?.FullName);
             setEmail(userData?.Email);
             setAddress(userData?.Address);
             setgstNumber(userData?.GSTNumber);
             setDateofbirth(userData?.DOB);
+            setSelectedState(State?.getStatesOfCountry(selectedCountry?.isoCode).filter((elem) => elem.name === userData?.State)[0])
+  
             console.log("Callback---------get user details", callback?.response);
           }
         })
@@ -379,16 +384,8 @@ const UpdateBooking = () => {
     name: "India",
     isoCode: "IN",
   });
-  const [selectedState, setSelectedState] = useState(bookingDetails?.State);
-  const [selectedCity, setSelectedCity] = useState(bookingDetails?.City);
-  const [partCash, setPartCash] = useState("");
-  const [partCard, setPartCard] = useState("");
-  const [upiId, setUpiId] = useState("");
-
-  console.log(
-    "Selected city-------------------------------------------->",
-    selectedCity
-  );
+  const [selectedState, setSelectedState] = useState(State?.getStatesOfCountry(selectedCountry?.isoCode).filter((elem) => elem.name === bookingDetails?.State)[0] || null);
+  const [selectedCity, setSelectedCity] = useState(bookingDetails?.City || null);
 
   useEffect(() => {
     console.log(selectedCountry);
@@ -396,7 +393,6 @@ const UpdateBooking = () => {
     console.log(State?.getStatesOfCountry(selectedCountry?.isoCode));
   }, [selectedCountry]);
 
-  console.log("selectedCountry------------->", selectedCountry);
 
   const fetchCouponCodes = () => {
     dispatch(
@@ -521,14 +517,7 @@ const UpdateBooking = () => {
           : 0,
       actualAmount: amount,
       governmentId: "",
-      amountAfterDiscount:
-        Discountpercent != "" && Discountpercent != null
-          ? amount - (amount * Discountpercent) / 100
-          : amountAfterDiscount != 0
-          ? amountAfterDiscount
-          : couponDiscount != ""
-          ? couponDiscount
-          : amount,
+      amountAfterDiscount: amount,
       packageName:
         packageIds.length == 0
           ? JSON.stringify(teensPackageName)
@@ -541,6 +530,11 @@ const UpdateBooking = () => {
         packageIds.length == 0
           ? JSON.stringify(teensWeekendPrice)
           : JSON.stringify(packageWeekendPrice),
+      numOfTeens: numberofteens,
+      teensPrice: totalteensPrice,
+      teensRate: totalTeensRate,
+      teensTax: teenstaxPercentage,
+      teensTaxName: teensTaxName,
     };
     console.log("Data from booking------->", data);
 
@@ -1058,6 +1052,7 @@ const UpdateBooking = () => {
           <label for="formGroupExampleInput " className="form_text mb-2">
             State
           </label>
+          {console.log({states: State?.getStatesOfCountry(selectedCountry?.isoCode)})}
           <Select
             // className="form-control"
             options={State?.getStatesOfCountry(selectedCountry?.isoCode)}
@@ -1068,6 +1063,7 @@ const UpdateBooking = () => {
               return options["name"];
             }}
             value={selectedState}
+            defaultValue={selectedState}
             onChange={(item) => {
               setSelectedState(item);
             }}
@@ -1121,6 +1117,7 @@ const UpdateBooking = () => {
               class="form-control mt-2"
               type="date"
               placeholder="Enter Start Date"
+              value={dateofbirth}
               onChange={(e) => setDateofbirth(e.target.value)}
               onFocus={handleFocus}
             />
