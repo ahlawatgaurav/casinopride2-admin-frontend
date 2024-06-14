@@ -42,6 +42,7 @@ import RegenerateBill from "./Layouts/Pages/Billing/RegenerateBill";
 import QrLinkPage from "./Layouts/Pages/QRLink/QrLinkPage";
 import LocalAgentList from "./Layouts/Pages/Users/LocalAgentList";
 import AcknowledgementDetails from "./Layouts/Pages/Ack/AcknowledgementDetails";
+import UpdateBooking from "./Layouts/Components/UpdateBooking";
 function App() {
   let { param } = useParams();
   return (
@@ -179,6 +180,15 @@ function App() {
           element={
             <Layout>
               <NewBooking />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/UpdateBooking/:bookingId"
+          element={
+            <Layout>
+              <UpdateBooking />
             </Layout>
           }
         />

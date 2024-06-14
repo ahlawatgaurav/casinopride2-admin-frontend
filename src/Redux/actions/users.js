@@ -602,7 +602,7 @@ export const EditPanelDiscounts =
   (token, phone, callback) => async (dispatch) => {
     console.log(token);
 
-    api.CORE_PORT.get(`/core/getUserByPhone?phone=${phone}`, {
+    api.BOOKING_PORT.get(`/booking/getUserByPhone?phone=${phone}`, {
       headers: { AuthToken: token },
     })
       .then((response) => {

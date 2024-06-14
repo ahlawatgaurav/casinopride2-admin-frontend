@@ -317,7 +317,7 @@ const NewBooking = () => {
         getUserByPhone(loginDetails?.logindata?.Token, phoneNumber, (callback) => {
           if (callback.status) {
             const userData = callback?.response?.Details;
-            setGuestName(userData?.Name);
+            setGuestName(userData?.FullName);
             setEmail(userData?.Email);
             setAddress(userData?.Address);
             setgstNumber(userData?.gstNumber)
@@ -1819,6 +1819,7 @@ const NewBooking = () => {
         </div>
         <PackagesPage
           setamount={setamount}
+          setamountAfterDiscount={setamountAfterDiscount}
           setPackageIds={setPackageIds}
           Discountpercent={Discountpercent}
           setPackageGuestCount={setPackageGuestCount}
@@ -2506,7 +2507,6 @@ const NewBooking = () => {
                 class="form-control mt-2"
                 type="number"
                 placeholder="Enter the amount"
-                // onChange={(e) => setCashAmount(e.target.value)}
                 value={cashAmount}
                 onChange={handlePartCash}
                 onWheel={(e) => e.target.blur()}
@@ -2520,7 +2520,6 @@ const NewBooking = () => {
                 class="form-control mt-2"
                 type="number"
                 placeholder="Enter the amount"
-                // onChange={(e) => setUpiAmount(e.target.value)}
                 value={upiAmount}
                 onChange={handlePartUPI}
                 onWheel={(e) => e.target.blur()}
@@ -2541,123 +2540,6 @@ const NewBooking = () => {
         ) : (
           <></>
         )}
-        {/* <div className="row mt-3">
-          <div className="col-lg-6 mt-3">
-            <div className="row">
-              <div className="col-4">
-                <label for="formGroupExampleInput " className="form_text">
-                  Dicount
-                </label>
-
-                <div className="form-check form-switch">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="discountSwitch"
-                    checked={discountToggle}
-                    onChange={() => handleToggle("discount")}
-                  />
-                </div>
-              </div>
-
-              <div className="col-4">
-                <label for="formGroupExampleInput " className="form_text">
-                  Coupon
-                </label>
-
-                <div className="form-check form-switch">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="couponSwitch"
-                    checked={couponToggle}
-                    onChange={() => handleToggle("coupon")}
-                  />
-                </div>
-              </div>
-
-              <div className="col-4">
-                <label for="formGroupExampleInput " className="form_text">
-                  Settled by company
-                </label>
-
-                <div className="form-check form-switch">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="referredBySwitch"
-                    checked={referredByToggle}
-                    onChange={() => handleToggle("referredBy")}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="row">
-            {couponToggle ? (
-              <div className="col-lg-6 mt-3">
-                <div className="input-group">
-                  <input
-                    className="form-control mt-2"
-                    type="text"
-                    placeholder="Coupon Code"
-                    onChange={(e) => setCouponCode(e.target.value)}
-                    value={couponCode}
-                  />
-                  <button
-                    className="btn btn-primary"
-                    style={{ marginTop: "8px" }}
-                    type="button"
-                    onClick={separateInitials}
-                  >
-                    Check
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <></>
-            )}
-          </div>
-
-          {discountToggle || referredByToggle ? (
-            <div className="col-lg-6 mt-3">
-              <label for="formGroupExampleInput mt-3" className="form_text">
-                Discount
-              </label>
-              <select
-                className="form-select form-control mt-2"
-                value={selectedOption}
-                onChange={handleSelectChange}
-              >
-                <option value="">Select an option</option>
-                {panelDiscounts.map((item, index) => (
-                  <option key={index} value={item?.Id}>
-                    {item?.PanelDiscount}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ) : (
-            <></>
-          )}
-
-          {referredByToggle || discountToggle ? (
-            <div className="col-lg-6 mt-3">
-              <label for="formGroupExampleInput " className="form_text">
-                Referred By <span style={{ color: "red" }}>*</span>
-              </label>
-              <input
-                class="form-control mt-2"
-                type="text"
-                placeholder="Referred By"
-                onChange={(e) => setreferredBy(e.target.value)}
-              />
-            </div>
-          ) : (
-            <></>
-          )}
-        </div> */}
       </div>
       <div className="col-lg-6 mb-2 btn-lg mx-auto d-flex justify-content-center ">
         <button
@@ -2665,40 +2547,6 @@ const NewBooking = () => {
           type="submit"
           className="btn btn_colour mt-5 btn-lg"
           onClick={handleShow}
-          // disabled={
-          //   (shifts && shifts[1] && !shifts[1][0]?.ShiftOpen === 1) ||
-          //   (shifts && shifts[3] && !shifts[3][0]?.ShiftOpen === 1) ||
-          //   (shifts && shifts[2] && !shifts[2][0]?.ShiftOpen === 1) ||
-          //   (recentShiftOpen &&
-          //     recentShiftOpen[0]?.ShiftTypeId === 2 &&
-          //     recentShiftOpen &&
-          //     recentShiftOpen[0]?.ShiftOpen === 0) ||
-          //   (recentShiftOpen &&
-          //     recentShiftOpen[0]?.ShiftTypeId === 2 &&
-          //     recentShiftOpen &&
-          //     recentShiftOpen[0]?.ShiftOpen === 1) ||
-          //   (recentShiftOpen &&
-          //     recentShiftOpen[0]?.ShiftTypeId === 3 &&
-          //     recentShiftOpen &&
-          //     recentShiftOpen[0]?.ShiftOpen === 1) ||
-          //   (recentShiftOpen &&
-          //     recentShiftOpen[0]?.ShiftTypeId === 1 &&
-          //     recentShiftOpen &&
-          //     recentShiftOpen[0]?.ShiftOpen === 0) ||
-          //   (recentShiftOpen &&
-          //     recentShiftOpen[0]?.ShiftTypeId === 1 &&
-          //     recentShiftOpen &&
-          //     recentShiftOpen[0]?.ShiftOpen === 1) ||
-          //   (shifts &&
-          //     shifts[2] &&
-          //     shifts[2][0]?.ShiftOpen === 0 &&
-          //     !shifts[3]) ||
-          //   (shifts &&
-          //     shifts[1] &&
-          //     shifts[1][0]?.ShiftOpen === 0 &&
-          //     !shifts[2]) ||
-          //   shiftForUserOne
-          // }
           disabled={
             (shifts && shifts[1] && !shifts[1][0]?.ShiftOpen === 1) ||
             (shifts && shifts[3] && !shifts[3][0]?.ShiftOpen === 1) ||

@@ -1279,9 +1279,9 @@ console.log('openShiftTwo>>data>>',data);
     }
   };
 
-  const generateReportFn = () => {
+  const generateReportFn = (shiftId) => {
     const reportData = {
-      userId: loginDetails.logindata.userId,
+      userId: loginDetails.logindata?.UserType===1 ? 0 : loginDetails.logindata.userId,
       billDate: new Date().toJSON().slice(0, 10),
       futureDate: "",
       shiftId: shiftId,
@@ -2461,13 +2461,11 @@ console.log('openShiftTwo>>data>>',data);
             className="container mt-5"
             // style={{ backgroundColor: "green" }}
           >
+             <h5 style={{marginBottom: "8px"}}>Welcome, {validateDetails?.Details?.Name}</h5>
             {(activeDateOfOutlet?.OutletDate != undefined ||
               activeDateOfOutlet?.OutletDate != null) && (
               <div>
-                {!outletOpenDetails?.Details[0]?.OutletStatus == 1 &&
-              !outletDetails == 1 && <h5 className="mb-0 ml-auto" style={{ paddingBottom: "20px" }}>
-                  Welcome, {validateDetails?.Details?.Name}
-                </h5>}
+              
                 <h5 className="mb-0" style={{ paddingBottom: "20px" }}>
                   Outlet Date :{" "}
                   {activeDateOfOutlet?.OutletDate != undefined ||
@@ -2479,12 +2477,7 @@ console.log('openShiftTwo>>data>>',data);
               </div>
             )}
             <div className="d-flex justify-content-between">
-              <div className="row d-flex ">
-            {outletOpenDetails?.Details[0]?.OutletStatus == 1 ||
-              outletDetails == 1 && <h5 className="mb-5">
-                  Welcome, {validateDetails?.Details?.Name}
-                </h5>}
-                </div>
+             
               {!outletOpenDetails?.Details[0]?.OutletStatus == 1 &&
               !outletDetails == 1 ? (
                 <div className="col-md-4 mb-5 d-flex justify-content-end">
@@ -2536,29 +2529,29 @@ console.log('openShiftTwo>>data>>',data);
             })}
              <div className="row mt-3 mx-auto">
               <div className="col-lg mx-auto d-flex text-center justify-content-around">
-                <div className="d-flex justify-content-center align-items-center">
-                  {<button
+                <div className="d-flex justify-content-center align-items-center" style={{flexBasis: "33.33%"}}>
+                  {shifts[1]?.[0]?.CloseTime || recentShiftOpen?.filter((elem) => elem.ShiftTypeId === 1)?.[0]?.CloseTime ? <button
                     className="btn btn-primary m-2 p-2"
                     onClick={() => generateReportFn(1)}
                   >
                     Generate Report
-                  </button>}
+                  </button> : <div />}
                 </div>
-                <div className="d-flex justify-content-center align-items-center">
-                  <button
+                <div className="d-flex justify-content-center align-items-center" style={{flexBasis: "33.33%"}}>
+                  {shifts[2]?.[0]?.CloseTime || recentShiftOpen?.filter((elem) => elem.ShiftTypeId === 2)?.[0]?.CloseTime  ? <button
                     className="btn btn-primary m-2 p-2"
                     onClick={() => generateReportFn(2)}
                   >
                     Generate Report
-                  </button>
+                  </button> : <div />}
                 </div>
-                <div className="d-flex justify-content-center align-items-center">
-                  <button
+                <div className="d-flex justify-content-center align-items-center" style={{flexBasis: "33.33%"}}>
+                  {shifts[3]?.[0]?.CloseTime || recentShiftOpen?.filter((elem) => elem.ShiftTypeId === 3)?.[0]?.CloseTime ? <button
                     className="btn btn-primary m-2 p-2"
                     onClick={() => generateReportFn(3)}
                   >
                     Generate Report
-                  </button>
+                  </button> : <div />}
                 </div>
               </div>
             </div>

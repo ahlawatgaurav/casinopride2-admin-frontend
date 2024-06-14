@@ -102,7 +102,7 @@ const AddDiscountOnWebsite = () => {
         StartDate: startDate,
         EndDate: endDate,
         IsActive: 1,
-        isDiscountEnabled: isChecked,
+        isDiscountEnabled: isChecked ? 1: 0,
       };
 
       dispatch(

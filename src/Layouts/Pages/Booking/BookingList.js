@@ -9,6 +9,7 @@ import {
 import {
   fetchBookingDetailsById,
   fetchUserbookings,
+  getPackagesDetails,
   updateBookingForPayAtCounterFn,
   updateShiftForBooking,
 } from "../../../Redux/actions/booking";
@@ -111,8 +112,24 @@ const BookingList = () => {
     );
   };
 
+  const fetchPackageDetails = () => {
+    dispatch(
+      getPackagesDetails(loginDetails?.logindata?.Token, 4, (callback) => {
+        if (callback.status) {
+          setLoading(false);
+
+          setFilterPackageDetails(callback?.response?.Details?.packageDetails);
+          setPackageDetails(callback?.response?.Details?.packageDetails);
+          setItemDetails(callback?.response?.Details?.packageItemDetails);
+        }
+      })
+    );
+  };
+
   useEffect(() => {
     fetchUserBookingFn();
+    fetchPackageDetails();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -121,6 +138,8 @@ const BookingList = () => {
 
   const [showViewMoreModal, setShowViewMoreModal] = useState(false);
   const [selectedUserDetails, setSelectedUserDetails] = useState({});
+  const [selectedPackage, setSelectedPackage] = useState(null);
+
   console.log("selectedUserDetails------------------->", selectedUserDetails);
 
   const handleViewMore = (userDetails) => {
@@ -536,6 +555,7 @@ const BookingList = () => {
     } else {
       setSelectedCountry(null);
     }
+
 
     if (backendData.selectedStateName) {
       setSelectedState({ name: backendData.selectedStateName });
@@ -1386,7 +1406,7 @@ const BookingList = () => {
                     moment(item?.BookingDate).format("YYYY-MM-DD") == activeDateOfOutlet?.OutletDate
                     ? (
                     <AiFillEdit
-                      onClick={() => startEditing(item)}
+                      onClick={() => navigate("/UpdateBooking/" + item.Id )}
                       style={{
                         height: "20px",
                         width: "20px",
@@ -1616,168 +1636,6 @@ const BookingList = () => {
             </div>
           </Modal.Body>
           <Modal.Footer></Modal.Footer>
-        </Modal>
-
-        <Modal
-          show={isEditing}
-          onHide={cancelEditing}
-          backdrop="static"
-          keyboard={false}
-          size="lg"
-        >
-          <Modal.Header>
-            <Modal.Title>Update Booking</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="row">
-              <div className="col-lg-6 mt-3 mt-3">
-                <label for="formGroupExampleInput " className="form_text">
-                  Guest Name <span style={{ color: "red" }}>*</span>
-                </label>
-                <input
-                  class="form-control mt-2 "
-                  type="text"
-                  placeholder="Full Name"
-                  onChange={(e) => setGuestName(e.target.value)}
-                  defaultValue={editBookingDetails?.FullName}
-                />
-              </div>
-
-              <div className="col-lg-6 mt-3">
-                <label for="formGroupExampleInput " className="form_text">
-                  Address <span style={{ color: "red" }}>*</span>
-                </label>
-                <input
-                  class="form-control mt-2"
-                  type="text"
-                  placeholder="Enter your address"
-                  onChange={(e) => setAddress(e.target.value)}
-                  defaultValue={editBookingDetails?.Address}
-                />
-              </div>
-
-              <div className="col-lg-6 mt-3">
-                <label for="formGroupExampleInput " className="form_text">
-                  Date of birth
-                </label>
-                <input
-                  class="form-control mt-2"
-                  type="date"
-                  placeholder="Enter Start Date"
-                  onChange={(e) => setDateofbirth(e.target.value)}
-                  defaultValue={editBookingDetails?.DOB}
-                />
-              </div>
-              <div className="col-lg-6 mt-3">
-                <label for="formGroupExampleInput " className="form_text">
-                  GST Details
-                </label>
-                <input
-                  class="form-control mt-2"
-                  type="text"
-                  placeholder="Enter GST number"
-                  onChange={(e) => setgstNumber(e.target.value)}
-                  defaultValue={editBookingDetails?.GSTNumber}
-                />
-              </div>
-
-              <div className="col-lg-6 mt-3">
-                <label
-                  htmlFor="formGroupExampleInput"
-                  className="form_text mb-2"
-                >
-                  Country
-                </label>
-                <Select
-                  className="form_text"
-                  options={Country.getAllCountries()}
-                  getOptionLabel={(options) => options["name"]}
-                  getOptionValue={(options) => options["name"]}
-                  value={selectedCountry}
-                  onChange={(item) => setSelectedCountry(item)}
-                  placeholder="Select"
-                />
-              </div>
-
-              <div className="col-lg-6 mt-3">
-                <label
-                  htmlFor="formGroupExampleInput"
-                  className="form_text mb-2"
-                >
-                  State
-                </label>
-                <Select
-                  className="form_text"
-                  options={State?.getStatesOfCountry(selectedCountry?.isoCode)}
-                  getOptionLabel={(options) => options["name"]}
-                  getOptionValue={(options) => options["name"]}
-                  value={selectedState}
-                  onChange={(item) => setSelectedState(item)}
-                  placeholder="Select"
-                />
-              </div>
-
-              {/* <div className="col-lg-6 mt-3">
-              <label for="formGroupExampleInput " className="form_text mb-2">
-                Country
-              </label>
-              <Select
-                // className="form-control"
-                options={Country.getAllCountries()}
-                getOptionLabel={(options) => {
-                  return options["name"];
-                }}
-                getOptionValue={(options) => {
-                  return options["name"];
-                }}
-                value={selectedCountry}
-                onChange={(item) => {
-                  setSelectedCountry(item);
-                }}
-              />
-            </div>
-            <div className="col-lg-6 mt-3">
-              <label for="formGroupExampleInput " className="form_text mb-2">
-                State
-              </label>
-              <Select
-                // className="form-control"
-                options={State?.getStatesOfCountry(selectedCountry?.isoCode)}
-                getOptionLabel={(options) => {
-                  return options["name"];
-                }}
-                getOptionValue={(options) => {
-                  return options["name"];
-                }}
-                value={selectedState}
-                onChange={(item) => {
-                  setSelectedState(item);
-                }}
-              />
-            </div> */}
-              <div className="col-lg-6 mt-3 ">
-                <label for="formGroupExampleInput " className="form_text mb-2">
-                  City
-                </label>
-
-                <input
-                  class="form-control "
-                  type="text"
-                  placeholder="Enter your city"
-                  onChange={(e) => setSelectedCity(e.target.value)}
-                  defaultValue={editBookingDetails?.City}
-                />
-              </div>
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={cancelEditing}>
-              Cancel
-            </Button>
-            <Button variant="primary" onClick={updateBookingFn}>
-              Update Booking
-            </Button>
-          </Modal.Footer>
         </Modal>
 
         <Modal

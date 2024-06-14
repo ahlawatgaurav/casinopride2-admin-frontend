@@ -1,4 +1,5 @@
 import api from "../../Service/api";
+import { saveBookingDetails } from "../reducers/booking";
 
 export const AddUserDetails = (data, token, callback) => async (dispatch) => {
   api.BOOKING_PORT.post("/core/user", data, { headers: { AuthToken: token } })
@@ -135,6 +136,7 @@ export const fetchBookingDetailsById =
       .then((response) => {
         console.log("Get user bookings based on id ->", response.data);
         if (response.data?.Details) {
+          dispatch(saveBookingDetails(response.data));
           console.log(response.data?.Details);
           callback({
             status: true,
