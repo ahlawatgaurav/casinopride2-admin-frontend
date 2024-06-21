@@ -1096,10 +1096,10 @@ const NewBooking = () => {
             const AgentSettlementAmount =
               (AgentSettlemetDiscount / 100) * data?.amountAfterDiscount;
             const agentData = {
-              userId: localAgentDetails?.Id || TravelDetails?.Id,
-              agentName: localAgentDetails?.Name || TravelDetails?.Name,
+              userId: localAgentDetails?.Id || TravelDetails?.Id || loginDetails?.logindata?.userId,
+              agentName: localAgentDetails?.Name || TravelDetails?.Name || validateDetails?.Details?.Name,
               userTypeId:
-                localAgentDetails?.UserType || TravelDetails?.UserType,
+                localAgentDetails?.UserType || TravelDetails?.UserType || loginDetails?.logindata?.UserType,
               settlementAmount: AgentSettlementAmount,
               bookingDate:
                 callback?.response?.Details?.BookingDate != null
