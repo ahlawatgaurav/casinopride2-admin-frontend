@@ -2637,7 +2637,6 @@ const BillingDetails = () => {
                           ),
                         };
 
-                        if (sourcePage == "") {
                           dispatch(
                             sendEmail(data, (callback) => {
                               if (callback.status) {
@@ -2669,9 +2668,7 @@ const BillingDetails = () => {
                               console.error("Fetch error:", error);
                               toast.success("Details sent to customer");
                             });
-                        } else {
-                          navigate("/NewBooking");
-                        }
+                        
 
                         setLoader(false);
                       } else {

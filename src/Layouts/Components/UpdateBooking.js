@@ -92,6 +92,7 @@ const UpdateBooking = () => {
               setIsBilllGenerated(callback?.response?.Details?.IsBillGenerated);
   
               const data = {
+                FullName: callback?.response?.Details.FullName,
                 bookingId: callback?.response?.Details.Id,
                 packageId: callback?.response?.Details.PackageId,
                 packageGuestCount: callback?.response?.Details.PackageGuestCount,
@@ -338,7 +339,23 @@ const UpdateBooking = () => {
 
   console.log("remainingCoupons------------>remaining", remainingCoupons);
 
-  console.log({bookingDetails});
+  useEffect(() => {
+    setGuestName(bookingDetails?.FullName);
+    setEmail(bookingDetails?.Email);
+    setPhone(bookingDetails?.Phone);
+    setAddress(bookingDetails?.Address);
+    settoalGuestCount(bookingDetails?.TotalGuestCount);
+    setDateofbirth(bookingDetails?.DOB);
+    setNumberofteens(bookingDetails?.NumOfTeens);
+    setgstNumber(bookingDetails?.GSTNumber || "");
+    setamount(bookingDetails?.ActualAmount);
+    setamountAfterDiscount(bookingDetails?.AmountAfterDiscount);
+    setPackageIds(bookingDetails.packageId);
+    setPackageGuestCount(bookingDetails.packageGuestCount);
+    setPackageName(bookingDetails?.packageNames);
+    setPackageWeekendPrice(bookingDetails?.packageWeekendPrices);
+    setPackageWeekdaysPrice(bookingDetails?.packageWeekdayPrices);
+  }, [bookingDetails]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const fetchUserByPhone = (phoneNumber) => {
@@ -963,6 +980,7 @@ const UpdateBooking = () => {
           <ToastContainer />
         </div>
         <PackagesPage
+          key={bookingDetails?.Id}
           setamount={setamount}
           setamountAfterDiscount={setamountAfterDiscount}
           setPackageIds={setPackageIds}

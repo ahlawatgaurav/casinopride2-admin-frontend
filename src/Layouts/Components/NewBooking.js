@@ -216,7 +216,7 @@ const NewBooking = () => {
 
   useEffect(() => {
     const url = new URL(window.location.href);
-    const userId = url.searchParams.get("UserId");
+    const userId = loginDetails?.logindata?.userId;
     console.log("userId++++", userId);
 
     if (userId != null) {
@@ -231,14 +231,16 @@ const NewBooking = () => {
             if (callback?.response?.Details?.UserType == 8) {
               setLocalAgentId(callback?.response?.Details?.Id);
               setLocalAgentDetails(callback?.response?.Details);
-              setShowDiscountCodeField(true);
             }
 
             if (callback?.response?.Details?.UserType == 5) {
               setTravelAgentId(callback?.response?.Details?.Id);
               setTravelDetails(callback?.response?.Details);
+            }
+            if([1, 3, 5, 8].includes(callback?.response?.Details?.UserType)){
               setShowDiscountCodeField(true);
             }
+
           } else {
             toast.error(callback.error);
           }
@@ -813,7 +815,7 @@ const NewBooking = () => {
 
   const handleShow = () => {
     // setShow(true)
-    console.log("okuuuuu", gstNumber.length);
+    console.log("okuuuuu", gstNumber?.length);
 
     if (guestName == "" || phone === "" || address == "") {
       toast.warning("Please fill all the fields");
