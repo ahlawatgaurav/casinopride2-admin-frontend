@@ -42,7 +42,7 @@ import { countDriverBookings } from "../../Redux/actions/users";
 import { ROLES } from "../../constants/roles";
 
 import debounce from "lodash.debounce";
-const DEBOUNCE_TIME_MS = 100;
+const DEBOUNCE_TIME_MS = 1000;
 
 // import { QrReader } from "react-qr-reader";
 const NewBooking = () => {
