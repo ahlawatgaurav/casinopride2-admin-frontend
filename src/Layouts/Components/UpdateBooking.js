@@ -35,6 +35,7 @@ import {
   AddBillingDetails,
   AddupdateAgentSettlement,
   updateBillingDetails,
+  voidBill,
 } from "../../Redux/actions/billing";
 import { checkActiveOutlet } from "../../Redux/actions/users";
 import { getUserById } from "../../Redux/actions/users";
@@ -350,8 +351,8 @@ const UpdateBooking = () => {
     setgstNumber(bookingDetails?.GSTNumber || "");
     setamount(bookingDetails?.ActualAmount);
     setamountAfterDiscount(bookingDetails?.AmountAfterDiscount);
-    setPackageIds(bookingDetails.packageId);
-    setPackageGuestCount(bookingDetails.packageGuestCount);
+    setPackageIds(bookingDetails?.packageId);
+    setPackageGuestCount(bookingDetails?.packageGuestCount);
     setPackageName(bookingDetails?.packageNames);
     setPackageWeekendPrice(bookingDetails?.packageWeekendPrices);
     setPackageWeekdaysPrice(bookingDetails?.packageWeekdayPrices);
@@ -430,6 +431,23 @@ const UpdateBooking = () => {
             "Panel Discounts----------------------->",
             callback?.response?.Details
           );
+        }
+      })
+    );
+  };
+
+  const handleVoidBill = (voidBookingId, voidBillReason) => {
+    const voidBillData = {
+      bookingId: voidBookingId,
+      voidBillReason: voidBillReason,
+    };
+    dispatch(
+      voidBill(loginDetails?.logindata?.Token, voidBillData, (callback) => {
+        if (callback.status) {
+          
+        } else {
+          console.log("Callback--------voidt>>error", callback.error);
+          toast.error(callback.error);
         }
       })
     );
@@ -552,10 +570,14 @@ const UpdateBooking = () => {
       teensRate: totalTeensRate,
       teensTax: teenstaxPercentage,
       teensTaxName: teensTaxName,
+      paymentMode: "Cash",
+      cashAmount: amount,
+      cardAmount: 0,
+      UPIAmount: 0,
     };
     console.log("Data from booking------->", data);
 
-      dispatch(
+      dispatch(        
         updateBooking(loginDetails?.logindata?.Token, data, (callback) => {
           if (callback.status) {
             console.log(
@@ -565,48 +587,10 @@ const UpdateBooking = () => {
 
             toast.success("Updated Booking details success");
               if (callback?.response?.Details?.IsBillGenerated == 1) {
-                dispatch(
-                  updateBillingDetails(
-                    loginDetails?.logindata?.Token,
-                    {
-                      bookingId: callback?.response?.Details?.Id,
-                    },
-                    (callback) => {
-                      if (callback.status) {
-                        console.log(
-                          "Callback------update---billing--payment--update",
-                          callback?.response.Details[0]
-                        );
-    
-                        if (
-                          callback?.response?.Details[0]?.NumOfTeens -
-                            callback?.response?.Details[0]?.TotalGuestCount ==
-                          0
-                        ) {
-                          navigate("/TeensBilling", {
-                            state: {
-                              BookingDetails: callback?.response?.Details,
-                            },
-                          });
-                          setLoader(false);
-                        } else {
-                          navigate("/BillingDetails", {
-                            state: {
-                              BookingDetails: callback?.response?.Details,
-                            },
-                          });
-                          setLoader(false);
-                        }
-                      } else {
-                        console.log(
-                          "Callback------update --voidt>>error",
-                          callback.error
-                        );
-                        toast.error(callback.error);
-                      }
-                    }
-                  )
-                );
+                handleVoidBill(bookingId, "Updated Booking details");
+                navigate("/GenerateBill", {
+                  state: { userData: callback?.response?.Details },
+                });
               }
               else{
                 navigate("/GenerateBill", {
@@ -667,7 +651,7 @@ const UpdateBooking = () => {
 
   const [selectedOption, setSelectedOption] = useState("");
 
-  const [paymentOption, setPaymentOption] = useState("");
+  const [paymentOption, setPaymentOption] = useState(bookingDetails?.PaymentMode);
 
   console.log("Discount ----->", selectedOption);
 

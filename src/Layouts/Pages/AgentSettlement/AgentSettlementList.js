@@ -326,6 +326,10 @@ console.log('today>>>>>>',today);
             <th scope="col" className="text-center table_heading">
               Settle Payment
             </th>
+
+            <th scope="col" className="text-center table_heading">
+              Settled Amount
+            </th>
             
             <th scope="col" className="text-center table_heading">
               Generate Report
@@ -381,6 +385,11 @@ console.log('today>>>>>>',today);
                     Amount Settled
                   </td>
                 )}
+
+                <td className="manager-list">
+                  {item.IsSettled == 0 ? '-':item.SettledAmount}
+                </td>
+
                 {(item.IsSettled == 0 
                 // && item?.SettlementDate != null
                 ) ? (

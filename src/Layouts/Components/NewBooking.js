@@ -237,7 +237,7 @@ const NewBooking = () => {
               setTravelAgentId(callback?.response?.Details?.Id);
               setTravelDetails(callback?.response?.Details);
             }
-            if([1, 3, 5, 8].includes(callback?.response?.Details?.UserType)){
+            if([1, 3, 5, 8].includes(+callback?.response?.Details?.UserType)){
               setShowDiscountCodeField(true);
             }
 
