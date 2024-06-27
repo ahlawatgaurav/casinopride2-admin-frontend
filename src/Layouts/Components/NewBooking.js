@@ -237,7 +237,7 @@ const NewBooking = () => {
               setTravelAgentId(callback?.response?.Details?.Id);
               setTravelDetails(callback?.response?.Details);
             }
-            if([1, 3, 5, 8].includes(callback?.response?.Details?.UserType)){
+            if([1, 3, 5, 8].includes(+callback?.response?.Details?.UserType)){
               setShowDiscountCodeField(true);
             }
 
@@ -330,7 +330,17 @@ const NewBooking = () => {
             setGuestName(userData?.FullName);
             setEmail(userData?.Email);
             setAddress(userData?.Address);
-            setgstNumber(userData?.gstNumber)
+            setgstNumber(userData?.GSTNumber)
+            setSelectedCity(userData?.City);
+            let countrySelected = Country.getAllCountries().filter((country) => country.name === userData?.Country)?.[0];
+            setSelectedCountry({
+              label: countrySelected?.name,
+              value: countrySelected?.name,
+              isoCode: countrySelected?.isoCode
+            });
+            let stateSelected = State?.getStatesOfCountry(countrySelected?.isoCode || selectedCountry?.isoCode).filter((state) => state.name === userData?.State)?.[0];
+            setSelectedState(stateSelected);
+            setDateofbirth(userData?.DOB);
             console.log("Callback---------get user details", callback?.response);
           }
         })
@@ -342,7 +352,7 @@ const NewBooking = () => {
         debounce((phoneNumber) => {
           setPhone(phoneNumber);
 
-          fetchUserByPhone(phoneNumber.includes("+91") ? phoneNumber.replace("+91", "") : phoneNumber);
+          fetchUserByPhone(phoneNumber?.includes("+91") ? phoneNumber.replace("+91", "") : phoneNumber);
         }, DEBOUNCE_TIME_MS),
       [fetchUserByPhone]
      );
@@ -535,12 +545,6 @@ const NewBooking = () => {
     selectedCity
   );
 
-  useEffect(() => {
-    console.log(selectedCountry);
-    console.log(selectedCountry?.isoCode);
-    console.log(State?.getStatesOfCountry(selectedCountry?.isoCode));
-  }, [selectedCountry]);
-
   console.log("selectedCountry------------->", selectedCountry);
 
   const fetchCouponCodes = () => {
@@ -721,6 +725,31 @@ const NewBooking = () => {
                 } else if (paymentOption == "Card") {
                   setCardAmount(discountedAmount);
                 }
+
+                dispatch(
+                  getUserById(callback?.response?.Details?.UserId, (callback) => {
+                    console.log("hii get user by Id>>callabck>>", callback);
+                    if (callback.status) {
+                      console.log(
+                        "callabck.response.details>>",
+                        callback?.response?.Details
+                      );
+                      if (callback?.response?.Details?.UserType == 8) {
+                        setLocalAgentId(callback?.response?.Details?.Id);
+                        setLocalAgentDetails(callback?.response?.Details);
+                      }
+          
+                      if (callback?.response?.Details?.UserType == 5) {
+                        setTravelAgentId(callback?.response?.Details?.Id);
+                        setTravelDetails(callback?.response?.Details);
+                      }
+                    } else {
+                      toast.error(callback.error);
+                    }
+                  })
+                );
+
+                
 
                 setDiscountFigure(callback?.response?.Details?.DiscountPercent);
                 setDiscountpercent(callback?.response?.Details?.DiscountPercent);
@@ -2009,6 +2038,7 @@ const NewBooking = () => {
           <Select
             options={Country.getAllCountries().map((country) => ({
               label: country.name,
+              name: country.name,
               value: country.name,
               isoCode: country.isoCode,
             }))}
@@ -2189,7 +2219,7 @@ const NewBooking = () => {
                 {
                 showDiscountCodeField && <div className="col-3">
                   <label for="formGroupExampleInput " className="form_text">
-                    Discount Code
+                    Agent Reference
                   </label>
 
                   <div className="form-check form-switch">
@@ -2247,6 +2277,7 @@ const NewBooking = () => {
               class="form-control mt-2"
               type="date"
               placeholder="Enter Start Date"
+              value={dateofbirth}
               onChange={(e) => setDateofbirth(e.target.value)}
               onFocus={handleFocus}
             />
