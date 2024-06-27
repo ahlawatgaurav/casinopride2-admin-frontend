@@ -2038,6 +2038,7 @@ const NewBooking = () => {
           <Select
             options={Country.getAllCountries().map((country) => ({
               label: country.name,
+              name: country.name,
               value: country.name,
               isoCode: country.isoCode,
             }))}
@@ -2218,7 +2219,7 @@ const NewBooking = () => {
                 {
                 showDiscountCodeField && <div className="col-3">
                   <label for="formGroupExampleInput " className="form_text">
-                    Discount Code
+                    Agent Reference
                   </label>
 
                   <div className="form-check form-switch">
