@@ -330,7 +330,17 @@ const NewBooking = () => {
             setGuestName(userData?.FullName);
             setEmail(userData?.Email);
             setAddress(userData?.Address);
-            setgstNumber(userData?.gstNumber)
+            setgstNumber(userData?.GSTNumber)
+            setSelectedCity(userData?.City);
+            let countrySelected = Country.getAllCountries().filter((country) => country.name === userData?.Country)?.[0];
+            setSelectedCountry({
+              label: countrySelected.name,
+              value: countrySelected.name,
+              isoCode: countrySelected.isoCode
+            });
+            let stateSelected = State?.getStatesOfCountry(countrySelected?.isoCode).filter((state) => state.name === userData?.State)?.[0];
+            setSelectedState(stateSelected);
+            setDateofbirth(userData?.DOB);
             console.log("Callback---------get user details", callback?.response);
           }
         })
@@ -342,7 +352,7 @@ const NewBooking = () => {
         debounce((phoneNumber) => {
           setPhone(phoneNumber);
 
-          fetchUserByPhone(phoneNumber.includes("+91") ? phoneNumber.replace("+91", "") : phoneNumber);
+          fetchUserByPhone(phoneNumber?.includes("+91") ? phoneNumber.replace("+91", "") : phoneNumber);
         }, DEBOUNCE_TIME_MS),
       [fetchUserByPhone]
      );
@@ -721,6 +731,31 @@ const NewBooking = () => {
                 } else if (paymentOption == "Card") {
                   setCardAmount(discountedAmount);
                 }
+
+                dispatch(
+                  getUserById(callback?.response?.Details?.UserId, (callback) => {
+                    console.log("hii get user by Id>>callabck>>", callback);
+                    if (callback.status) {
+                      console.log(
+                        "callabck.response.details>>",
+                        callback?.response?.Details
+                      );
+                      if (callback?.response?.Details?.UserType == 8) {
+                        setLocalAgentId(callback?.response?.Details?.Id);
+                        setLocalAgentDetails(callback?.response?.Details);
+                      }
+          
+                      if (callback?.response?.Details?.UserType == 5) {
+                        setTravelAgentId(callback?.response?.Details?.Id);
+                        setTravelDetails(callback?.response?.Details);
+                      }
+                    } else {
+                      toast.error(callback.error);
+                    }
+                  })
+                );
+
+                
 
                 setDiscountFigure(callback?.response?.Details?.DiscountPercent);
                 setDiscountpercent(callback?.response?.Details?.DiscountPercent);
@@ -2247,6 +2282,7 @@ const NewBooking = () => {
               class="form-control mt-2"
               type="date"
               placeholder="Enter Start Date"
+              value={dateofbirth}
               onChange={(e) => setDateofbirth(e.target.value)}
               onFocus={handleFocus}
             />

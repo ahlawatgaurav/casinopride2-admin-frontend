@@ -581,12 +581,35 @@ const BookingList = () => {
         bookingId: editBookingDetails?.Id,
         guestName: guestName ? guestName : editBookingDetails?.FullName,
         address: address ? address : editBookingDetails?.Address,
+        email: editBookingDetails?.Email,
+        phone: editBookingDetails?.Phone,
+        totalGuestCount: editBookingDetails?.TotalGuestCount,
         dob: dateofbirth ? dateofbirth : editBookingDetails?.DOB,
         country: selectedCountry?.name,
         state: selectedState?.name,
         city: selectedCity ? selectedCity : editBookingDetails.City,
         GSTNumber: gstNumber ? gstNumber : editBookingDetails.GSTNumber,
         isActive: 1,
+        packageId: editBookingDetails?.PackageId,
+        packageGuestCount:  editBookingDetails?.PackageGuestCount,
+        userId: loginDetails?.logindata?.userId,
+        userTypeId: loginDetails?.logindata?.UserType,
+        shiftId:  editBookingDetails?.ShiftId,
+        actualAmount: editBookingDetails?.ActualAmount,
+        governmentId: editBookingDetails?.GovernmentId,
+        amountAfterDiscount: editBookingDetails?.AmountAfterDiscount,
+        packageName: editBookingDetails?.PackageName,
+        packageWeekdayPrice: JSON.stringify(editBookingDetails?.PackageWeekdayPrice),
+        packageWeekendPrice: JSON.stringify(editBookingDetails?.PackageWeekendPrice),
+        numOfTeens: editBookingDetails?.NumOfTeens,
+        teensPrice: editBookingDetails?.TeensPrice,
+        teensRate: editBookingDetails?.TeensRate,
+        teensTax: editBookingDetails?.TeensTax,
+        teensTaxName: editBookingDetails?.TeensTaxName,
+        paymentMode: editBookingDetails?.PaymentMode,
+        cashAmount: editBookingDetails?.CashAmount,
+        cardAmount: editBookingDetails?.CardAmount,
+        UPIAmount: editBookingDetails?.UPIAmount,
       };
 
       dispatch(
@@ -1406,7 +1429,7 @@ const BookingList = () => {
                     moment(item?.BookingDate).format("YYYY-MM-DD") == activeDateOfOutlet?.OutletDate
                     ? (
                     <AiFillEdit
-                      onClick={() => navigate("/UpdateBooking/" + item.Id )}
+                      onClick={() => ([1, 2].includes(loginDetails?.logindata?.UserType)) ? navigate("/UpdateBooking/" + item.Id ) : startEditing(item)}
                       style={{
                         height: "20px",
                         width: "20px",
@@ -1636,6 +1659,168 @@ const BookingList = () => {
             </div>
           </Modal.Body>
           <Modal.Footer></Modal.Footer>
+        </Modal>
+
+        <Modal
+          show={isEditing}
+          onHide={cancelEditing}
+          backdrop="static"
+          keyboard={false}
+          size="lg"
+        >
+          <Modal.Header>
+            <Modal.Title>Update Booking</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row">
+              <div className="col-lg-6 mt-3 mt-3">
+                <label for="formGroupExampleInput " className="form_text">
+                  Guest Name <span style={{ color: "red" }}>*</span>
+                </label>
+                <input
+                  class="form-control mt-2 "
+                  type="text"
+                  placeholder="Full Name"
+                  onChange={(e) => setGuestName(e.target.value)}
+                  defaultValue={editBookingDetails?.FullName}
+                />
+              </div>
+
+              <div className="col-lg-6 mt-3">
+                <label for="formGroupExampleInput " className="form_text">
+                  Address <span style={{ color: "red" }}>*</span>
+                </label>
+                <input
+                  class="form-control mt-2"
+                  type="text"
+                  placeholder="Enter your address"
+                  onChange={(e) => setAddress(e.target.value)}
+                  defaultValue={editBookingDetails?.Address}
+                />
+              </div>
+
+              <div className="col-lg-6 mt-3">
+                <label for="formGroupExampleInput " className="form_text">
+                  Date of birth
+                </label>
+                <input
+                  class="form-control mt-2"
+                  type="date"
+                  placeholder="Enter Start Date"
+                  onChange={(e) => setDateofbirth(e.target.value)}
+                  defaultValue={editBookingDetails?.DOB}
+                />
+              </div>
+              <div className="col-lg-6 mt-3">
+                <label for="formGroupExampleInput " className="form_text">
+                  GST Details
+                </label>
+                <input
+                  class="form-control mt-2"
+                  type="text"
+                  placeholder="Enter GST number"
+                  onChange={(e) => setgstNumber(e.target.value)}
+                  defaultValue={editBookingDetails?.GSTNumber}
+                />
+              </div>
+
+              <div className="col-lg-6 mt-3">
+                <label
+                  htmlFor="formGroupExampleInput"
+                  className="form_text mb-2"
+                >
+                  Country
+                </label>
+                <Select
+                  className="form_text"
+                  options={Country.getAllCountries()}
+                  getOptionLabel={(options) => options["name"]}
+                  getOptionValue={(options) => options["name"]}
+                  value={selectedCountry}
+                  onChange={(item) => setSelectedCountry(item)}
+                  placeholder="Select"
+                />
+              </div>
+
+              <div className="col-lg-6 mt-3">
+                <label
+                  htmlFor="formGroupExampleInput"
+                  className="form_text mb-2"
+                >
+                  State
+                </label>
+                <Select
+                  className="form_text"
+                  options={State?.getStatesOfCountry(selectedCountry?.isoCode)}
+                  getOptionLabel={(options) => options["name"]}
+                  getOptionValue={(options) => options["name"]}
+                  value={selectedState}
+                  onChange={(item) => setSelectedState(item)}
+                  placeholder="Select"
+                />
+              </div>
+
+              {/* <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text mb-2">
+                Country
+              </label>
+              <Select
+                // className="form-control"
+                options={Country.getAllCountries()}
+                getOptionLabel={(options) => {
+                  return options["name"];
+                }}
+                getOptionValue={(options) => {
+                  return options["name"];
+                }}
+                value={selectedCountry}
+                onChange={(item) => {
+                  setSelectedCountry(item);
+                }}
+              />
+            </div>
+            <div className="col-lg-6 mt-3">
+              <label for="formGroupExampleInput " className="form_text mb-2">
+                State
+              </label>
+              <Select
+                // className="form-control"
+                options={State?.getStatesOfCountry(selectedCountry?.isoCode)}
+                getOptionLabel={(options) => {
+                  return options["name"];
+                }}
+                getOptionValue={(options) => {
+                  return options["name"];
+                }}
+                value={selectedState}
+                onChange={(item) => {
+                  setSelectedState(item);
+                }}
+              />
+            </div> */}
+              <div className="col-lg-6 mt-3 ">
+                <label for="formGroupExampleInput " className="form_text mb-2">
+                  City
+                </label>
+
+                <input
+                  class="form-control "
+                  type="text"
+                  placeholder="Enter your city"
+                  onChange={(e) => setSelectedCity(e.target.value)}
+                  defaultValue={editBookingDetails?.City}
+                />
+              </div>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={cancelEditing}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={updateBookingFn}>
+              Update Booking
+            </Button>
+          </Modal.Footer>
         </Modal>
 
         <Modal
