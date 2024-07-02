@@ -114,7 +114,10 @@ const SideNav = () => {
       )}
       <hr />
       <Sidenav expanded={expanded} defaultOpenKeys={["3", "4"]}>
-      <span style={{fontSize: "15px", fontWeight: "700", color: "black", padding: "10px 20px", border: "1px solid black", borderLeft: 0}}>Welcome, {validateDetails?.Details?.Name}</span>
+      <span style={{fontSize: "15px", fontWeight: "700", color: "black", padding: "10px 20px", border: "1px solid black", borderLeft: 0, display: "flex", "alignItems": "baseline"}}>
+        <AdminIcon style={{marginRight: "20px"}}/>
+        {validateDetails?.Details?.Name}
+        </span>
         <Sidenav.Body>
           <Nav activeKey={activeKey} onSelect={setActiveKey}>
             {loginDetails?.logindata?.UserType == "1" ||

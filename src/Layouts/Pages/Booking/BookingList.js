@@ -178,6 +178,8 @@ const BookingList = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isUpdatePaymentModalOpen, setIsUpdatePaymentModalOpen] =
     useState(false);
+  const [isBillGenerationModalOpen, setIsBillGenerationModalOpen] =
+    useState(false);
   const [UpdatePaymentDetails, setUpdatePaymentDetails] = useState(null);
 
   const [paymentOption, setPaymentOption] = useState("");
@@ -193,6 +195,7 @@ const BookingList = () => {
   const [partCash, setPartCash] = useState("");
   const [partCard, setPartCard] = useState("");
   const [enableUpdatePayment, setEnableUpdatepayment] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const handlePaymentSelection = (event) => {
     // Update the selected option when the user makes a selection
@@ -337,6 +340,12 @@ const BookingList = () => {
 
     setIsUpdatePaymentModalOpen(true);
   };
+
+  const startBillGeneration = (item) => {
+    setPaymentOption(item.PaymentMode);
+    setSelectedItem(item);
+    setIsBillGenerationModalOpen(true);
+  }
 
   const handleShowR = () => {
     // setShow(true)
@@ -1233,15 +1242,15 @@ const BookingList = () => {
             </div>
 
             <div className="col-md-4 col-lg-4 d-flex justify-content-end mb-3">
-              <button className="btn btn-primary">
-                <Link
+            <Link
                   to="/NewBooking"
                   state={{ userType: "4" }}
                   className="addLinks"
                 >
-                  New Booking
-                </Link>
+              <button className="btn btn-primary h-100">
+                New Booking
               </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -1394,19 +1403,7 @@ const BookingList = () => {
                       (item?.FutureDate == today) ?
                       (item?.IsBillGenerated != 1) ? 
                       <LiaFileInvoiceSolid
-                        onClick={() => {
-                          if (
-                            item?.PayAtCounter == 1 &&
-                            item?.PaymentMode == null
-                          ) {
-                            window.open(
-                              `/acknowledgementDetails?BookingId=${item.Id}`,
-                              "_self"
-                            );
-                          } else {
-                            GenerateBill(item);
-                          }
-                        }}
+                        onClick={() => startBillGeneration(item)}
                         style={{
                           height: "22px",
                           width: "22px",
@@ -2294,6 +2291,50 @@ const BookingList = () => {
               onClick={onsubmit}
             >
               Update Booking
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal
+          show={isBillGenerationModalOpen}
+          onHide={() => setIsBillGenerationModalOpen(false)}
+          backdrop="static"
+          keyboard={false}
+          size="lg"
+        >
+          <Modal.Header>
+            <Modal.Title>Generate Bill</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+           Are You sure you want to proceed?
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setIsBillGenerationModalOpen(false);
+                setSelectedItem(null);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => {
+                if (
+                  selectedItem?.PayAtCounter == 1 &&
+                  selectedItem?.PaymentMode == null
+                ) {
+                  window.open(
+                    `/acknowledgementDetails?BookingId=${selectedItem.Id}`,
+                    "_self"
+                  );
+                } else {
+                  GenerateBill(selectedItem);
+                }
+              }}
+            >
+              Generate Bill
             </Button>
           </Modal.Footer>
         </Modal>
