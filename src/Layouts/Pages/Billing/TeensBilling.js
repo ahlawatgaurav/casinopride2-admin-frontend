@@ -1488,7 +1488,7 @@ const TeensBilling = () => {
                       <td style={{ textAlign: "center" }}>
                         {/* <p className="BillPrintFont">Kids</p> */}
                         <p className="BillPrintFont">
-                          Entry, Food (HSN-996331)
+                          Entry, Food (HSN-999692)
                         </p>
                       </td>
 
@@ -1812,7 +1812,7 @@ const TeensBilling = () => {
                           <td style={{ textAlign: "center" }}>
                             {/* <p className="BillPrintFontPrint">Kids</p> */}
                             <p className="BillPrintFontPrint">
-                              Entry, Food (HSN-996331)
+                              Entry, Food (HSN-999692)
                             </p>
                           </td>
 

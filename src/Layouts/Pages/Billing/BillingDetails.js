@@ -3950,7 +3950,7 @@ const BillingDetails = () => {
                                   className="BillPrintFont"
                                 >
                                   {/* <p>Kids</p> */}
-                                  <p>Entry, Food (HSN-996331)</p>
+                                  <p>Entry, Food (HSN-999692)</p>
                                 </td>
 
                                 <td
@@ -5190,7 +5190,7 @@ const BillingDetails = () => {
                                 <td style={{ textAlign: "center" }}>
                                   {/* <p className="BillPrintFontPrint">Kids</p> */}
                                   <p className="BillPrintFontPrint">
-                                    Entry, Food (HSN-996331)
+                                    Entry, Food (HSN-999692)
                                   </p>
                                 </td>
 
