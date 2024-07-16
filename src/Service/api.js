@@ -1,30 +1,29 @@
 import axios from "axios";
 
-
 const api = {
   BILLING_PORT: axios.create({
-    baseURL: `${process.env.REACT_APP_BASE_URL}${process.env.REACT_APP_BILLING_PORT}/api`,
+    baseURL: `${process.env.REACT_APP_BILLING_URL_HTTPS}/api`,
     headers: {
-      Authorization:process.env.REACT_APP_AUTHORIZATION,
+      Authorization: process.env.REACT_APP_AUTHORIZATION,
     },
   }),
 
   BOOKING_PORT: axios.create({
-    baseURL: `${process.env.REACT_APP_BASE_URL}${process.env.REACT_APP_BOOKING_PORT}/api`,
+    baseURL: `${process.env.REACT_APP_BOOKING_URL_HTTPS}/api`,
     headers: {
       Authorization: process.env.REACT_APP_AUTHORIZATION,
     },
   }),
 
   CORE_PORT: axios.create({
-    baseURL: `${process.env.REACT_APP_BASE_URL}${process.env.REACT_APP_CORE_PORT}/api`,
+    baseURL: `${process.env.REACT_APP_CORE_URL_HTTPS}/api`,
     headers: {
       Authorization: process.env.REACT_APP_AUTHORIZATION,
     },
   }),
 
   AUTH_PORT: axios.create({
-    baseURL: `${process.env.REACT_APP_BASE_URL}${process.env.REACT_APP_AUTH_PORT}/api`,
+    baseURL: `${process.env.REACT_APP_AUTH_URL_HTTPS}/api`,
     headers: {
       Authorization: process.env.REACT_APP_AUTHORIZATION,
     },
