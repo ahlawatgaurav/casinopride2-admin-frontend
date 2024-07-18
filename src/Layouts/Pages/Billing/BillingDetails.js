@@ -3049,10 +3049,10 @@ const BillingDetails = () => {
 
       const KidsPrice = item?.TeensPrice;
 
-      const KidsCgstProperty = `CGST ${item?.TeensTax / 2} %`;
+      const KidsCgstProperty = `Kids CGST ${item?.TeensTax / 2} %`;
       console.log("Kids cgst", KidsCgstProperty);
 
-      const KidsSgstProperty = `SGST ${item?.TeensTax / 2} %`;
+      const KidsSgstProperty = `Kids SGST ${item?.TeensTax / 2} %`;
       console.log("Kids sgst", KidsSgstProperty);
 
       const KidsTaxPercentage = item?.TeensTax;
@@ -4258,11 +4258,11 @@ const BillingDetails = () => {
                               </>
                             )}
                             <h6 className="BillPrintFont">
-                              CGST {item?.TeensTax / 2} %:{" "}
+                              Kids CGST {item?.TeensTax / 2} %:{" "}
                               {(item?.TeensTaxBifurcation / 2).toFixed(2)}
                             </h6>
                             <h6 className="BillPrintFont">
-                              SGST {item?.TeensTax / 2} %:
+                              Kids SGST {item?.TeensTax / 2} %:
                               {(item?.TeensTaxBifurcation / 2).toFixed(2)}
                             </h6>
 
