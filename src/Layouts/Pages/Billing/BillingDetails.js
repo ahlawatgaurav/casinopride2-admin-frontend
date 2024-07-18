@@ -3049,12 +3049,13 @@ const BillingDetails = () => {
 
       const KidsPrice = item?.TeensPrice;
 
-      const KidsCgstProperty = `CGST ${item?.TeensTax / 2} %`;
+      const KidsCgstProperty = `Kids CGST ${item?.TeensTax / 2} %`;
       console.log("Kids cgst", KidsCgstProperty);
 
-      const KidsSgstProperty = `SGST ${item?.TeensTax / 2} %`;
+      const KidsSgstProperty = `Kids SGST ${item?.TeensTax / 2} %`;
       console.log("Kids sgst", KidsSgstProperty);
 
+      const KidsTaxPercentage = item?.TeensTax;
       const KidsTax = item?.TeensTaxBifurcation / KidsCount;
 
       const TotalKidsplusAdults = TotalBillAmount + KidsPrice;
@@ -3149,6 +3150,7 @@ const BillingDetails = () => {
         ItemId: item?.ItemDetails?.ItemId,
         ItemName: item?.ItemDetails?.ItemName,
         Price: finalResultPrice,
+        KidsTax: KidsTax,
         // Rate: FinalRateResult,
         ItemTaxName: itemTaxName[0],
         TaxDiff: finalTaxDiffSum,
@@ -3168,6 +3170,7 @@ const BillingDetails = () => {
             properties["KidsCount"] = KidsCount;
             properties["KidsRate"] = KidsRate;
             properties["KidsPrice"] = KidsPrice;
+            properties["KidsTax"] = KidsTaxPercentage;
             properties[KidsCgstProperty] = KidsTax / 2;
             properties[KidsSgstProperty] = KidsTax / 2;
             // properties[cgstProperty] = adjustedTaxDiffSum / 2;
@@ -3198,6 +3201,7 @@ const BillingDetails = () => {
             properties["KidsPrice"] = KidsPrice;
             properties[KidsCgstProperty] = item?.TeensTaxBifurcation / 2;
             properties[KidsSgstProperty] = item?.TeensTaxBifurcation / 2;
+            properties["KidsTax"] = KidsTaxPercentage;
             // properties[cgstProperty] = adjustedTaxDiffSum / 2;
             properties[cgstProperty] = sumWhenDiscount;
             // properties[sgstProperty] = adjustedTaxDiffSum / 2;
@@ -3225,6 +3229,7 @@ const BillingDetails = () => {
             properties["KidsRate"] = KidsRate;
             properties["KidsPrice"] = KidsPrice;
             properties[KidsCgstProperty] = item?.TeensTaxBifurcation / 2;
+            properties["KidsTax"] = KidsTaxPercentage;
             properties[KidsSgstProperty] = item?.TeensTaxBifurcation / 2;
             // properties[cgstProperty] = adjustedTaxDiffSum / 2;
             properties[cgstProperty] = sumWhenDiscount / 2;
@@ -3254,6 +3259,7 @@ const BillingDetails = () => {
             properties["KidsPrice"] = KidsPrice;
             properties[KidsCgstProperty] = item?.TeensTaxBifurcation / 2;
             properties[KidsSgstProperty] = item?.TeensTaxBifurcation / 2;
+            properties["KidsTax"] = KidsTaxPercentage;
             // properties[cgstProperty] = adjustedTaxDiffSum / 2;
             properties[cgstProperty] = sumWhenDiscount / 2;
             // properties[sgstProperty] = adjustedTaxDiffSum / 2;
@@ -3282,6 +3288,7 @@ const BillingDetails = () => {
             properties["KidsPrice"] = KidsPrice;
             properties[KidsCgstProperty] = item?.TeensTaxBifurcation / 2;
             properties[KidsSgstProperty] = item?.TeensTaxBifurcation / 2;
+            properties["KidsTax"] = KidsTaxPercentage;
             // properties[cgstProperty] = adjustedTaxDiffSum / 2;
             properties[cgstProperty] = total / 2;
             // properties[sgstProperty] = adjustedTaxDiffSum / 2;
@@ -3310,6 +3317,7 @@ const BillingDetails = () => {
             properties["KidsPrice"] = KidsPrice;
             properties[KidsCgstProperty] = item?.TeensTaxBifurcation / 2;
             properties[KidsSgstProperty] = item?.TeensTaxBifurcation / 2;
+            properties["KidsTax"] = KidsTaxPercentage;
             // properties[cgstProperty] = adjustedTaxDiffSum / 2;
             properties[cgstProperty] = total / 2;
             // properties[sgstProperty] = adjustedTaxDiffSum / 2;
@@ -3338,6 +3346,7 @@ const BillingDetails = () => {
             properties["KidsPrice"] = KidsPrice;
             properties[KidsCgstProperty] = item?.TeensTaxBifurcation / 2;
             properties[KidsSgstProperty] = item?.TeensTaxBifurcation / 2;
+            properties["KidsTax"] = KidsTaxPercentage;
             // properties[cgstProperty] = adjustedTaxDiffSum / 2;
             properties[cgstProperty] = total / 2;
             // properties[sgstProperty] = adjustedTaxDiffSum / 2;
@@ -3366,6 +3375,7 @@ const BillingDetails = () => {
             properties["KidsPrice"] = KidsPrice;
             properties[KidsCgstProperty] = item?.TeensTaxBifurcation / 2;
             properties[KidsSgstProperty] = item?.TeensTaxBifurcation / 2;
+            properties["KidsTax"] = KidsTaxPercentage;
             // properties[cgstProperty] = adjustedTaxDiffSum / 2;
             properties[cgstProperty] = total / 2;
             // properties[sgstProperty] = adjustedTaxDiffSum / 2;
@@ -3390,6 +3400,7 @@ const BillingDetails = () => {
             properties["KidsPrice"] = KidsPrice;
             properties[KidsCgstProperty] = KidsTax;
             properties[KidsSgstProperty] = KidsTax;
+            properties["KidsTax"] = KidsTaxPercentage;
             // properties[cgstProperty] = adjustedTaxDiffSum / 2;
             properties[cgstProperty] = total / 2;
             // properties[sgstProperty] = adjustedTaxDiffSum / 2;
@@ -3421,6 +3432,7 @@ const BillingDetails = () => {
           properties["KidsPrice"] = KidsPrice;
           properties[KidsCgstProperty] = KidsTax;
           properties[KidsSgstProperty] = KidsTax;
+          properties["KidsTax"] = KidsTaxPercentage;
           // properties[cgstProperty] = adjustedTaxDiffSum / 2;
           properties[cgstProperty] = sumWhenDiscount;
           // properties[sgstProperty] = adjustedTaxDiffSum / 2;
@@ -3452,6 +3464,7 @@ const BillingDetails = () => {
           properties["KidsPrice"] = KidsPrice;
           properties[KidsCgstProperty] = KidsTax;
           properties[KidsSgstProperty] = KidsTax;
+          properties["KidsTax"] = KidsTaxPercentage;
           // properties[cgstProperty] = adjustedTaxDiffSum / 2;
           properties[cgstProperty] = sumWhenDiscount / 2;
           // properties[sgstProperty] = adjustedTaxDiffSum / 2;
@@ -3502,6 +3515,7 @@ const BillingDetails = () => {
           properties["Rate"] = FinalRateResult;
           properties["cashAmount"] = CashAmount;
           properties["cardAmount"] = CardAmount;
+          properties["KidsTax"] = KidsTaxPercentage;
           properties["upiAmount"] = UPIAmount;
           properties["upiId"] = UPIId;
           properties["cardHoldersName"] = CardHoldersName;
@@ -4244,11 +4258,11 @@ const BillingDetails = () => {
                               </>
                             )}
                             <h6 className="BillPrintFont">
-                              CGST {item?.TeensTax / 2} %:{" "}
+                              Kids CGST {item?.TeensTax / 2} %:{" "}
                               {(item?.TeensTaxBifurcation / 2).toFixed(2)}
                             </h6>
                             <h6 className="BillPrintFont">
-                              SGST {item?.TeensTax / 2} %:
+                              Kids SGST {item?.TeensTax / 2} %:
                               {(item?.TeensTaxBifurcation / 2).toFixed(2)}
                             </h6>
 

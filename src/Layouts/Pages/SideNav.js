@@ -297,15 +297,13 @@ const SideNav = () => {
               <></>
             )}
 
-            {loginDetails?.logindata?.UserType == "1" ? (
+            {loginDetails?.logindata?.UserType == "1" || loginDetails?.logindata?.UserType == "4" ? (
               <Nav.Menu
                 placement="rightStart"
                 eventKey="10"
                 title="Discounts"
                 icon={<MagicIcon />}
               >
-                {loginDetails?.logindata?.UserType == "4" ||
-                loginDetails?.logindata?.UserType == "1" ? (
                   <Nav.Item
                     eventKey="3-1"
                     onClick={() => navigate("/Discountonwebsite")}
@@ -314,9 +312,7 @@ const SideNav = () => {
                       Website Discounts
                     </Link>
                   </Nav.Item>
-                ) : (
-                  <></>
-                )}
+                
                 <Nav.Item
                   eventKey="3-2"
                   onClick={() => navigate("/DiscountOnPanel")}

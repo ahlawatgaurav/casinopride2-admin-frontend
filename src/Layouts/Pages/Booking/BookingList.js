@@ -1644,6 +1644,18 @@ const BookingList = () => {
             </div>
             <div className="col-6">
               <p className="table-modal-list ">
+                Package Guest Count:{" "}
+                {selectedUserDetails.PackageGuestCount ? (
+                  JSON.parse(selectedUserDetails.PackageGuestCount).map(
+                    (item, index) => <span key={index}>{item} </span>
+                  )
+                ) : (
+                  <span>No package count available</span>
+                )}
+              </p>
+            </div>
+            <div className="col-6">
+              <p className="table-modal-list ">
                 Package Price:{" "}
                 {selectedUserDetails.FinalPrice ? (
                   selectedUserDetails.FinalPrice.map((item, index) => (
