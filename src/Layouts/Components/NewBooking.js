@@ -965,6 +965,7 @@ const NewBooking = () => {
       teensTax: teenstaxPercentage,
       teensTaxName: teensTaxName,
       bookingDate: activeDateOfOutlet?.OutletDate,
+      futureDate: activeDateOfOutlet?.OutletDate,
       discount: discountFigureToUse,
       panelDiscountId: selectedOptionToUse,
       couponId: couponId,

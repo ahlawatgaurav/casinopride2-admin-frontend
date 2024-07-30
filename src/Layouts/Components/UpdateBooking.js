@@ -9,7 +9,7 @@ import {
   EditUsedCoupon,
   getUserByPhone,
 } from "../../Redux/actions/users";
-import { AddBookingFn, fetchBookingDetailsById, updateBooking } from "../../Redux/actions/booking";
+import {  fetchBookingDetailsById, updateBooking } from "../../Redux/actions/booking";
 import { connect, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
