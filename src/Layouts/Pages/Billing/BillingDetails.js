@@ -4258,11 +4258,11 @@ const BillingDetails = () => {
                               </>
                             )}
                             <h6 className="BillPrintFont">
-                              Kids CGST {item?.TeensTax / 2} %:{" "}
+                              CGST {item?.TeensTax / 2} %:{" "}
                               {(item?.TeensTaxBifurcation / 2).toFixed(2)}
                             </h6>
                             <h6 className="BillPrintFont">
-                              Kids SGST {item?.TeensTax / 2} %:
+                              SGST {item?.TeensTax / 2} %:
                               {(item?.TeensTaxBifurcation / 2).toFixed(2)}
                             </h6>
 
