@@ -243,8 +243,8 @@ console.log('today>>>>>>',today);
         userType : item?.UserTypeId,
         // settlementDate: item?.SettlementDate == null ? today : moment.utc(item?.SettlementDate).format("YYYY-MM-DD HH:mm:ss"),
         // settlementDate:  moment.utc(item?.SettlementDate).format("YYYY-MM-DD HH:mm:ss"),
-        settlementDate: item?.SettlementDate != null ? moment.utc(item?.SettlementDate).format("YYYY-MM-DD HH:mm:ss") : null,
-        settlementUpdateDate: moment.utc(item?.Date).format("YYYY-MM-DD HH:mm:ss"),
+        settlementDate: item?.SettlementDate != null ? moment(item?.SettlementDate).format("YYYY-MM-DD HH:mm:ss") : null,
+        settlementUpdateDate: moment(item?.Date).format("YYYY-MM-DD HH:mm:ss"),
         reportTypeId: 9,
       };
       console.log('generateAgentSettlementReportFn>>data>>',data);
