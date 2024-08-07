@@ -7,6 +7,8 @@ import {
   getCouponsbyInitials,
   getPanelDiscounts,
   EditUsedCoupon,
+  getUserByPhone,
+  getDiscountsUsingDiscountCode,
 } from "../../Redux/actions/users";
 import { AddBookingFn } from "../../Redux/actions/booking";
 import { connect, useSelector } from "react-redux";
@@ -37,6 +39,11 @@ import {
 import { checkActiveOutlet } from "../../Redux/actions/users";
 import { getUserById } from "../../Redux/actions/users";
 import { countDriverBookings } from "../../Redux/actions/users";
+import { ROLES } from "../../constants/roles";
+
+import debounce from "lodash.debounce";
+const DEBOUNCE_TIME_MS = 1000;
+
 // import { QrReader } from "react-qr-reader";
 const NewBooking = () => {
   const location = useLocation();
@@ -45,16 +52,16 @@ const NewBooking = () => {
   // const { userType } = location.state;
 
   const [show, setShow] = useState(false);
-  const [shiftOneOpen,setShiftOneOpen]=useState(false)
-  const [shiftTwoOpen,setShiftTwoOpen]=useState(false)
-  const [shiftThreeOpen,setShiftThreeOpen]=useState(false)
+  const [shiftOneOpen, setShiftOneOpen] = useState(false);
+  const [shiftTwoOpen, setShiftTwoOpen] = useState(false);
+  const [shiftThreeOpen, setShiftThreeOpen] = useState(false);
+  const [toggleCounter, setToggleCounter] = useState(0); 
   const handleClose = () => setShow(false);
 
   const loginDetails = useSelector(
     (state) => state.auth?.userDetailsAfterLogin.Details
   );
 
-  
   console.log("loginDetails-------------->", loginDetails);
 
   useEffect(() => {
@@ -206,10 +213,11 @@ const NewBooking = () => {
   const [TravelDetails, setTravelDetails] = useState();
 
   const [Discountpercent, setDiscountpercent] = useState("");
+  const [showDiscountCodeField, setShowDiscountCodeField] = useState(false);
 
   useEffect(() => {
     const url = new URL(window.location.href);
-    const userId = url.searchParams.get("UserId");
+    const userId = loginDetails?.logindata?.userId;
     console.log("userId++++", userId);
 
     if (userId != null) {
@@ -230,6 +238,10 @@ const NewBooking = () => {
               setTravelAgentId(callback?.response?.Details?.Id);
               setTravelDetails(callback?.response?.Details);
             }
+            if([1, 3, 5, 8].includes(+callback?.response?.Details?.UserType)){
+              setShowDiscountCodeField(true);
+            }
+
           } else {
             toast.error(callback.error);
           }
@@ -238,10 +250,21 @@ const NewBooking = () => {
     }
 
     const Discount = url.searchParams.get("Discountpercent");
+    const DiscountCodeURL  = url.searchParams.get("DiscountCode");
+    if(DiscountCodeURL) {
+      setDiscountCodeToggle(true);
+      setDiscountCode(DiscountCodeURL);
+      setToggleCounter(toggleCounter + 1);
+      
+    }
     setDiscountpercent(Discount);
     setDiscountFigure(Discount);
   }, []);
 
+  useEffect(() => {
+    if(toggleCounter)
+    handleDiscountCode()
+  }, [toggleCounter])
   const [guestName, setGuestName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -263,6 +286,9 @@ const NewBooking = () => {
   const [packageName, setPackageName] = useState("");
 
   const [discountToggle, setDiscountToggle] = useState(false);
+  const [discountCodeToggle, setDiscountCodeToggle] = useState(false);
+  const [discountCode, setDiscountCode] = useState("");
+
   const [couponToggle, setCouponToggle] = useState(false);
   const [referredByToggle, setReferredByToggle] = useState(false);
 
@@ -273,6 +299,7 @@ const NewBooking = () => {
   const [remainingCoupons, setRemainingCoupons] = useState();
   const [bookingData, setBookingData] = useState("");
   const [couponDiscount, setCouponDiscout] = useState("");
+  const [discountCodeDiscount, setDiscountCodeDiscount] = useState(""); 
   const [totalteensPrice, setTotalTeensPrice] = useState("");
 
   const [teenpackageId, setTeenPackageId] = useState([]);
@@ -299,7 +326,6 @@ const NewBooking = () => {
   const [cardType, setCardType] = useState("");
   const [discountFigure, setDiscountFigure] = useState("");
 
-
   const [loader, setLoader] = useState(false);
   console.log("cardType------->", cardType);
 
@@ -307,8 +333,43 @@ const NewBooking = () => {
 
   console.log("remainingCoupons------------>remaining", remainingCoupons);
 
-  const handleToggle = (field) => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const fetchUserByPhone = (phoneNumber) => {
+      dispatch(
+        getUserByPhone(loginDetails?.logindata?.Token, phoneNumber, (callback) => {
+          if (callback.status) {
+            const userData = callback?.response?.Details;
+            setGuestName(userData?.FullName);
+            setEmail(userData?.Email);
+            setAddress(userData?.Address);
+            setgstNumber(userData?.GSTNumber)
+            setSelectedCity(userData?.City);
+            let countrySelected = Country.getAllCountries().filter((country) => country.name === userData?.Country)?.[0];
+            setSelectedCountry({
+              label: countrySelected?.name,
+              value: countrySelected?.name,
+              isoCode: countrySelected?.isoCode
+            });
+            let stateSelected = State?.getStatesOfCountry(countrySelected?.isoCode || selectedCountry?.isoCode).filter((state) => state.name === userData?.State)?.[0];
+            setSelectedState(stateSelected);
+            setDateofbirth(userData?.DOB);
+            console.log("Callback---------get user details", callback?.response);
+          }
+        })
+      );
+    };
+  
+    const onPhoneNumberChange = useMemo(
+      () =>
+        debounce((phoneNumber) => {
+          setPhone(phoneNumber);
 
+          fetchUserByPhone(phoneNumber?.includes("+91") ? phoneNumber.replace("+91", "") : phoneNumber);
+        }, DEBOUNCE_TIME_MS),
+      [fetchUserByPhone]
+     );
+
+  const handleToggle = (field) => {
     const DiscountedAmount =
       amount - amountAfterDiscount == amount ? amount : amountAfterDiscount;
     if (paymentOption == "Cash") {
@@ -328,8 +389,9 @@ const NewBooking = () => {
         setCouponCode("");
         setSelectedOption("");
         setamountAfterDiscount("");
+        setDiscountCodeDiscount("");
         setCouponDiscout("");
-        setSettledBy(0)
+        setSettledBy(0);
         // if (paymentOption == "Cash") {
         //   setCashAmount(DiscountedAmount);
         // } else if (paymentOption == "UPI") {
@@ -344,8 +406,9 @@ const NewBooking = () => {
         console.log("inside discountToggle");
         setamountAfterDiscount("");
         setCouponDiscout("");
+        setDiscountCodeDiscount("");
         setCouponCode("");
-        setSettledBy(0)
+        setSettledBy(0);
         // if (paymentOption == "Cash") {
         //   setCashAmount(DiscountedAmount);
         // } else if (paymentOption == "UPI") {
@@ -362,16 +425,63 @@ const NewBooking = () => {
           setCardAmount(amount);
         }
       }
+    } else if(field === "discountCode") {
+        setDiscountCodeToggle(!discountCodeToggle);
+        if (!discountCodeToggle) {
+          console.log("Called Here----12>");
+          setCouponToggle(false);
+          setReferredByToggle(false);
+          setDiscountToggle(false);
+          setCouponCode("");
+          setSelectedOption("");
+          setamountAfterDiscount("");
+          setCouponDiscout("");
+          setSettledBy(0);
+          // if (paymentOption == "Cash") {
+          //   setCashAmount(DiscountedAmount);
+          // } else if (paymentOption == "UPI") {
+          //   setCardAmount(DiscountedAmount);
+          // } else if (paymentOption == "Card") {
+          //   setUpiAmount(DiscountedAmount);
+          // }
+  
+          //newww code
+        } else if (discountCodeToggle) {
+          console.log("Called Here----11>");
+          console.log("inside discountCodeToggle");
+          setamountAfterDiscount("");
+          setSelectedOption("");
+          setCouponDiscout("");
+          setCouponCode("");
+          setSettledBy(0);
+          // if (paymentOption == "Cash") {
+          //   setCashAmount(DiscountedAmount);
+          // } else if (paymentOption == "UPI") {
+          //   setCardAmount(DiscountedAmount);
+          // } else if (paymentOption == "Card") {
+          //   setUpiAmount(DiscountedAmount);
+          // }
+  
+          if (paymentOption == "Cash") {
+            setCashAmount(amount);
+          } else if (paymentOption == "UPI") {
+            setUpiAmount(amount);
+          } else if (paymentOption == "Card") {
+            setCardAmount(amount);
+          }
+        }
+      
     } else if (field === "coupon") {
       console.log("couponToggle>>", couponToggle);
       setCouponToggle(!couponToggle);
       if (!couponToggle) {
         setDiscountToggle(false);
         setReferredByToggle(false);
+        setDiscountCodeToggle(false);
         setCouponCode("");
         setSelectedOption("");
         setamountAfterDiscount("");
-      setSettledBy(0)
+        setSettledBy(0);
         // if (paymentOption == "Cash") {
         //   setCashAmount(amount);
         // } else if (paymentOption == "UPI") {
@@ -381,7 +491,7 @@ const NewBooking = () => {
         // }
       } else if (couponToggle) {
         setCouponDiscout("");
-        setSettledBy(0)
+        setSettledBy(0);
         if (paymentOption == "Cash") {
           setCashAmount(DiscountedAmount);
         } else if (paymentOption == "UPI") {
@@ -391,14 +501,15 @@ const NewBooking = () => {
         }
       }
     } else if (field === "referredBy") {
-      setSettledBy(1)
+      setSettledBy(1);
       setReferredByToggle(!referredByToggle);
       if (!referredByToggle) {
         setDiscountToggle(false);
         setCouponToggle(false);
+        setDiscountCodeToggle(false);
         setCouponCode("");
         setCouponDiscout("");
-        setSettledBy(1)
+        setSettledBy(1);
         // if (paymentOption == "Cash") {
         //   setCashAmount(amount);
         // } else if (paymentOption == "UPI") {
@@ -410,7 +521,7 @@ const NewBooking = () => {
         setSelectedOption("");
         setCouponDiscout("");
         setamountAfterDiscount("");
-        setSettledBy(0)
+        setSettledBy(0);
         // if (paymentOption == "Cash") {
         //   setCashAmount(DiscountedAmount);
         // } else if (paymentOption == "UPI") {
@@ -445,12 +556,6 @@ const NewBooking = () => {
     "Selected city-------------------------------------------->",
     selectedCity
   );
-
-  useEffect(() => {
-    console.log(selectedCountry);
-    console.log(selectedCountry?.isoCode);
-    console.log(State?.getStatesOfCountry(selectedCountry?.isoCode));
-  }, [selectedCountry]);
 
   console.log("selectedCountry------------->", selectedCountry);
 
@@ -533,57 +638,67 @@ const NewBooking = () => {
                 toast.error("Coupon code is already used");
               } else {
                 const discount =
-                (amount * callback?.response?.Details?.CouponDiscount) / 100;
-              const discountedAmount = amount - discount;
-              setCouponDiscout(discountedAmount);
+                  (amount * callback?.response?.Details?.CouponDiscount) / 100;
+                const discountedAmount = amount - discount;
+                setCouponDiscout(discountedAmount);
 
-              if (paymentOption == "Cash") {
-                setCashAmount(discountedAmount);
-              } else if (paymentOption == "UPI") {
-                setUpiAmount(discountedAmount);
-              } else if (paymentOption == "Card") {
-                setCardAmount(discountedAmount);
-              }
+                if (paymentOption == "Cash") {
+                  setCashAmount(discountedAmount);
+                } else if (paymentOption == "UPI") {
+                  setUpiAmount(discountedAmount);
+                } else if (paymentOption == "Card") {
+                  setCardAmount(discountedAmount);
+                }
 
-              setDiscountFigure(callback?.response?.Details?.CouponDiscount);
-              console.log(
-                "remaing------------------->length------------->",
-                callback?.response?.Details?.UsedCoupons
-              );
+                setDiscountFigure(callback?.response?.Details?.CouponDiscount);
+                console.log(
+                  "remaing------------------->length------------->",
+                  callback?.response?.Details?.UsedCoupons
+                );
 
-              const usedCouponsArray = callback?.response?.Details?.UsedCoupons?.substring(1, callback?.response?.Details?.UsedCoupons?.length - 1).split(',');
-              // Remove double quotes from each element of the array
-              const sanitizedUsedCouponsArray = usedCouponsArray.map(coupon => coupon.replace(/"/g, ''));
-              // let usedCoupons = callback?.response?.Details?.UsedCoupons.replace(/^"(.*)"$/, '$1');
-              // console.log('jhumka-->',usedCoupons.length);
-              // console.log('parsinggg>>',JSON.parse(callback?.response?.Details?.UsedCoupons));
-              console.log(
-                "Used Coupon length-->",
-                callback?.response?.Details?.UsedCoupons?.length
-              );
-              if (sanitizedUsedCouponsArray?.length === 1 && sanitizedUsedCouponsArray[0]==='') {
-                setRemainingCoupons(callback?.response?.Details?.TotalCoupons - 1)
-              }
-            else{
-
-              setRemainingCoupons(
-                (callback?.response?.Details?.TotalCoupons -
-                sanitizedUsedCouponsArray?.length) - 1
-              );
-            }
-              // console.log('Check remaining======>',callback?.response?.Details?.TotalCoupons - JSON.parse(callback?.response?.Details?.UsedCoupons)?.length);
-              // setRemainingCoupons(
-              //   callback?.response?.Details?.TotalCoupons -
-              //     callback?.response?.Details?.UsedCoupons?.length
-              // );
-              setCouponId(callback?.response?.Details?.Id);
-              setUsedCouponArr(
-                callback?.response?.Details?.UsedCoupons.slice(1, -1).split(",")
-              );
+                const usedCouponsArray =
+                  callback?.response?.Details?.UsedCoupons?.substring(
+                    1,
+                    callback?.response?.Details?.UsedCoupons?.length - 1
+                  ).split(",");
+                // Remove double quotes from each element of the array
+                const sanitizedUsedCouponsArray = usedCouponsArray.map(
+                  (coupon) => coupon.replace(/"/g, "")
+                );
+                // let usedCoupons = callback?.response?.Details?.UsedCoupons.replace(/^"(.*)"$/, '$1');
+                // console.log('jhumka-->',usedCoupons.length);
+                // console.log('parsinggg>>',JSON.parse(callback?.response?.Details?.UsedCoupons));
+                console.log(
+                  "Used Coupon length-->",
+                  callback?.response?.Details?.UsedCoupons?.length
+                );
+                if (
+                  sanitizedUsedCouponsArray?.length === 1 &&
+                  sanitizedUsedCouponsArray[0] === ""
+                ) {
+                  setRemainingCoupons(
+                    callback?.response?.Details?.TotalCoupons - 1
+                  );
+                } else {
+                  setRemainingCoupons(
+                    callback?.response?.Details?.TotalCoupons -
+                      sanitizedUsedCouponsArray?.length -
+                      1
+                  );
+                }
+                // console.log('Check remaining======>',callback?.response?.Details?.TotalCoupons - JSON.parse(callback?.response?.Details?.UsedCoupons)?.length);
+                // setRemainingCoupons(
+                //   callback?.response?.Details?.TotalCoupons -
+                //     callback?.response?.Details?.UsedCoupons?.length
+                // );
+                setCouponId(callback?.response?.Details?.Id);
+                setUsedCouponArr(
+                  callback?.response?.Details?.UsedCoupons.slice(1, -1).split(
+                    ","
+                  )
+                );
                 toast.success("Coupon code is available");
               }
-
-
             } else {
               toast.error("This Coupon does not exists");
             }
@@ -595,6 +710,69 @@ const NewBooking = () => {
     }
   };
 
+  const handleDiscountCode = () => {
+    if (!discountCode) {
+      toast.error("Discount code is empty.");
+      return;
+    }
+
+    dispatch(getDiscountsUsingDiscountCode(
+      loginDetails?.logindata?.Token,
+      discountCode,
+      (callback) => {
+        if (callback.status) {
+        console.log(
+          "Discount Code Details ---------->",
+          callback?.response?.Details
+        );
+        const discount =
+                  (amount * callback?.response?.Details?.DiscountPercent) / 100;
+                const discountedAmount = amount - discount;
+                setDiscountCodeDiscount(discountedAmount);
+
+                if (paymentOption == "Cash") {
+                  setCashAmount(discountedAmount);
+                } else if (paymentOption == "UPI") {
+                  setUpiAmount(discountedAmount);
+                } else if (paymentOption == "Card") {
+                  setCardAmount(discountedAmount);
+                }
+
+                dispatch(
+                  getUserById(callback?.response?.Details?.UserId, (callback) => {
+                    console.log("hii get user by Id>>callabck>>", callback);
+                    if (callback.status) {
+                      console.log(
+                        "callabck.response.details>>",
+                        callback?.response?.Details
+                      );
+                      if (callback?.response?.Details?.UserType == 8) {
+                        setLocalAgentId(callback?.response?.Details?.Id);
+                        setLocalAgentDetails(callback?.response?.Details);
+                      }
+          
+                      if (callback?.response?.Details?.UserType == 5) {
+                        setTravelAgentId(callback?.response?.Details?.Id);
+                        setTravelDetails(callback?.response?.Details);
+                      }
+                    } else {
+                      toast.error(callback.error);
+                    }
+                  })
+                );
+
+                
+
+                setDiscountFigure(callback?.response?.Details?.DiscountPercent);
+                setDiscountpercent(callback?.response?.Details?.DiscountPercent);
+
+                toast.success("Discount code is Applied");
+              } else {
+                toast.error("Discount code is invalid.");
+              }
+      }));
+      
+  }
 
   console.log(
     "discountFigure_____________________(((((((((((((((((((((((((({{{{{{{{{{{{{{{}}}}}}}}}}}}}}}______________________------------>>>>>>>>>>>>>",
@@ -652,7 +830,6 @@ const NewBooking = () => {
 
   console.log("usedCouponArr-------------->", usedCouponArr);
 
-
   console.log(
     "activeDateOfOutlet?.OutletDate-------------->",
     activeDateOfOutlet?.OutletDate
@@ -679,7 +856,7 @@ const NewBooking = () => {
 
   const handleShow = () => {
     // setShow(true)
-    console.log('okuuuuu',gstNumber.length);
+    console.log("okuuuuu", gstNumber?.length);
 
     if (guestName == "" || phone === "" || address == "") {
       toast.warning("Please fill all the fields");
@@ -693,7 +870,7 @@ const NewBooking = () => {
       toast.warning("Please enter a valid GST number");
       setLoader(false);
       handleClose();
-    } else if (!isValidEmail(email)) {
+    } else if (!isValidEmail(email) && loginDetails?.logindata?.UserType !== ROLES.GRE ) {
       toast.warning("Please enter a valid email address");
       setLoader(false);
       handleClose();
@@ -706,11 +883,11 @@ const NewBooking = () => {
       setLoader(false);
       handleClose();
     } else if (
-      paymentOption == "Card" &&
-      cardType == "" &&
-      cardNumber == "" &&
-      cardHoldersName == "" &&
-      cardAmount == ""
+      paymentOption === "Card" &&
+      (!cardType  ||
+      !cardNumber ||
+      !cardHoldersName ||
+      !cardAmount)
     ) {
       toast.warning("Please enter all card details");
       setLoader(false);
@@ -759,6 +936,9 @@ const NewBooking = () => {
   };
 
   const onsubmit = () => {
+    const discountFigureToUse = (discountToggle || discountCodeToggle) ? discountFigure : 0;
+    const selectedOptionToUse = discountToggle ? selectedOption : null;
+
     setLoader(true);
 
     console.log("amountAfterDiscount--->", amountAfterDiscount);
@@ -766,7 +946,7 @@ const NewBooking = () => {
     const teenpackageIdArray = [];
 
     teenpackageIdArray.push(teenpackageId);
-    console.log('onsubmit>>>shiftDetails>>',shiftDetails);
+    console.log("onsubmit>>>shiftDetails>>", shiftDetails);
     const data = {
       guestName: guestName,
       address: address,
@@ -785,12 +965,14 @@ const NewBooking = () => {
       teensTax: teenstaxPercentage,
       teensTaxName: teensTaxName,
       bookingDate: activeDateOfOutlet?.OutletDate,
-      discount: discountFigure,
-      panelDiscountId: selectedOption,
+      futureDate: activeDateOfOutlet?.OutletDate,
+      discount: discountFigureToUse,
+      panelDiscountId: selectedOptionToUse,
       couponId: couponId,
       referredBy: referredBy,
       // settledByCompany: 0,
-      settledByCompany: (settledBy == 1 || paymentOption == "Company Settlement") ? 1 : 0,
+      settledByCompany:
+        settledBy == 1 || paymentOption == "Company Settlement" ? 1 : 0,
       agentPanelDiscount: Discountpercent != "" ? Discountpercent : 0,
       packageId:
         packageIds.length == 0
@@ -799,13 +981,15 @@ const NewBooking = () => {
       packageGuestCount: JSON.stringify(packageGuestCount),
       userId: loginDetails?.logindata?.userId,
       userTypeId: loginDetails?.logindata?.UserType,
-      localAgentId : localAgentId != null || localAgentId != undefined ? localAgentId : 0,
+      localAgentId:
+        localAgentId != null || localAgentId != undefined ? localAgentId : 0,
       travelAgentName: Discountpercent
         ? localAgentDetails?.Name || TravelDetails?.Name
         : "",
-        travelAgentId: TravelDetails?.Name != undefined || TravelDetails?.Name != null 
-        ? TravelAgentId
-        : 0,
+      travelAgentId:
+        TravelDetails?.Name != undefined || TravelDetails?.Name != null
+          ? TravelAgentId
+          : 0,
       // shiftId:
       //   shiftDetails?.ShiftTypeId === 1 && shiftDetails?.ShiftOpen === 1
       //     ? 1
@@ -815,13 +999,13 @@ const NewBooking = () => {
       //     ? 3
       //     : 0,
       shiftId:
-      (shifts && shifts[1] && shifts[1][0]?.ShiftOpen === 1) 
-      ? 1 
-      : (shifts && shifts[2] && shifts[2][0]?.ShiftOpen === 1) 
-      ? 2
-      : (shifts && shifts[3] && shifts[3][0]?.ShiftOpen === 1)
-      ? 3
-      : 0,
+        shifts && shifts[1] && shifts[1][0]?.ShiftOpen === 1
+          ? 1
+          : shifts && shifts[2] && shifts[2][0]?.ShiftOpen === 1
+          ? 2
+          : shifts && shifts[3] && shifts[3][0]?.ShiftOpen === 1
+          ? 3
+          : 0,
       actualAmount: amount,
       paymentMode: paymentOption,
       cardAmount: cardAmount,
@@ -832,14 +1016,15 @@ const NewBooking = () => {
       //   : couponDiscount !== ""
       //   ? couponDiscount
       //   : amount,
-      amountAfterDiscount: (Discountpercent != "" && Discountpercent != null)
-      ? amount - (amount * Discountpercent) / 100
-      : amountAfterDiscount != 0
-      ? amountAfterDiscount
-      : couponDiscount != ""
-      ? couponDiscount
-      : amount,
-      // amountAfterDiscount: Discountpercent != "" 
+      amountAfterDiscount:
+        Discountpercent != "" && Discountpercent != null
+          ? amount - (amount * Discountpercent) / 100
+          : amountAfterDiscount != 0
+          ? amountAfterDiscount
+          : couponDiscount != ""
+          ? couponDiscount
+          : amount,
+      // amountAfterDiscount: Discountpercent != ""
       // ? amount - (amount * Discountpercent) / 100
       // : amountAfterDiscount != 0
       // ? amountAfterDiscount
@@ -872,7 +1057,7 @@ const NewBooking = () => {
       localAgentName: localAgentDetails?.Name,
       UPIId: upiId,
     };
-    console.log("Data from booking------->",data);
+    console.log("Data from booking------->", data);
 
     dispatch(
       AddBookingFn(loginDetails?.logindata?.Token, data, (callback) => {
@@ -885,7 +1070,6 @@ const NewBooking = () => {
           setBookingData(callback?.response?.Details);
 
           toast.success("Booking details success");
-          
 
           if (couponToggle && couponDiscount != "") {
             couponCodeAppend();
@@ -897,10 +1081,14 @@ const NewBooking = () => {
             packageGuestCount: callback?.response?.Details?.PackageGuestCount,
             totalGuestCount: callback?.response?.Details?.TotalGuestCount,
             // bookingDate: callback?.response?.Details?.CreatedOn?.slice(0, 10),
-            bookingDate: callback?.response?.Details?.BookingDate != null ? 
-            moment(callback?.response?.Details?.BookingDate).format("YYYY-MM-DD") :
-            moment(callback?.response?.Details?.FutureDate
-              ).format("YYYY-MM-DD"),
+            bookingDate:
+              callback?.response?.Details?.BookingDate != null
+                ? moment(callback?.response?.Details?.BookingDate).format(
+                    "YYYY-MM-DD"
+                  )
+                : moment(callback?.response?.Details?.FutureDate).format(
+                    "YYYY-MM-DD"
+                  ),
             billingDate: activeDateOfOutlet?.OutletDate,
             teensCount: callback?.response?.Details?.NumOfTeens,
             actualAmount: callback?.response?.Details?.ActualAmount,
@@ -919,191 +1107,194 @@ const NewBooking = () => {
 
           console.log("data------------>", data);
 
-                            /// settlement if Discountpercent
-                            if (Discountpercent) {
-                              console.log('Inside if Discountpercent--->');
-                              let perc = localAgentId
-                                ? localAgentDetails?.DiscountPercent
-                                : TravelAgentId
-                                ? TravelDetails?.DiscountPercent
-                                : 0;
-          
-                              const AgentSettlemetDiscount = perc - Discountpercent;
-          
-                              console.log(
-                                "AgentSettlemetDiscount-------->",
-                                AgentSettlemetDiscount
-                              );
-          
-                              const calculateAmountAfterDiscount =
-                                data?.actualAmount * (1 - AgentSettlemetDiscount / 100);
-          
-                              console.log(
-                                "calculateAmountAfterDiscount",
-                                calculateAmountAfterDiscount
-                              );
-          
-                              // const AgentSettlementAmount =
-                              //   (calculateAmountAfterDiscount * AgentSettlemetDiscount) /
-                              //   100;
+          /// settlement if Discountpercent
+          if (Discountpercent) {
+            console.log("Inside if Discountpercent--->");
+            let perc = localAgentId
+              ? localAgentDetails?.DiscountPercent
+              : TravelAgentId
+              ? TravelDetails?.DiscountPercent
+              : 0;
 
-                                const AgentSettlementAmount =  (AgentSettlemetDiscount/100)*data?.amountAfterDiscount
-                              const agentData = {
-                                userId: localAgentDetails?.Id || TravelDetails?.Id,
-                                agentName: localAgentDetails?.Name || TravelDetails?.Name,
-                                userTypeId:
-                                  localAgentDetails?.UserType || TravelDetails?.UserType,
-                                settlementAmount: AgentSettlementAmount,
-                                bookingDate:
-                                callback?.response?.Details?.BookingDate != null ? 
-                                moment(callback?.response?.Details?.BookingDate).format("YYYY-MM-DD") :
-                                moment(callback?.response?.Details?.FutureDate
-                                  ).format("YYYY-MM-DD"),
-                                bookingId: callback?.response?.Details?.Id,
+            const AgentSettlemetDiscount = perc - Discountpercent;
+
+            console.log(
+              "AgentSettlemetDiscount-------->",
+              AgentSettlemetDiscount
+            );
+
+            const calculateAmountAfterDiscount =
+              data?.actualAmount * (1 - AgentSettlemetDiscount / 100);
+
+            console.log(
+              "calculateAmountAfterDiscount",
+              calculateAmountAfterDiscount
+            );
+
+            // const AgentSettlementAmount =
+            //   (calculateAmountAfterDiscount * AgentSettlemetDiscount) /
+            //   100;
+
+            const AgentSettlementAmount =
+              (AgentSettlemetDiscount / 100) * data?.amountAfterDiscount;
+            const agentData = {
+              userId: localAgentDetails?.Id || TravelDetails?.Id || loginDetails?.logindata?.userId,
+              agentName: localAgentDetails?.Name || TravelDetails?.Name || validateDetails?.Details?.Name,
+              userTypeId:
+                localAgentDetails?.UserType || TravelDetails?.UserType || loginDetails?.logindata?.UserType,
+              settlementAmount: AgentSettlementAmount,
+              bookingDate:
+                callback?.response?.Details?.BookingDate != null
+                  ? moment(callback?.response?.Details?.BookingDate).format(
+                      "YYYY-MM-DD"
+                    )
+                  : moment(callback?.response?.Details?.FutureDate).format(
+                      "YYYY-MM-DD"
+                    ),
+              bookingId: callback?.response?.Details?.Id,
+            };
+            dispatch(
+              AddupdateAgentSettlement(
+                agentData,
+                loginDetails?.logindata?.Token,
+                (callback2) => {
+                  if (callback2?.status) {
+                    dispatch(
+                      AddBillingDetails(
+                        loginDetails?.logindata?.Token,
+                        data,
+                        (callback5) => {
+                          if (callback5.status) {
+                            console.log(
+                              "Generate Bill --------------?",
+                              callback5?.response?.Details[0]?.NumOfTeens,
+                              callback5?.response?.Details
+                            );
+
+                            if (localAgentId) {
+                              const agentDetails = {
+                                userId: localAgentDetails?.Id,
+                                userType: localAgentDetails?.UserType,
+                                localAgentName: localAgentDetails?.Name,
                               };
                               dispatch(
-                                AddupdateAgentSettlement(
-                                  agentData,
-                                  loginDetails?.logindata?.Token,
-                                  (callback2) => {
-                                    if (callback2?.status) {
-                                      dispatch(
-                                        AddBillingDetails(
-                                          loginDetails?.logindata?.Token,
-                                          data,
-                                          (callback5) => {
-                                            if (callback5.status) {
-                                              console.log(
-                                                "Generate Bill --------------?",
-                                                callback5?.response?.Details[0]?.NumOfTeens,
-                                                callback5?.response?.Details
-                                              );
-                            
-                                              if (localAgentId) {
-                                                const agentDetails = {
-                                                  userId: localAgentDetails?.Id,
-                                                  userType: localAgentDetails?.UserType,
-                                                  localAgentName: localAgentDetails?.Name,
-                                                };
-                                                dispatch(
-                                                  countDriverBookings(
-                                                    agentDetails,
-                            
-                                                    (callback) => {
-                                                      if (callback.status) {
-                                                        console.log(
-                                                          "Callback count local agent bookings---->",
-                                                          callback?.response?.Details
-                                                        );
-                                                      } else {
-                                                        toast.error(callback.error);
-                                                        // reject(callback);
-                                                      }
-                                                    }
-                                                  )
-                                                );
-                                              }
-                            
-                            
-                                              if (
-                                                callback5?.response?.Details[0]?.NumOfTeens -
-                                                  callback5?.response?.Details[0]?.TotalGuestCount ==
-                                                0
-                                              ) {
-                                                navigate("/TeensBilling", {
-                                                  state: { BookingDetails: callback5?.response?.Details },
-                                                });
-                                                setLoader(false);
-                                              } else {
-                                                navigate("/BillingDetails", {
-                                                  state: { BookingDetails: callback5?.response?.Details },
-                                                });
-                                                setLoader(false);
-                                              }
-                            
-                                              toast.error(callback5.error);
-                                            } else {
-                                              toast.error(callback5.error);
-                                              setLoader(false);
-                                            }
-                                          }
-                                        )
+                                countDriverBookings(
+                                  agentDetails,
+
+                                  (callback) => {
+                                    if (callback.status) {
+                                      console.log(
+                                        "Callback count local agent bookings---->",
+                                        callback?.response?.Details
                                       );
-                                    }
-                                    else{
-                                      toast.error(callback2.error)
+                                    } else {
+                                      toast.error(callback.error);
+                                      // reject(callback);
                                     }
                                   }
                                 )
                               );
                             }
-          
-else{
-  console.log('inside else of Discountpercent======>');
-  dispatch(
-    AddBillingDetails(
-      loginDetails?.logindata?.Token,
-      data,
-      (callback) => {
-        if (callback.status) {
-          console.log(
-            "Generate Bill --------------?",
-            callback?.response?.Details[0]?.NumOfTeens,
-            callback?.response?.Details
-          );
 
-          if (localAgentId) {
-            const agentDetails = {
-              userId: localAgentDetails?.Id,
-              userType: localAgentDetails?.UserType,
-              localAgentName: localAgentDetails?.Name,
-            };
+                            if (
+                              callback5?.response?.Details[0]?.NumOfTeens -
+                                callback5?.response?.Details[0]
+                                  ?.TotalGuestCount ==
+                              0
+                            ) {
+                              navigate("/TeensBilling", {
+                                state: {
+                                  BookingDetails: callback5?.response?.Details,
+                                },
+                              });
+                              setLoader(false);
+                            } else {
+                              navigate("/BillingDetails", {
+                                state: {
+                                  BookingDetails: callback5?.response?.Details,
+                                },
+                              });
+                              setLoader(false);
+                            }
+
+                            toast.error(callback5.error);
+                          } else {
+                            toast.error(callback5.error);
+                            setLoader(false);
+                          }
+                        }
+                      )
+                    );
+                  } else {
+                    toast.error(callback2.error);
+                  }
+                }
+              )
+            );
+          } else {
+            console.log("inside else of Discountpercent======>");
             dispatch(
-              countDriverBookings(
-                agentDetails,
-
+              AddBillingDetails(
+                loginDetails?.logindata?.Token,
+                data,
                 (callback) => {
                   if (callback.status) {
                     console.log(
-                      "Callback count local agent bookings---->",
+                      "Generate Bill --------------?",
+                      callback?.response?.Details[0]?.NumOfTeens,
                       callback?.response?.Details
                     );
+
+                    if (localAgentId) {
+                      const agentDetails = {
+                        userId: localAgentDetails?.Id,
+                        userType: localAgentDetails?.UserType,
+                        localAgentName: localAgentDetails?.Name,
+                      };
+                      dispatch(
+                        countDriverBookings(
+                          agentDetails,
+
+                          (callback) => {
+                            if (callback.status) {
+                              console.log(
+                                "Callback count local agent bookings---->",
+                                callback?.response?.Details
+                              );
+                            } else {
+                              toast.error(callback.error);
+                              // reject(callback);
+                            }
+                          }
+                        )
+                      );
+                    }
+
+                    if (
+                      callback?.response?.Details[0]?.NumOfTeens -
+                        callback?.response?.Details[0]?.TotalGuestCount ==
+                      0
+                    ) {
+                      navigate("/TeensBilling", {
+                        state: { BookingDetails: callback?.response?.Details },
+                      });
+                      setLoader(false);
+                    } else {
+                      navigate("/BillingDetails", {
+                        state: { BookingDetails: callback?.response?.Details },
+                      });
+                      setLoader(false);
+                    }
+
+                    toast.error(callback.error);
                   } else {
                     toast.error(callback.error);
-                    // reject(callback);
+                    setLoader(false);
                   }
                 }
               )
             );
           }
-
-
-          if (
-            callback?.response?.Details[0]?.NumOfTeens -
-              callback?.response?.Details[0]?.TotalGuestCount ==
-            0
-          ) {
-            navigate("/TeensBilling", {
-              state: { BookingDetails: callback?.response?.Details },
-            });
-            setLoader(false);
-          } else {
-            navigate("/BillingDetails", {
-              state: { BookingDetails: callback?.response?.Details },
-            });
-            setLoader(false);
-          }
-
-          toast.error(callback.error);
-        } else {
-          toast.error(callback.error);
-          setLoader(false);
-        }
-      }
-    )
-  );
-}
-
 
           // navigate("/GenerateBill", {
           //   state: { userData: callback?.response?.Details },
@@ -1120,11 +1311,16 @@ else{
   console.log("numberofteens-------------------->", numberofteens);
 
   const couponCodeAppend = () => {
-    console.log('...usedCouponArr-------',typeof{...usedCouponArr});
-    console.log('...usedCouponArr>>>>>',{...usedCouponArr} == {0 : ''} ? true : false);
+    console.log("...usedCouponArr-------", typeof { ...usedCouponArr });
+    console.log(
+      "...usedCouponArr>>>>>",
+      { ...usedCouponArr } == { 0: "" } ? true : false
+    );
     const updatedCouponData = [...usedCouponArr, couponCode];
-    const filteredUpdatedCouponData = updatedCouponData.filter(item => item !== ''); // Filter out empty strings
-    console.log('lets-->check-->updatedCouponData-->',updatedCouponData);
+    const filteredUpdatedCouponData = updatedCouponData.filter(
+      (item) => item !== ""
+    ); // Filter out empty strings
+    console.log("lets-->check-->updatedCouponData-->", updatedCouponData);
     // const dataArray = Array.from(
     //   { length: updatedCouponData.length },
     //   (_, index) => updatedCouponData[index]
@@ -1133,14 +1329,14 @@ else{
       { length: filteredUpdatedCouponData.length },
       (_, index) => filteredUpdatedCouponData[index]
     );
-    console.log('dataArray--->',dataArray);
+    console.log("dataArray--->", dataArray);
     const stringRepresentation = "[" + dataArray.join(",") + "]";
     const couponData = {
       couponId: couponId,
       usedCoupons: stringRepresentation,
       remainingCoupons: remainingCoupons,
     };
-    console.log('check--->>couponData-->>',couponData);
+    console.log("check--->>couponData-->>", couponData);
     dispatch(
       EditUsedCoupon(couponData, loginDetails?.logindata?.Token, (callback) => {
         if (callback.status) {
@@ -1172,8 +1368,8 @@ else{
 
     const DiscountedAmount = Discountpercent
       ? amount - (amount * Discountpercent) / 100
-    : couponDiscount != ""
-    ? couponDiscount
+      : couponDiscount != ""
+      ? couponDiscount
       : amount - amountAfterDiscount == amount
       ? amount
       : amountAfterDiscount;
@@ -1184,7 +1380,7 @@ else{
     // : couponDiscount != ""
     // ? couponDiscount
     // : amount;
-    console.log('check==>DiscountedAmount==>',DiscountedAmount);
+    console.log("check==>DiscountedAmount==>", DiscountedAmount);
     setcardHoldersName("");
     setCardNumber("");
     setCardType("");
@@ -1278,7 +1474,7 @@ else{
 
   const [shiftForUserOne, setShiftForUserOne] = useState(false);
   const checkShiftFn = () => {
-    console.log('inside>>checkShiftFn>>>');
+    console.log("inside>>checkShiftFn>>>");
     dispatch(
       checkShiftForUser(
         checkActiveOtlet == true ? today : activeDateOfOutlet?.OutletDate,
@@ -1350,7 +1546,7 @@ else{
 
   const shifts = {};
   if (shiftDetailsForUser) {
-    console.log('hello>>inside>>shiftDetailsForUser>>',shiftDetailsForUser);
+    console.log("hello>>inside>>shiftDetailsForUser>>", shiftDetailsForUser);
     shiftDetailsForUser.forEach((item) => {
       const { ShiftTypeId, OpenTime, CloseTime, ShiftOpen } = item;
       if (!shifts[ShiftTypeId]) {
@@ -1361,7 +1557,7 @@ else{
   }
 
   const handleOpenShift = () => {
-    console.log('check shifts now>>',shifts);
+    console.log("check shifts now>>", shifts);
     if (
       shiftDetailsForUser &&
       shiftDetailsForUser?.length > 0 &&
@@ -1548,12 +1744,12 @@ else{
 
   const handlePartCard = (e) => {
     const DiscountedAmount = Discountpercent
-    ? amount - (amount * Discountpercent) / 100
-  : couponDiscount != ""
-  ? couponDiscount
-    : amount - amountAfterDiscount == amount
-    ? amount
-    : amountAfterDiscount;
+      ? amount - (amount * Discountpercent) / 100
+      : couponDiscount != ""
+      ? couponDiscount
+      : amount - amountAfterDiscount == amount
+      ? amount
+      : amountAfterDiscount;
 
     let inputValue = parseFloat(e.target.value);
 
@@ -1571,13 +1767,13 @@ else{
     if (paymentOption === "Part Card / Part Cash") {
       // setCashAmount(parseFloat(finalAmountofPackage) - inputValue);
       setCashAmount(parseFloat(DiscountedAmount) - inputValue);
-      setUpiAmount("")
+      setUpiAmount("");
     }
 
     if (paymentOption === "Part Card / Part UPI") {
       // setUpiAmount(parseFloat(finalAmountofPackage) - inputValue);
       setUpiAmount(parseFloat(DiscountedAmount) - inputValue);
-      setCashAmount("")
+      setCashAmount("");
     }
 
     setCardAmount(inputValue);
@@ -1585,17 +1781,17 @@ else{
 
   const handlePartCash = (e) => {
     const DiscountedAmount = Discountpercent
-    ? amount - (amount * Discountpercent) / 100
-  : couponDiscount != ""
-  ? couponDiscount
-    : amount - amountAfterDiscount == amount
-    ? amount
-    : amountAfterDiscount;
+      ? amount - (amount * Discountpercent) / 100
+      : couponDiscount != ""
+      ? couponDiscount
+      : amount - amountAfterDiscount == amount
+      ? amount
+      : amountAfterDiscount;
     let inputValue = parseFloat(e.target.value);
 
     if (isNaN(inputValue) || inputValue < 0) {
       inputValue = "";
-    // } else if (inputValue > parseFloat(finalAmountofPackage)) {
+      // } else if (inputValue > parseFloat(finalAmountofPackage)) {
     } else if (inputValue > parseFloat(DiscountedAmount)) {
       //checking if the discount that is added is more than the discount percent of the agent
       // inputValue = finalAmountofPackage;
@@ -1605,13 +1801,13 @@ else{
     if (paymentOption === "Part Card / Part Cash") {
       // setCardAmount(parseFloat(finalAmountofPackage) - inputValue);
       setCardAmount(parseFloat(DiscountedAmount) - inputValue);
-      setUpiAmount("")
+      setUpiAmount("");
     }
 
     if (paymentOption === "Part Cash / Part UPI") {
       // setUpiAmount(parseFloat(finalAmountofPackage) - inputValue);
       setUpiAmount(parseFloat(DiscountedAmount) - inputValue);
-      setCardAmount("")
+      setCardAmount("");
     }
 
     setCashAmount(inputValue);
@@ -1619,17 +1815,17 @@ else{
 
   const handlePartUPI = (e) => {
     const DiscountedAmount = Discountpercent
-    ? amount - (amount * Discountpercent) / 100
-  : couponDiscount != ""
-  ? couponDiscount
-    : amount - amountAfterDiscount == amount
-    ? amount
-    : amountAfterDiscount;
+      ? amount - (amount * Discountpercent) / 100
+      : couponDiscount != ""
+      ? couponDiscount
+      : amount - amountAfterDiscount == amount
+      ? amount
+      : amountAfterDiscount;
     let inputValue = parseFloat(e.target.value);
 
     if (isNaN(inputValue) || inputValue < 0) {
       inputValue = "";
-    // } else if (inputValue > parseFloat(finalAmountofPackage)) {
+      // } else if (inputValue > parseFloat(finalAmountofPackage)) {
     } else if (inputValue > parseFloat(DiscountedAmount)) {
       //checking if the discount that is added is more than the discount percent of the agent
       // inputValue = finalAmountofPackage;
@@ -1639,13 +1835,13 @@ else{
     if (paymentOption === "Part Card / Part UPI") {
       // setCardAmount(parseFloat(finalAmountofPackage) - inputValue);
       setCardAmount(parseFloat(DiscountedAmount) - inputValue);
-      setCashAmount("")
+      setCashAmount("");
     }
 
     if (paymentOption === "Part Cash / Part UPI") {
       // setCashAmount(parseFloat(finalAmountofPackage) - inputValue);
       setCashAmount(parseFloat(DiscountedAmount) - inputValue);
-      setCardAmount("")
+      setCardAmount("");
     }
 
     setUpiAmount(inputValue);
@@ -1764,6 +1960,7 @@ else{
         </div>
         <PackagesPage
           setamount={setamount}
+          setamountAfterDiscount={setamountAfterDiscount}
           setPackageIds={setPackageIds}
           Discountpercent={Discountpercent}
           setPackageGuestCount={setPackageGuestCount}
@@ -1793,6 +1990,7 @@ else{
             class="form-control mt-2 "
             type="text"
             placeholder="Full Name"
+            value={guestName}
             onChange={(e) => setGuestName(e.target.value)}
           />
         </div>
@@ -1811,7 +2009,7 @@ else{
           <PhoneInput
             className="form-control mt-2 "
             placeholder="Enter phone number"
-            onChange={setPhone}
+            onChange={onPhoneNumberChange}
             defaultCountry="IN"
           />
         </div>
@@ -1821,12 +2019,13 @@ else{
             className="form_text"
             style={{ fontSize: "15px", fontWeight: "600" }}
           >
-            Email <span style={{ color: "red" }}>*</span>
+            Email {loginDetails?.logindata?.UserType !== ROLES.GRE && <span style={{ color: "red" }}>*</span>}
           </label>
           <input
             class="form-control mt-2"
             type="text"
             placeholder="Enter Email"
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
@@ -1852,6 +2051,7 @@ else{
           <Select
             options={Country.getAllCountries().map((country) => ({
               label: country.name,
+              name: country.name,
               value: country.name,
               isoCode: country.isoCode,
             }))}
@@ -1892,6 +2092,7 @@ else{
             class="form-control "
             type="text"
             placeholder="Enter your city"
+            value={selectedCity}
             onChange={(e) => setSelectedCity(e.target.value)}
           />
         </div>
@@ -1903,6 +2104,7 @@ else{
             class="form-control mt-2"
             type="text"
             placeholder="Enter your address"
+            value={address}
             onChange={(e) => setAddress(e.target.value)}
           />
         </div>
@@ -1914,6 +2116,7 @@ else{
             class="form-control mt-2"
             type="text"
             placeholder="Enter GST number"
+            value={gstNumber}
             onChange={(e) => setgstNumber(e.target.value)}
           />
         </div>
@@ -2010,7 +2213,7 @@ else{
           {!Discountpercent && (
             <div className="col-lg-6 mt-3">
               <div className="row">
-                <div className="col-4">
+                <div className="col-3">
                   <label for="formGroupExampleInput " className="form_text">
                     Discount
                   </label>
@@ -2026,7 +2229,25 @@ else{
                   </div>
                 </div>
 
-                <div className="col-4">
+                {
+                showDiscountCodeField && <div className="col-3">
+                  <label for="formGroupExampleInput " className="form_text">
+                    Agent Reference
+                  </label>
+
+                  <div className="form-check form-switch">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      id="discountSwitch"
+                      checked={discountCodeToggle}
+                      onChange={() => handleToggle("discountCode")}
+                    />
+                  </div>
+                </div>
+}
+
+                <div className="col-3">
                   <label for="formGroupExampleInput " className="form_text">
                     Coupon
                   </label>
@@ -2042,7 +2263,7 @@ else{
                   </div>
                 </div>
 
-                <div className="col-4">
+                <div className="col-3">
                   <label for="formGroupExampleInput " className="form_text">
                     Settled by company
                   </label>
@@ -2069,6 +2290,7 @@ else{
               class="form-control mt-2"
               type="date"
               placeholder="Enter Start Date"
+              value={dateofbirth}
               onChange={(e) => setDateofbirth(e.target.value)}
               onFocus={handleFocus}
             />
@@ -2092,6 +2314,32 @@ else{
                     onClick={separateInitials}
                   >
                     Check
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+
+          <div className="row">
+            {discountCodeToggle ? (
+              <div className="col-lg-6 mt-3">
+                <div className="input-group">
+                  <input
+                    className="form-control mt-2"
+                    type="text"
+                    placeholder="Discount Code"
+                    onChange={(e) => setDiscountCode(e.target.value)}
+                    value={discountCode}
+                  />
+                  <button
+                    className="btn btn-primary"
+                    style={{ marginTop: "8px" }}
+                    type="button"
+                    onClick={handleDiscountCode}
+                  >
+                    Apply
                   </button>
                 </div>
               </div>
@@ -2193,7 +2441,7 @@ else{
                 class="form-control mt-2"
                 type="number"
                 placeholder="Enter the amount"
-                onChange={(e) => setCardAmount(e.target.value)}
+                // onChange={(e) => setCardAmount(e.target.value)}
                 value={cardAmount}
               />
             </div>
@@ -2252,7 +2500,7 @@ else{
                 class="form-control mt-2"
                 type="text"
                 placeholder="Enter the amount"
-                onChange={(e) => setUpiAmount(e.target.value)}
+                // onChange={(e) => setUpiAmount(e.target.value)}
                 value={upiAmount}
                 defaultValue={upiAmount}
               />
@@ -2446,7 +2694,6 @@ else{
                 class="form-control mt-2"
                 type="number"
                 placeholder="Enter the amount"
-                // onChange={(e) => setCashAmount(e.target.value)}
                 value={cashAmount}
                 onChange={handlePartCash}
                 onWheel={(e) => e.target.blur()}
@@ -2460,7 +2707,6 @@ else{
                 class="form-control mt-2"
                 type="number"
                 placeholder="Enter the amount"
-                // onChange={(e) => setUpiAmount(e.target.value)}
                 value={upiAmount}
                 onChange={handlePartUPI}
                 onWheel={(e) => e.target.blur()}
@@ -2481,123 +2727,6 @@ else{
         ) : (
           <></>
         )}
-        {/* <div className="row mt-3">
-          <div className="col-lg-6 mt-3">
-            <div className="row">
-              <div className="col-4">
-                <label for="formGroupExampleInput " className="form_text">
-                  Dicount
-                </label>
-
-                <div className="form-check form-switch">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="discountSwitch"
-                    checked={discountToggle}
-                    onChange={() => handleToggle("discount")}
-                  />
-                </div>
-              </div>
-
-              <div className="col-4">
-                <label for="formGroupExampleInput " className="form_text">
-                  Coupon
-                </label>
-
-                <div className="form-check form-switch">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="couponSwitch"
-                    checked={couponToggle}
-                    onChange={() => handleToggle("coupon")}
-                  />
-                </div>
-              </div>
-
-              <div className="col-4">
-                <label for="formGroupExampleInput " className="form_text">
-                  Settled by company
-                </label>
-
-                <div className="form-check form-switch">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="referredBySwitch"
-                    checked={referredByToggle}
-                    onChange={() => handleToggle("referredBy")}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="row">
-            {couponToggle ? (
-              <div className="col-lg-6 mt-3">
-                <div className="input-group">
-                  <input
-                    className="form-control mt-2"
-                    type="text"
-                    placeholder="Coupon Code"
-                    onChange={(e) => setCouponCode(e.target.value)}
-                    value={couponCode}
-                  />
-                  <button
-                    className="btn btn-primary"
-                    style={{ marginTop: "8px" }}
-                    type="button"
-                    onClick={separateInitials}
-                  >
-                    Check
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <></>
-            )}
-          </div>
-
-          {discountToggle || referredByToggle ? (
-            <div className="col-lg-6 mt-3">
-              <label for="formGroupExampleInput mt-3" className="form_text">
-                Discount
-              </label>
-              <select
-                className="form-select form-control mt-2"
-                value={selectedOption}
-                onChange={handleSelectChange}
-              >
-                <option value="">Select an option</option>
-                {panelDiscounts.map((item, index) => (
-                  <option key={index} value={item?.Id}>
-                    {item?.PanelDiscount}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ) : (
-            <></>
-          )}
-
-          {referredByToggle || discountToggle ? (
-            <div className="col-lg-6 mt-3">
-              <label for="formGroupExampleInput " className="form_text">
-                Referred By <span style={{ color: "red" }}>*</span>
-              </label>
-              <input
-                class="form-control mt-2"
-                type="text"
-                placeholder="Referred By"
-                onChange={(e) => setreferredBy(e.target.value)}
-              />
-            </div>
-          ) : (
-            <></>
-          )}
-        </div> */}
       </div>
       <div className="col-lg-6 mb-2 btn-lg mx-auto d-flex justify-content-center ">
         <button
@@ -2605,40 +2734,6 @@ else{
           type="submit"
           className="btn btn_colour mt-5 btn-lg"
           onClick={handleShow}
-          // disabled={
-          //   (shifts && shifts[1] && !shifts[1][0]?.ShiftOpen === 1) ||
-          //   (shifts && shifts[3] && !shifts[3][0]?.ShiftOpen === 1) ||
-          //   (shifts && shifts[2] && !shifts[2][0]?.ShiftOpen === 1) ||
-          //   (recentShiftOpen &&
-          //     recentShiftOpen[0]?.ShiftTypeId === 2 &&
-          //     recentShiftOpen &&
-          //     recentShiftOpen[0]?.ShiftOpen === 0) ||
-          //   (recentShiftOpen &&
-          //     recentShiftOpen[0]?.ShiftTypeId === 2 &&
-          //     recentShiftOpen &&
-          //     recentShiftOpen[0]?.ShiftOpen === 1) ||
-          //   (recentShiftOpen &&
-          //     recentShiftOpen[0]?.ShiftTypeId === 3 &&
-          //     recentShiftOpen &&
-          //     recentShiftOpen[0]?.ShiftOpen === 1) ||
-          //   (recentShiftOpen &&
-          //     recentShiftOpen[0]?.ShiftTypeId === 1 &&
-          //     recentShiftOpen &&
-          //     recentShiftOpen[0]?.ShiftOpen === 0) ||
-          //   (recentShiftOpen &&
-          //     recentShiftOpen[0]?.ShiftTypeId === 1 &&
-          //     recentShiftOpen &&
-          //     recentShiftOpen[0]?.ShiftOpen === 1) ||
-          //   (shifts &&
-          //     shifts[2] &&
-          //     shifts[2][0]?.ShiftOpen === 0 &&
-          //     !shifts[3]) ||
-          //   (shifts &&
-          //     shifts[1] &&
-          //     shifts[1][0]?.ShiftOpen === 0 &&
-          //     !shifts[2]) ||
-          //   shiftForUserOne
-          // }
           disabled={
             (shifts && shifts[1] && !shifts[1][0]?.ShiftOpen === 1) ||
             (shifts && shifts[3] && !shifts[3][0]?.ShiftOpen === 1) ||
@@ -2668,7 +2763,8 @@ else{
             //   shifts[2][0]?.ShiftOpen === 0 &&
             //   !shifts[3]) ||
             (shifts &&
-              shifts[1] && shifts[1][0]?.ShiftOpen === 0 &&
+              shifts[1] &&
+              shifts[1][0]?.ShiftOpen === 0 &&
               shifts[2] &&
               shifts[2][0]?.ShiftOpen === 0 &&
               !shifts[3]) ||
@@ -2676,11 +2772,13 @@ else{
               shifts[1] &&
               shifts[1][0]?.ShiftOpen === 0 &&
               !shifts[2]) ||
-              (shifts &&
-                shifts[1] && shifts[1][0]?.ShiftOpen === 0 &&
-                shifts[2] &&
-                shifts[2][0]?.ShiftOpen === 0 &&
-                shifts[3] && shifts[3][0]?.ShiftOpen === 0) ||
+            (shifts &&
+              shifts[1] &&
+              shifts[1][0]?.ShiftOpen === 0 &&
+              shifts[2] &&
+              shifts[2][0]?.ShiftOpen === 0 &&
+              shifts[3] &&
+              shifts[3][0]?.ShiftOpen === 0) ||
             shiftForUserOne
           }
         >

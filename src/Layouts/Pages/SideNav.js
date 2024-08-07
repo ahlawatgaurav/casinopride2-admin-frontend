@@ -46,6 +46,9 @@ const SideNav = () => {
     (state) => state.auth?.userDetailsAfterLogin.Details
   );
 
+  const validateDetails = useSelector(
+    (state) => state.auth?.userDetailsAfterValidation
+  );
   const logoutFn = () => {
     const data = {
       UserId: loginDetails?.logindata?.userId,
@@ -111,11 +114,16 @@ const SideNav = () => {
       )}
       <hr />
       <Sidenav expanded={expanded} defaultOpenKeys={["3", "4"]}>
+      <span style={{fontSize: "15px", fontWeight: "700", color: "black", padding: "10px 20px", border: "1px solid black", borderLeft: 0, display: "flex", "alignItems": "baseline"}}>
+        <AdminIcon style={{marginRight: "20px"}}/>
+        {validateDetails?.Details?.Name}
+        </span>
         <Sidenav.Body>
           <Nav activeKey={activeKey} onSelect={setActiveKey}>
             {loginDetails?.logindata?.UserType == "1" ||
             loginDetails?.logindata?.UserType == "3" ||
-            loginDetails?.logindata?.UserType == "2" ? (
+            loginDetails?.logindata?.UserType == "2" || 
+            loginDetails?.logindata?.UserType == "7" ? (
               <Nav.Item
                 eventKey="10"
                 icon={<TagNumberIcon />}
@@ -289,15 +297,13 @@ const SideNav = () => {
               <></>
             )}
 
-            {loginDetails?.logindata?.UserType == "1" ? (
+            {loginDetails?.logindata?.UserType == "1" || loginDetails?.logindata?.UserType == "4" ? (
               <Nav.Menu
                 placement="rightStart"
                 eventKey="10"
                 title="Discounts"
                 icon={<MagicIcon />}
               >
-                {loginDetails?.logindata?.UserType == "4" ||
-                loginDetails?.logindata?.UserType == "1" ? (
                   <Nav.Item
                     eventKey="3-1"
                     onClick={() => navigate("/Discountonwebsite")}
@@ -306,9 +312,7 @@ const SideNav = () => {
                       Website Discounts
                     </Link>
                   </Nav.Item>
-                ) : (
-                  <></>
-                )}
+                
                 <Nav.Item
                   eventKey="3-2"
                   onClick={() => navigate("/DiscountOnPanel")}

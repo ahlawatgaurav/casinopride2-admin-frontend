@@ -23,7 +23,7 @@ import { saveOutletDetails } from "../../../Redux/reducers/auth";
 import { checkCurrentOutletFn } from "../../../Redux/actions/users";
 import { Oval } from "react-loader-spinner";
 import { checkActiveOutlet } from "../../../Redux/actions/users";
-import { cashierReport } from "../../../Redux/actions/billing";
+import { cashierReport, generateCSVReport } from "../../../Redux/actions/billing";
 import { cashierReportShiftWise } from "../../../Redux/actions/billing";
 
 const Shifts = () => {
@@ -1279,6 +1279,38 @@ console.log('openShiftTwo>>data>>',data);
     }
   };
 
+  const generateReportFn = (shiftId) => {
+    const reportData = {
+      userId: loginDetails.logindata?.UserType===1 ? 0 : loginDetails.logindata.userId,
+      billDate: new Date().toJSON().slice(0, 10),
+      futureDate: "",
+      shiftId: shiftId,
+      fromDate: "",
+      toDate: "",
+      reportTypeId: "3",
+    };
+
+    dispatch(
+      generateCSVReport(
+        loginDetails?.logindata?.Token,
+        reportData,
+        (callback) => {
+          if (callback.status) {
+            console.log(
+              "Callback------generate report",
+              callback?.response?.Details?.ReportFile
+            );
+            window.open(callback?.response?.Details?.ReportFile, "_blank");
+            handleClose();
+          } else {
+            console.log("Callback------generate report error", callback.error);
+            toast.error(callback.error);
+          }
+        }
+      )
+    );
+  };
+
   const handleClose = () => {
     handleCloseShift();
 
@@ -1389,7 +1421,10 @@ console.log('openShiftTwo>>data>>',data);
                   </button>
                 </div>
               </div>
+      
             </div>
+
+ 
 
             <div className="col-md-4">
               <div class="Shiftcard">
@@ -2383,6 +2418,30 @@ console.log('openShiftTwo>>data>>',data);
     );
   };
 
+  const generateCashierReportShiftWiseWithShiftId = (paramShiftId) => {
+    console.log("Shiftttt", outletFormattedData, paramShiftId);
+    dispatch(
+      cashierReportShiftWise(
+        loginDetails?.logindata?.Token,
+        outletFormattedData,
+        paramShiftId,
+
+        (callback) => {
+          if (callback.status) {
+            console.log("cashierReport---shift wise>>", callback?.response);
+            window.open(callback?.response?.Details?.ReportFile, "_blank");
+
+            // window.location.reload();
+            setShowShiftReportModal(false);
+          } else {
+            console.log("cashierReport>>>Callback------", callback.error);
+            toast.error(callback.error);
+          }
+        }
+      )
+    );
+  };
+
   const closeCashierReportModal = () => {
     setShowGenerateCashierModal(false);
     window.location.reload();
@@ -2426,15 +2485,20 @@ console.log('openShiftTwo>>data>>',data);
             className="container mt-5"
             // style={{ backgroundColor: "green" }}
           >
+             <h5 style={{marginBottom: "8px"}}>Welcome, {validateDetails?.Details?.Name}</h5>
             {(activeDateOfOutlet?.OutletDate != undefined ||
               activeDateOfOutlet?.OutletDate != null) && (
-              <h5 className="mb-0" style={{ paddingBottom: "20px" }}>
-                Outlet Date :{" "}
-                {activeDateOfOutlet?.OutletDate != undefined ||
-                activeDateOfOutlet?.OutletDate != null
-                  ? activeDateOfOutlet?.OutletDate
-                  : ""}
-              </h5>
+              <div>
+              
+                <h5 className="mb-0" style={{ paddingBottom: "20px" }}>
+                  Outlet Date :{" "}
+                  {activeDateOfOutlet?.OutletDate != undefined ||
+                  activeDateOfOutlet?.OutletDate != null
+                    ? activeDateOfOutlet?.OutletDate
+                    : ""}   
+                </h5>
+                
+              </div>
             )}
             <div className="row d-flex justify-content-end">
               {!outletOpenDetails?.Details[0]?.OutletStatus == 1 &&
@@ -2486,6 +2550,34 @@ console.log('openShiftTwo>>data>>',data);
               shiftDetailsForUser,
               shifts,
             })}
+             <div className="row mt-3 mx-auto">
+              <div className="col-lg mx-auto d-flex text-center justify-content-around">
+                <div className="d-flex justify-content-center align-items-center" style={{flexBasis: "33.33%"}}>
+                  {shifts[1]?.[0]?.CloseTime || recentShiftOpen?.filter((elem) => elem.ShiftTypeId === 1)?.[0]?.CloseTime ? <button
+                    className="btn btn-primary m-2 p-2"
+                    onClick={() => generateCashierReportShiftWiseWithShiftId(1)}
+                  >
+                    Generate Report
+                  </button> : <div />}
+                </div>
+                <div className="d-flex justify-content-center align-items-center" style={{flexBasis: "33.33%"}}>
+                  {shifts[2]?.[0]?.CloseTime || recentShiftOpen?.filter((elem) => elem.ShiftTypeId === 2)?.[0]?.CloseTime  ? <button
+                    className="btn btn-primary m-2 p-2"
+                    onClick={() => generateCashierReportShiftWiseWithShiftId(2)}
+                  >
+                    Generate Report
+                  </button> : <div />}
+                </div>
+                <div className="d-flex justify-content-center align-items-center" style={{flexBasis: "33.33%"}}>
+                  {shifts[3]?.[0]?.CloseTime || recentShiftOpen?.filter((elem) => elem.ShiftTypeId === 3)?.[0]?.CloseTime ? <button
+                    className="btn btn-primary m-2 p-2"
+                    onClick={() => generateCashierReportShiftWiseWithShiftId(3)}
+                  >
+                    Generate Report
+                  </button> : <div />}
+                </div>
+              </div>
+            </div>
 
             <div className="row mt-5 mx-auto">
               <div className="col-lg mx-auto text-center">

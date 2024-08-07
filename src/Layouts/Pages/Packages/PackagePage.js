@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 
 const PackagesPage = ({
   setamount,
+  setamountAfterDiscount,
   setPackageIds,
   setPackageGuestCount,
   setNumberofteens,
@@ -31,7 +32,8 @@ const PackagesPage = ({
   setTeensWeekdayPrice,
   setTeensPackageName,
   Discountpercent,
-  outletDate
+  outletDate,
+  bookingDetails = {}
 }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
@@ -43,6 +45,8 @@ const PackagesPage = ({
   const [packageDetails, setPackageDetails] = useState([]);
   const [filterPackageDetails, setFilterPackageDetails] = useState([]);
   const [itemDetails, setItemDetails] = useState([]);
+
+  console.log({bookingDetailsPackagePage: bookingDetails})
 
   const loginDetails = useSelector(
     (state) => state.auth?.userDetailsAfterLogin.Details
@@ -84,7 +88,8 @@ const PackagesPage = ({
     "********************groupedData***************************",
     groupedData[0]?.Id
   );
-  const [selectedPackages, setSelectedPackages] = useState({});
+
+
   const handleCounterChange = (
     packageId,
     counterType,
@@ -94,7 +99,7 @@ const PackagesPage = ({
     PackageName,
     newValue // Add the new parameter for the value
   ) => {
-    // console.log('check>>>',newValue);
+    console.log('check>>>',newValue);
     setSelectedPackages((prevSelectedPackages) => {
       const updatedPackages = { ...prevSelectedPackages };
       const currentCount = updatedPackages[packageId]?.[counterType] || 0;
@@ -109,24 +114,6 @@ const PackagesPage = ({
         PackageWeekdayPrice,
         PackageWeekendPrice
       );
-      //commented by manasi
-      // if (increment || currentCount > 0) {
-      //   updatedPackages[packageId] = {
-      //     ...updatedPackages[packageId],
-      //     [counterType]: currentCount + (increment ? 1 : -1),
-      //     PackageName,
-      //     PackageWeekdayPrice,
-      //     PackageWeekendPrice,
-      //   };
-
-      //   if (updatedPackages[packageId][counterType] <= 0) {
-      //     delete updatedPackages[packageId];
-      //   }
-      // } else {
-      //   delete updatedPackages[packageId];
-      // }
-  
-
 
       if (outletDate != undefined || outletDate != null) {  //checking if outlet date is set or not
 
@@ -162,9 +149,13 @@ const PackagesPage = ({
         toast.error("Please Check if the outlet is open");
       }
   
+
       return updatedPackages;
     });
   };
+  const [selectedPackages, setSelectedPackages] = useState({});
+
+  
   
 
   // const handleCounterChange = (
@@ -242,6 +233,26 @@ const PackagesPage = ({
   const packageNames = [];
   const packageWeekdayPrices = [];
   const packageWeekendPrices = [];
+
+  useEffect(() => {
+    if(!!bookingDetails && Object.keys(bookingDetails).length > 0 && JSON.parse(bookingDetails?.PackageId) && JSON.parse(bookingDetails?.PackageId).length > 0) {
+    JSON.parse(bookingDetails?.PackageId)?.forEach((elem, index) => {
+      console.log(elem);
+      handleCounterChange(
+        elem,
+        "adults",
+        false,
+        JSON.parse(bookingDetails?.PackageWeekdayPrice)[index],
+        JSON.parse(bookingDetails?.PackageWeekendPrice)[index],
+        JSON.parse(bookingDetails?.PackageName)[index],
+        JSON.parse(bookingDetails?.PackageGuestCount)[index]
+      )
+    });
+  }
+  }, [bookingDetails]);
+  
+
+  
 
   Object.keys(selectedPackages).forEach((packageId) => {
     const packageData = selectedPackages[packageId];
@@ -337,6 +348,7 @@ const PackagesPage = ({
   useEffect(() => {
     console.log("totalTeensRate------------------>", totalTeensRate);
     setamount(totalAmountOfAllPackages);
+    setamountAfterDiscount(totalAmountOfAllPackages - ((totalAmountOfAllPackages * Discountpercent)/100));
     setPackageIds(formattedData.packageId);
     setPackageGuestCount(formattedData.packageGuestCount);
     settoalGuestCount(totalCountofCustomer);

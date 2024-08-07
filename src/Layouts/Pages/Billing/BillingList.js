@@ -67,9 +67,12 @@ const BillingList = () => {
   const todayDate = moment().format("YYYY-MM-DD");
 
   const [futureDate, setFutureDate] = useState(
-    (loginDetails?.logindata?.UserType == 1 && activeDateOfOutlet?.OutletDate != undefined) ||
-    (loginDetails?.logindata?.UserType == 2 && activeDateOfOutlet?.OutletDate != undefined) ||
-      (loginDetails?.logindata?.UserType == 3 && activeDateOfOutlet?.OutletDate != undefined)
+    (loginDetails?.logindata?.UserType == 1 &&
+      activeDateOfOutlet?.OutletDate != undefined) ||
+      (loginDetails?.logindata?.UserType == 2 &&
+        activeDateOfOutlet?.OutletDate != undefined) ||
+      (loginDetails?.logindata?.UserType == 3 &&
+        activeDateOfOutlet?.OutletDate != undefined)
       ? activeDateOfOutlet?.OutletDate
       : ""
   );
@@ -103,12 +106,14 @@ const BillingList = () => {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
-
   const fetchBillingDetailsFn = () => {
-    console.log('activeDateOfOutlet?.OutletDate>>',activeDateOfOutlet?.OutletDate);
-    console.log('billdateeee',billDate);
-    console.log('online>>',online);
-    console.log('futureDate>>>',futureDate);
+    console.log(
+      "activeDateOfOutlet?.OutletDate>>",
+      activeDateOfOutlet?.OutletDate
+    );
+    console.log("billdateeee", billDate);
+    console.log("online>>", online);
+    console.log("futureDate>>>", futureDate);
     dispatch(
       GetBillingDetails(
         loginDetails?.logindata?.Token,
@@ -175,16 +180,16 @@ const BillingList = () => {
   };
 
   const handleReportTypeChange = (selectedOption) => {
-    clearFilters()
-    console.log('selectedOption>>',selectedOption);
-    setBillDate("")
-    setFutureDate("")
+    clearFilters();
+    console.log("selectedOption>>", selectedOption);
+    setBillDate("");
+    setFutureDate("");
     setShitId(0);
     setUserId(0);
     setBillId(0);
     setSearhBillId(0);
-    setFromDate("")
-    setToDate("")
+    setFromDate("");
+    setToDate("");
     setReportId(selectedOption?.value);
   };
 
@@ -264,12 +269,11 @@ const BillingList = () => {
 
   useEffect(() => {
     searchBtn();
-  }, [searchBillId, futureDate, userId, shiftId,billDate,fromDate,toDate]);
+  }, [searchBillId, futureDate, userId, shiftId, billDate, fromDate, toDate]);
 
   useEffect(() => {
     setDisableInput(true);
   }, [futureDate, handleSelectChange, handleShiftChange]);
-
 
   const clearFilters = () => {
     console.log("All clear");
@@ -277,10 +281,10 @@ const BillingList = () => {
     setShitId(0);
     setUserId(0);
     setBillId(0);
-    setOnline(0)
-    setBillDate("")
-    setFromDate("")
-    setToDate("")
+    setOnline(0);
+    setBillDate("");
+    setFromDate("");
+    setToDate("");
     fetchBillingDetailsFn();
   };
 
@@ -332,7 +336,7 @@ const BillingList = () => {
   };
 
   const handleToggle = (field) => {
-    clearFilters()
+    clearFilters();
     // Toggle the state of the corresponding field
     if (field === "allBill") {
       setAllBill(!allBill); // Toggle the state
@@ -479,8 +483,8 @@ const BillingList = () => {
       billDate: futureDate,
       futureDate: billDate,
       shiftId: shiftId,
-      fromDate:fromDate,
-      toDate:toDate,
+      fromDate: fromDate,
+      toDate: toDate,
       reportTypeId: reportId,
     };
 
@@ -505,8 +509,8 @@ const BillingList = () => {
             setReportId(0);
             fetchVoidBillList();
             setBillDate("");
-            setFromDate("")
-            setToDate("")
+            setFromDate("");
+            setToDate("");
           } else {
             console.log("Callback------generate report error", callback.error);
             toast.error(callback.error);
@@ -543,8 +547,7 @@ const BillingList = () => {
       combinedData[bookingId] = {
         BookingId: bookingId,
         Items: [item],
-        BillingId : item?.BillingId
-
+        BillingId: item?.BillingId,
       };
     } else {
       combinedData[bookingId].Items.push(item);
@@ -650,26 +653,25 @@ const BillingList = () => {
     activeDateOfOutlet?.OutletDate
   );
 
-  const searchByBillId = (value) =>{
-    setLoading(true)
-    console.log('sathiyaaaaaaa<<<',value);
-    console.log('ohhhh<<<',typeof value);
+  const searchByBillId = (value) => {
+    setLoading(true);
+    console.log("sathiyaaaaaaa<<<", value);
+    console.log("ohhhh<<<", typeof value);
     if (value != "") {
-      clearFilters()
-    setSearhBillId(value);
-      setLoading(false)
-    }
-    else if (value == "" || value == NaN) {
-      console.log('taqderrr');
-      setLoading(false)
-            // setLoading(true)
+      clearFilters();
+      setSearhBillId(value);
+      setLoading(false);
+    } else if (value == "" || value == NaN) {
+      console.log("taqderrr");
+      setLoading(false);
+      // setLoading(true)
       // fetchBillingDetailsFn()
-    setBillId(0)
-    clearFilters()
+      setBillId(0);
+      clearFilters();
 
-    // fetchBillingDetailsFn()
+      // fetchBillingDetailsFn()
     }
-  }
+  };
   // const searchByBillId = (value) => {
   //   console.log('yuhi challa>>',value);
   //   console.log('yuhi challa>>ojjkkk--->',typeof value);
@@ -761,7 +763,7 @@ const BillingList = () => {
                         className="form-control"
                         placeholder="Search Bill No."
                         onChange={(e) => {
-                          searchByBillId(parseInt(e.target.value))
+                          searchByBillId(parseInt(e.target.value));
                           // clearFilters()
                           // setSearhBillId(e.target.value);
                         }}
@@ -928,7 +930,7 @@ const BillingList = () => {
                     Package Name
                   </th>
                   <th scope="col" className="text-center table_heading">
-                    Billing Amount
+                    Package Amount
                   </th>
 
                   {/* <th scope="col" className="text-center table_heading">
@@ -1038,7 +1040,7 @@ const BillingList = () => {
                               </li>
                             ))}
                           </td> */}
-                          {/*Billing Amount */}
+                          {/*Package Amount */}
                           <td className="manager-list">
                             {/* {item?.Items[0]?.FinalPrice?.map((price, index) => (
                               <li key={index} style={{ listStyleType: "none" }}>
@@ -1093,7 +1095,9 @@ const BillingList = () => {
                           {/*Date & Time*/}
                           <td className="manager-list">
                             {/* {item?.Items[0]?.BillingDate.slice(0, 10)}{" "} */}
-                            {moment(item?.Items[0]?.BillingDate).format("DD/MM/YYYY")}{" "}{" "}
+                            {moment(item?.Items[0]?.BillingDate).format(
+                              "DD/MM/YYYY"
+                            )}{" "}
                             {item?.Items[0]?.ActualBillingTime}
                           </td>
                           <td className="manager-list">
@@ -1199,7 +1203,7 @@ const BillingList = () => {
                   Package Name
                 </th>
                 <th scope="col" className="text-center table_heading">
-                  Billing Amount
+                  Package Amount
                 </th>
                 <th scope="col" className="text-center table_heading">
                   Date & Time

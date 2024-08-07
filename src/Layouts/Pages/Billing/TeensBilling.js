@@ -1186,9 +1186,9 @@ const TeensBilling = () => {
 
   console.log("BookingDetails------------>", BookingDetails[0]);
 
-  const KidsCgstProperty = `CGST ${BookingDetails[0]?.TeensTax / 2} %`;
+  const KidsCgstProperty = `Kids CGST ${BookingDetails[0]?.TeensTax / 2} %`;
 
-  const KidsSgstProperty = `SGST ${BookingDetails[0]?.TeensTax / 2} %`;
+  const KidsSgstProperty = `Kids SGST ${BookingDetails[0]?.TeensTax / 2} %`;
   const KidsItemName = "Entry,Food";
 
   const updatededBillDetails = {
@@ -1198,7 +1198,7 @@ const TeensBilling = () => {
     // KidsRate: BookingDetails[0]?.TeensRate * BookingDetails[0]?.NumOfTeens,
     KidsRate: BookingDetails[0]?.TeensRate,
     ItemTaxName: BookingDetails[0]?.TeensTaxName,
-
+    KidsTax: BookingDetails[0]?.TeensTax,
     PackageId: BookingDetails[0]?.PackageId,
     packageGuestCount: BookingDetails[0]?.NumOfTeens,
     [KidsCgstProperty]: BookingDetails[0]?.TeensTaxBifurcation / 2,

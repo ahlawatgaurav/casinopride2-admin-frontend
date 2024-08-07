@@ -2637,41 +2637,37 @@ const BillingDetails = () => {
                           ),
                         };
 
-                        if (sourcePage == "") {
-                          dispatch(
-                            sendEmail(data, (callback) => {
-                              if (callback.status) {
-                                toast.success("Email sent");
-                                navigate("/NewBooking");
+                        dispatch(
+                          sendEmail(data, (callback) => {
+                            if (callback.status) {
+                              toast.success("Email sent");
+                              navigate("/NewBooking");
 
-                                toast.error(callback.error);
-                              } else {
-                                toast.error(callback.error);
-                              }
-                            })
-                          );
+                              toast.error(callback.error);
+                            } else {
+                              toast.error(callback.error);
+                            }
+                          })
+                        );
 
-                          const apiUrl = `http://commnestsms.com/api/push.json?apikey=635cd8e64fddd&route=transactional&sender=CPGOAA&mobileno=${BookingDetails[0]?.Phone}&text=Thank%20you%20for%20choosing%20Casino%20Pride.%20View%20e-bill%20of%20Rs%20${FinalAmount}%20at%20-%20${callback?.response?.shortUrl}%0ALets%20Play%20with%20Pride%20!%0AGood%20luck%20!%0ACPGOAA`;
-                          fetch(apiUrl)
-                            .then((response) => {
-                              if (!response.ok) {
-                                throw new Error(
-                                  `HTTP error! Status: ${response.status}`
-                                );
-                              }
-                              return response.json(); // Parse the JSON response
-                            })
-                            .then((data) => {
-                              console.log(data); // Handle the parsed JSON data here
-                              toast.success("Details sent to customer");
-                            })
-                            .catch((error) => {
-                              console.error("Fetch error:", error);
-                              toast.success("Details sent to customer");
-                            });
-                        } else {
-                          navigate("/NewBooking");
-                        }
+                        const apiUrl = `http://commnestsms.com/api/push.json?apikey=635cd8e64fddd&route=transactional&sender=CPGOAA&mobileno=${BookingDetails[0]?.Phone}&text=Thank%20you%20for%20choosing%20Casino%20Pride.%20View%20e-bill%20of%20Rs%20${FinalAmount}%20at%20-%20${callback?.response?.shortUrl}%0ALets%20Play%20with%20Pride%20!%0AGood%20luck%20!%0ACPGOAA`;
+                        fetch(apiUrl)
+                          .then((response) => {
+                            if (!response.ok) {
+                              throw new Error(
+                                `HTTP error! Status: ${response.status}`
+                              );
+                            }
+                            return response.json(); // Parse the JSON response
+                          })
+                          .then((data) => {
+                            console.log(data); // Handle the parsed JSON data here
+                            toast.success("Details sent to customer");
+                          })
+                          .catch((error) => {
+                            console.error("Fetch error:", error);
+                            toast.success("Details sent to customer");
+                          });
 
                         setLoader(false);
                       } else {
@@ -3053,12 +3049,13 @@ const BillingDetails = () => {
 
       const KidsPrice = item?.TeensPrice;
 
-      const KidsCgstProperty = `CGST ${item?.TeensTax / 2} %`;
+      const KidsCgstProperty = `Kids CGST ${item?.TeensTax / 2} %`;
       console.log("Kids cgst", KidsCgstProperty);
 
-      const KidsSgstProperty = `SGST ${item?.TeensTax / 2} %`;
+      const KidsSgstProperty = `Kids SGST ${item?.TeensTax / 2} %`;
       console.log("Kids sgst", KidsSgstProperty);
 
+      const KidsTaxPercentage = item?.TeensTax;
       const KidsTax = item?.TeensTaxBifurcation / KidsCount;
 
       const TotalKidsplusAdults = TotalBillAmount + KidsPrice;
@@ -3153,6 +3150,7 @@ const BillingDetails = () => {
         ItemId: item?.ItemDetails?.ItemId,
         ItemName: item?.ItemDetails?.ItemName,
         Price: finalResultPrice,
+        KidsTax: KidsTax,
         // Rate: FinalRateResult,
         ItemTaxName: itemTaxName[0],
         TaxDiff: finalTaxDiffSum,
@@ -3172,6 +3170,7 @@ const BillingDetails = () => {
             properties["KidsCount"] = KidsCount;
             properties["KidsRate"] = KidsRate;
             properties["KidsPrice"] = KidsPrice;
+            properties["KidsTax"] = KidsTaxPercentage;
             properties[KidsCgstProperty] = KidsTax / 2;
             properties[KidsSgstProperty] = KidsTax / 2;
             // properties[cgstProperty] = adjustedTaxDiffSum / 2;
@@ -3202,6 +3201,7 @@ const BillingDetails = () => {
             properties["KidsPrice"] = KidsPrice;
             properties[KidsCgstProperty] = item?.TeensTaxBifurcation / 2;
             properties[KidsSgstProperty] = item?.TeensTaxBifurcation / 2;
+            properties["KidsTax"] = KidsTaxPercentage;
             // properties[cgstProperty] = adjustedTaxDiffSum / 2;
             properties[cgstProperty] = sumWhenDiscount;
             // properties[sgstProperty] = adjustedTaxDiffSum / 2;
@@ -3229,6 +3229,7 @@ const BillingDetails = () => {
             properties["KidsRate"] = KidsRate;
             properties["KidsPrice"] = KidsPrice;
             properties[KidsCgstProperty] = item?.TeensTaxBifurcation / 2;
+            properties["KidsTax"] = KidsTaxPercentage;
             properties[KidsSgstProperty] = item?.TeensTaxBifurcation / 2;
             // properties[cgstProperty] = adjustedTaxDiffSum / 2;
             properties[cgstProperty] = sumWhenDiscount / 2;
@@ -3258,6 +3259,7 @@ const BillingDetails = () => {
             properties["KidsPrice"] = KidsPrice;
             properties[KidsCgstProperty] = item?.TeensTaxBifurcation / 2;
             properties[KidsSgstProperty] = item?.TeensTaxBifurcation / 2;
+            properties["KidsTax"] = KidsTaxPercentage;
             // properties[cgstProperty] = adjustedTaxDiffSum / 2;
             properties[cgstProperty] = sumWhenDiscount / 2;
             // properties[sgstProperty] = adjustedTaxDiffSum / 2;
@@ -3286,6 +3288,7 @@ const BillingDetails = () => {
             properties["KidsPrice"] = KidsPrice;
             properties[KidsCgstProperty] = item?.TeensTaxBifurcation / 2;
             properties[KidsSgstProperty] = item?.TeensTaxBifurcation / 2;
+            properties["KidsTax"] = KidsTaxPercentage;
             // properties[cgstProperty] = adjustedTaxDiffSum / 2;
             properties[cgstProperty] = total / 2;
             // properties[sgstProperty] = adjustedTaxDiffSum / 2;
@@ -3314,6 +3317,7 @@ const BillingDetails = () => {
             properties["KidsPrice"] = KidsPrice;
             properties[KidsCgstProperty] = item?.TeensTaxBifurcation / 2;
             properties[KidsSgstProperty] = item?.TeensTaxBifurcation / 2;
+            properties["KidsTax"] = KidsTaxPercentage;
             // properties[cgstProperty] = adjustedTaxDiffSum / 2;
             properties[cgstProperty] = total / 2;
             // properties[sgstProperty] = adjustedTaxDiffSum / 2;
@@ -3342,6 +3346,7 @@ const BillingDetails = () => {
             properties["KidsPrice"] = KidsPrice;
             properties[KidsCgstProperty] = item?.TeensTaxBifurcation / 2;
             properties[KidsSgstProperty] = item?.TeensTaxBifurcation / 2;
+            properties["KidsTax"] = KidsTaxPercentage;
             // properties[cgstProperty] = adjustedTaxDiffSum / 2;
             properties[cgstProperty] = total / 2;
             // properties[sgstProperty] = adjustedTaxDiffSum / 2;
@@ -3370,6 +3375,7 @@ const BillingDetails = () => {
             properties["KidsPrice"] = KidsPrice;
             properties[KidsCgstProperty] = item?.TeensTaxBifurcation / 2;
             properties[KidsSgstProperty] = item?.TeensTaxBifurcation / 2;
+            properties["KidsTax"] = KidsTaxPercentage;
             // properties[cgstProperty] = adjustedTaxDiffSum / 2;
             properties[cgstProperty] = total / 2;
             // properties[sgstProperty] = adjustedTaxDiffSum / 2;
@@ -3394,6 +3400,7 @@ const BillingDetails = () => {
             properties["KidsPrice"] = KidsPrice;
             properties[KidsCgstProperty] = KidsTax;
             properties[KidsSgstProperty] = KidsTax;
+            properties["KidsTax"] = KidsTaxPercentage;
             // properties[cgstProperty] = adjustedTaxDiffSum / 2;
             properties[cgstProperty] = total / 2;
             // properties[sgstProperty] = adjustedTaxDiffSum / 2;
@@ -3425,6 +3432,7 @@ const BillingDetails = () => {
           properties["KidsPrice"] = KidsPrice;
           properties[KidsCgstProperty] = KidsTax;
           properties[KidsSgstProperty] = KidsTax;
+          properties["KidsTax"] = KidsTaxPercentage;
           // properties[cgstProperty] = adjustedTaxDiffSum / 2;
           properties[cgstProperty] = sumWhenDiscount;
           // properties[sgstProperty] = adjustedTaxDiffSum / 2;
@@ -3456,6 +3464,7 @@ const BillingDetails = () => {
           properties["KidsPrice"] = KidsPrice;
           properties[KidsCgstProperty] = KidsTax;
           properties[KidsSgstProperty] = KidsTax;
+          properties["KidsTax"] = KidsTaxPercentage;
           // properties[cgstProperty] = adjustedTaxDiffSum / 2;
           properties[cgstProperty] = sumWhenDiscount / 2;
           // properties[sgstProperty] = adjustedTaxDiffSum / 2;
@@ -3506,6 +3515,7 @@ const BillingDetails = () => {
           properties["Rate"] = FinalRateResult;
           properties["cashAmount"] = CashAmount;
           properties["cardAmount"] = CardAmount;
+          properties["KidsTax"] = KidsTaxPercentage;
           properties["upiAmount"] = UPIAmount;
           properties["upiId"] = UPIId;
           properties["cardHoldersName"] = CardHoldersName;

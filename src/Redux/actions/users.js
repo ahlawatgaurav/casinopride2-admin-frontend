@@ -598,6 +598,34 @@ export const EditPanelDiscounts =
       });
   };
 
+  export const getUserByPhone =
+  (token, phone, callback) => async (dispatch) => {
+    console.log(token);
+
+    api.BOOKING_PORT.get(`/booking/getUserByPhone?phone=${phone}`, {
+      headers: { AuthToken: token },
+    })
+      .then((response) => {
+        console.log("Get users details ->", response.data);
+        if (response.data?.Details) {
+          console.log(response.data?.Details);
+          callback({
+            status: true,
+            response: response?.data,
+          });
+        } else if (response.data?.Error) {
+          callback({
+            status: false,
+            error: response.data?.Error?.ErrorMessage,
+          });
+        }
+      })
+      .catch((err) => {
+        {
+          console.log("error", err);
+        }
+      });
+  };
 export const getCouponsbyInitials =
   (token, initial, numeric, date, callback) => async (dispatch) => {
     api.CORE_PORT.get(
@@ -627,6 +655,31 @@ export const getCouponsbyInitials =
         }
       });
   };
+
+  export const getDiscountsUsingDiscountCode = 
+  (token, discountCode, callback) => async (dispatch) => {
+    api.CORE_PORT.get(
+      `/core/agentDiscountsUsingDiscountCode?agentDiscountCode=${discountCode}`,
+      {
+        headers: { AuthToken: token },
+      }
+    )
+    .then((response) => {
+      console.log("Get Discount using Discount Code ->", response.data);
+      if (response.data?.Details) {
+        console.log(response.data?.Details);
+        callback({
+          status: true,
+          response: response?.data,
+        });
+      } else if (response.data?.Error) {
+        callback({
+          status: false,
+          error: response.data?.Error?.ErrorMessage,
+        });
+      }
+    });
+  }
 
 export const getPanelDiscounts = (token, callback) => async (dispatch) => {
   api.CORE_PORT.get("/core/panelDiscount", {

@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   userDetailsAfterLogin: {},
+  bookingDetails: {}
 };
 
 export const bookingslice = createSlice({
@@ -11,10 +12,13 @@ export const bookingslice = createSlice({
     saveLoginData: (state, action) => {
       state.userDetailsAfterLogin = action.payload;
     },
+    saveBookingDetails: (state, action) => {
+      state.bookingDetails = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { saveLoginData } = bookingslice.actions;
+export const { saveLoginData, saveBookingDetails } = bookingslice.actions;
 
 export default bookingslice.reducer;

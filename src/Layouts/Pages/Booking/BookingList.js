@@ -9,6 +9,7 @@ import {
 import {
   fetchBookingDetailsById,
   fetchUserbookings,
+  getPackagesDetails,
   updateBookingForPayAtCounterFn,
   updateShiftForBooking,
 } from "../../../Redux/actions/booking";
@@ -111,8 +112,24 @@ const BookingList = () => {
     );
   };
 
+  const fetchPackageDetails = () => {
+    dispatch(
+      getPackagesDetails(loginDetails?.logindata?.Token, 4, (callback) => {
+        if (callback.status) {
+          setLoading(false);
+
+          setFilterPackageDetails(callback?.response?.Details?.packageDetails);
+          setPackageDetails(callback?.response?.Details?.packageDetails);
+          setItemDetails(callback?.response?.Details?.packageItemDetails);
+        }
+      })
+    );
+  };
+
   useEffect(() => {
     fetchUserBookingFn();
+    fetchPackageDetails();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -121,6 +138,8 @@ const BookingList = () => {
 
   const [showViewMoreModal, setShowViewMoreModal] = useState(false);
   const [selectedUserDetails, setSelectedUserDetails] = useState({});
+  const [selectedPackage, setSelectedPackage] = useState(null);
+
   console.log("selectedUserDetails------------------->", selectedUserDetails);
 
   const handleViewMore = (userDetails) => {
@@ -159,6 +178,8 @@ const BookingList = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isUpdatePaymentModalOpen, setIsUpdatePaymentModalOpen] =
     useState(false);
+  const [isBillGenerationModalOpen, setIsBillGenerationModalOpen] =
+    useState(false);
   const [UpdatePaymentDetails, setUpdatePaymentDetails] = useState(null);
 
   const [paymentOption, setPaymentOption] = useState("");
@@ -174,6 +195,7 @@ const BookingList = () => {
   const [partCash, setPartCash] = useState("");
   const [partCard, setPartCard] = useState("");
   const [enableUpdatePayment, setEnableUpdatepayment] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const handlePaymentSelection = (event) => {
     // Update the selected option when the user makes a selection
@@ -318,6 +340,12 @@ const BookingList = () => {
 
     setIsUpdatePaymentModalOpen(true);
   };
+
+  const startBillGeneration = (item) => {
+    setPaymentOption(item.PaymentMode);
+    setSelectedItem(item);
+    setIsBillGenerationModalOpen(true);
+  }
 
   const handleShowR = () => {
     // setShow(true)
@@ -537,6 +565,7 @@ const BookingList = () => {
       setSelectedCountry(null);
     }
 
+
     if (backendData.selectedStateName) {
       setSelectedState({ name: backendData.selectedStateName });
     } else {
@@ -561,12 +590,35 @@ const BookingList = () => {
         bookingId: editBookingDetails?.Id,
         guestName: guestName ? guestName : editBookingDetails?.FullName,
         address: address ? address : editBookingDetails?.Address,
+        email: editBookingDetails?.Email,
+        phone: editBookingDetails?.Phone,
+        totalGuestCount: editBookingDetails?.TotalGuestCount,
         dob: dateofbirth ? dateofbirth : editBookingDetails?.DOB,
         country: selectedCountry?.name,
         state: selectedState?.name,
         city: selectedCity ? selectedCity : editBookingDetails.City,
         GSTNumber: gstNumber ? gstNumber : editBookingDetails.GSTNumber,
         isActive: 1,
+        packageId: editBookingDetails?.PackageId,
+        packageGuestCount:  editBookingDetails?.PackageGuestCount,
+        userId: loginDetails?.logindata?.userId,
+        userTypeId: loginDetails?.logindata?.UserType,
+        shiftId:  editBookingDetails?.ShiftId,
+        actualAmount: editBookingDetails?.ActualAmount,
+        governmentId: editBookingDetails?.GovernmentId,
+        amountAfterDiscount: editBookingDetails?.AmountAfterDiscount,
+        packageName: editBookingDetails?.PackageName,
+        packageWeekdayPrice: JSON.stringify(editBookingDetails?.PackageWeekdayPrice),
+        packageWeekendPrice: JSON.stringify(editBookingDetails?.PackageWeekendPrice),
+        numOfTeens: editBookingDetails?.NumOfTeens,
+        teensPrice: editBookingDetails?.TeensPrice,
+        teensRate: editBookingDetails?.TeensRate,
+        teensTax: editBookingDetails?.TeensTax,
+        teensTaxName: editBookingDetails?.TeensTaxName,
+        paymentMode: editBookingDetails?.PaymentMode,
+        cashAmount: editBookingDetails?.CashAmount,
+        cardAmount: editBookingDetails?.CardAmount,
+        UPIAmount: editBookingDetails?.UPIAmount,
       };
 
       dispatch(
@@ -1190,15 +1242,15 @@ const BookingList = () => {
             </div>
 
             <div className="col-md-4 col-lg-4 d-flex justify-content-end mb-3">
-              <button className="btn btn-primary">
-                <Link
+            <Link
                   to="/NewBooking"
                   state={{ userType: "4" }}
                   className="addLinks"
                 >
-                  New Booking
-                </Link>
+              <button className="btn btn-primary h-100">
+                New Booking
               </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -1351,19 +1403,7 @@ const BookingList = () => {
                       (item?.FutureDate == today) ?
                       (item?.IsBillGenerated != 1) ? 
                       <LiaFileInvoiceSolid
-                        onClick={() => {
-                          if (
-                            item?.PayAtCounter == 1 &&
-                            item?.PaymentMode == null
-                          ) {
-                            window.open(
-                              `/acknowledgementDetails?BookingId=${item.Id}`,
-                              "_self"
-                            );
-                          } else {
-                            GenerateBill(item);
-                          }
-                        }}
+                        onClick={() => startBillGeneration(item)}
                         style={{
                           height: "22px",
                           width: "22px",
@@ -1386,7 +1426,7 @@ const BookingList = () => {
                     moment(item?.BookingDate).format("YYYY-MM-DD") == activeDateOfOutlet?.OutletDate
                     ? (
                     <AiFillEdit
-                      onClick={() => startEditing(item)}
+                      onClick={() => ([1, 2].includes(loginDetails?.logindata?.UserType) && item?.IsBillGenerated != 1) ? navigate("/UpdateBooking/" + item.Id ) : startEditing(item)}
                       style={{
                         height: "20px",
                         width: "20px",
@@ -1540,7 +1580,7 @@ const BookingList = () => {
             <div className="col-6">
               <p className="table-modal-list ">
                 Event Date :{" "}
-                {moment(selectedUserDetails?.BookingDate != null ? selectedUserDetails?.BookingDate : selectedUserDetails?.FutureDate).format(
+                {moment(selectedUserDetails?.FutureDate).format(
                   "YYYY-MM-DD"
                 )}
               </p>
@@ -1599,6 +1639,18 @@ const BookingList = () => {
                   )
                 ) : (
                   <span>No package name available</span>
+                )}
+              </p>
+            </div>
+            <div className="col-6">
+              <p className="table-modal-list ">
+                Package Guest Count:{" "}
+                {selectedUserDetails.PackageGuestCount ? (
+                  JSON.parse(selectedUserDetails.PackageGuestCount).map(
+                    (item, index) => <span key={index}>{item} </span>
+                  )
+                ) : (
+                  <span>No package count available</span>
                 )}
               </p>
             </div>
@@ -2251,6 +2303,50 @@ const BookingList = () => {
               onClick={onsubmit}
             >
               Update Booking
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal
+          show={isBillGenerationModalOpen}
+          onHide={() => setIsBillGenerationModalOpen(false)}
+          backdrop="static"
+          keyboard={false}
+          size="lg"
+        >
+          <Modal.Header>
+            <Modal.Title>Generate Bill</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+           Are You sure you want to proceed?
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setIsBillGenerationModalOpen(false);
+                setSelectedItem(null);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => {
+                if (
+                  selectedItem?.PayAtCounter == 1 &&
+                  selectedItem?.PaymentMode == null
+                ) {
+                  window.open(
+                    `/acknowledgementDetails?BookingId=${selectedItem.Id}`,
+                    "_self"
+                  );
+                } else {
+                  GenerateBill(selectedItem);
+                }
+              }}
+            >
+              Generate Bill
             </Button>
           </Modal.Footer>
         </Modal>
