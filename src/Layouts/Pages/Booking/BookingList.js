@@ -47,7 +47,7 @@ const BookingList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const today = moment().format("YYYY-MM-DD");
+  const today = moment().utc().add(150, "minutes").format("YYYY-MM-DD");
   console.log("Today------>", today);
   const [payAT, setPay] = useState(true);
 
@@ -1445,7 +1445,7 @@ const BookingList = () => {
                   {
                   (moment(item?.FutureDate).format("YYYY-MM-DD") === today && item?.PayAtCounter == 1) ||
                   // moment(item?.BookingDate).format("YYYY-MM-DD") === today ? (
-                  moment(item?.BookingDate).format("YYYY-MM-DD") == activeDateOfOutlet?.OutletDate
+                  moment(item?.FutureDate).format("YYYY-MM-DD") == activeDateOfOutlet?.OutletDate
                   ? (
                     <LiaMoneyBillSolid
                       onClick={() => StartUpdatingPayment(item)}
