@@ -1671,6 +1671,11 @@ const BookingList = () => {
               {`Booking Mode: Website`}
               </p>
             </div> : null}
+            <div className="col-6">
+              <p className="table-modal-list ">
+              {`Booking Date: ${selectedUserDetails.BookingDate}`}
+              </p>
+            </div>
           </Modal.Body>
           <Modal.Footer></Modal.Footer>
         </Modal>
