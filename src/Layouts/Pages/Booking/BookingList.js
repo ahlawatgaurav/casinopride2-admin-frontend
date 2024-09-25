@@ -1574,7 +1574,7 @@ const BookingList = () => {
             )}
             <div className="col-6">
               <p className="table-modal-list ">
-                Total Amount: {selectedUserDetails.ActualAmount}
+                Total Amount: {selectedUserDetails?.AmountAfterDiscount}
               </p>
             </div>
             <div className="col-6">
@@ -1673,7 +1673,7 @@ const BookingList = () => {
             </div> : null}
             <div className="col-6">
               <p className="table-modal-list ">
-              {`Booking Date: ${selectedUserDetails?.BookingDate?.substring(0, 10)}`}
+              {`Booking Date: ${selectedUserDetails?.BookingDate}`}
               </p>
             </div>
           </Modal.Body>
