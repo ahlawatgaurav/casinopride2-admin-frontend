@@ -3,9 +3,8 @@ import { saveLoginData } from "../reducers/auth";
 import { saveValidateData } from "../reducers/auth";
 import { saveOutletDetails } from "../reducers/auth";
 import moment from "moment";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { connect, useSelector } from "react-redux";
 
 console.log("Log from apin ", api);
 
@@ -22,9 +21,12 @@ export const Login = (data, callback) => async (dispatch) => {
       if (response.data?.Details) {
         dispatch(saveValidateData(response.data));
 
-        if (
+        if(response.data?.Details?.UserType == 5 || response.data?.Details?.UserType == 8) {
+          callback({ status: false, error: "Not allowed to login"});
+        }
+        else if (
           response.data?.Details?.UserType == 2 ||
-          response.data?.Details?.UserType == 3
+          response.data?.Details?.UserType == 3 
         ) {
           api.AUTH_PORT.get("/auth/checkIP")
             .then((response) => {
@@ -110,9 +112,7 @@ export const Login = (data, callback) => async (dispatch) => {
               }
             })
             .catch((err) => {
-              {
-                console.log("error", err);
-              }
+              console.log("error", err);
             });
         }
       } else if (response.data?.Error) {
@@ -120,9 +120,7 @@ export const Login = (data, callback) => async (dispatch) => {
       }
     })
     .catch((err) => {
-      {
-        console.log("error", err);
-      }
+      console.log("error", err);
     });
 };
 
