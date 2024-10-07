@@ -2650,10 +2650,10 @@ const BillingDetails = () => {
                           })
                         );
 
-                        let shortUrl = new URL(callback?.response?.shortUrl);
-                        let SharableUrl = `${shortUrl.hostname}${shortUrl.port ? `:${shortUrl.port}` : ""}${shortUrl.pathname}`;
+                        let shortUrl = callback?.response?.shortUrl;
+                      
 
-                        const apiUrl = `https://commnestsms.com/api/push.json?apikey=635cd8e64fddd&route=transactional&sender=CPGOAA&mobileno=${BookingDetails[0]?.Phone}&text=Thank%20you%20for%20choosing%20Casino%20Pride.%20View%20e-bill%20of%20Rs%20${FinalAmount}%20at%20-%20http://${SharableUrl}%0ALets%20Play%20with%20Pride%20!%0AGood%20luck%20!%0ACPGOAA`;
+                        const apiUrl = `https://commnestsms.com/api/push.json?apikey=635cd8e64fddd&route=transactional&sender=CPGOAA&mobileno=${BookingDetails[0]?.Phone}&text=Thank%20you%20for%20choosing%20Casino%20Pride.%20View%20e-bill%20of%20Rs%20${FinalAmount}%20at%20-%20${shortUrl}%0ALets%20Play%20with%20Pride%20!%0AGood%20luck%20!%0ACPGOAA`;
 
                         fetch(apiUrl)
                           .then((response) => {

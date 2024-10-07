@@ -3,10 +3,11 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { getLongUrl } from "../../../Redux/actions/users";
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 const QrLinkPage = () => {
-  let { param } = useParams();
+  const [searchParams] = useSearchParams();
+  const param = searchParams.get('code');
   const dispatch = useDispatch();
   const loginDetails = useSelector(
     (state) => state.auth?.userDetailsAfterLogin.Details
