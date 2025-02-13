@@ -117,9 +117,9 @@ export const GetBillingDetails =
         searchBillId ? parseInt(searchBillId) : 0
       }&userId=${
         userId ? parseInt(userId) : 0
-      }&billingDate=${futureDate}&shiftId=${
+      }&billingDate=${toDate || fromDate?"":billDate}&shiftId=${
         shiftId ? parseInt(shiftId) : 0
-      }&isBookingWebsite=${online}&futureDate=${billDate}&fromDate=${fromDate}&toDate=${toDate}`,
+      }&isBookingWebsite=${online}&futureDate=${futureDate}&fromDate=${fromDate}&toDate=${toDate}`,
       {
         headers: { AuthToken: token },
       }

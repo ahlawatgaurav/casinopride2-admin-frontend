@@ -30,11 +30,13 @@ import printerpng from "../../../assets/Images/printerpng.png";
 import { AiOutlinePrinter } from "react-icons/ai";
 import { FcCancel } from "react-icons/fc";
 import { CiCircleMore } from "react-icons/ci";
+import { Checkbox, IconButton, Pagination, Table, Whisper } from "rsuite";
 
 const BillingList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const [limit, setLimit] = useState(100);
+  const [page, setPage] = useState(1);
   const loginDetails = useSelector(
     (state) => state.auth?.userDetailsAfterLogin.Details
   );
@@ -66,16 +68,7 @@ const BillingList = () => {
 
   const todayDate = moment().format("YYYY-MM-DD");
 
-  const [futureDate, setFutureDate] = useState(
-    (loginDetails?.logindata?.UserType == 1 &&
-      activeDateOfOutlet?.OutletDate != undefined) ||
-      (loginDetails?.logindata?.UserType == 2 &&
-        activeDateOfOutlet?.OutletDate != undefined) ||
-      (loginDetails?.logindata?.UserType == 3 &&
-        activeDateOfOutlet?.OutletDate != undefined)
-      ? activeDateOfOutlet?.OutletDate
-      : ""
-  );
+  const [futureDate, setFutureDate] = useState("");
 
   // const [futureDate, setFutureDate] = useState("");
 
@@ -83,7 +76,7 @@ const BillingList = () => {
     "<------------------filtered Billing List-------------->",
     filteredBillingList
   );
-  const [reportId, setReportId] = useState(0);
+  const [reportId, setReportId] = useState(2);
   const [shiftId, setShitId] = useState(0);
   const [userId, setUserId] = useState(0);
   const [billId, setBillId] = useState(0);
@@ -102,10 +95,22 @@ const BillingList = () => {
   const [eventDate, setEventDate] = useState(null);
   const [online, setOnline] = useState(reportId == 4 ? 1 : 0);
   const [voidBillReason, setVoidBillReason] = useState();
-  const [billDate, setBillDate] = useState("");
+  const [billDate, setBillDate] = useState((loginDetails?.logindata?.UserType == 1 &&
+    activeDateOfOutlet?.OutletDate != undefined) ||
+    (loginDetails?.logindata?.UserType == 2 &&
+      activeDateOfOutlet?.OutletDate != undefined) ||
+    (loginDetails?.logindata?.UserType == 3 &&
+      activeDateOfOutlet?.OutletDate != undefined)
+    ? activeDateOfOutlet?.OutletDate
+    : moment().format("YYYY-MM-DD"));
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
+  const handleChangeLimit = (dataKey) => {
+    setPage(1);
+    // alert(dataKey)
+    setLimit(dataKey);
+  };
   const fetchBillingDetailsFn = () => {
     console.log(
       "activeDateOfOutlet?.OutletDate>>",
@@ -182,7 +187,7 @@ const BillingList = () => {
   const handleReportTypeChange = (selectedOption) => {
     clearFilters();
     console.log("selectedOption>>", selectedOption);
-    setBillDate("");
+    setBillDate(moment().format('YYYY-MM-DD'));
     setFutureDate("");
     setShitId(0);
     setUserId(0);
@@ -251,14 +256,20 @@ const BillingList = () => {
   ];
 
   const searchBtn = () => {
-    if (searchBillId && (futureDate || userId || shiftId)) {
+    if (searchBillId && (billDate || userId || shiftId)) {
       toast.error(
         "If Bill ID is selected, other filters should not be selected."
       );
       return;
     }
+    if (toDate == "" && fromDate!="" ) {
+      toast.error(
+        "Select To Date."
+      );
+      return;
+    }
 
-    if (shiftId && !futureDate) {
+    if (shiftId && !billDate) {
       toast.error("Please select a date when choosing shifts.");
 
       return;
@@ -282,7 +293,7 @@ const BillingList = () => {
     setUserId(0);
     setBillId(0);
     setOnline(0);
-    setBillDate("");
+    setBillDate(moment().format('YYYY-MM-DD'));;
     setFromDate("");
     setToDate("");
     fetchBillingDetailsFn();
@@ -480,8 +491,8 @@ const BillingList = () => {
   const generateReportFn = () => {
     const reportData = {
       userId: userId,
-      billDate: futureDate,
-      futureDate: billDate,
+      billDate:fromDate || toDate?"": billDate,
+      futureDate: futureDate,
       shiftId: shiftId,
       fromDate: fromDate,
       toDate: toDate,
@@ -502,15 +513,15 @@ const BillingList = () => {
             window.open(callback?.response?.Details?.ReportFile, "_blank");
 
             handleClose();
-            setShitId(0);
-            setBillId(0);
-            setUserId(0);
-            setFutureDate("");
-            setReportId(0);
-            fetchVoidBillList();
-            setBillDate("");
-            setFromDate("");
-            setToDate("");
+            // setShitId(0);
+            // setBillId(0);
+            // setUserId(0);
+            // setFutureDate("");
+            // setReportId(0);
+            // fetchVoidBillList();
+            // setBillDate(moment().format('YYYY-MM-DD'));;
+            // setFromDate("");
+            // setToDate("");
           } else {
             console.log("Callback------generate report error", callback.error);
             toast.error(callback.error);
@@ -583,9 +594,9 @@ const BillingList = () => {
   // dataArray.forEach((group) => {
   //   group.Items.sort((a, b) => b.BillNumber - a.BillNumber); // Sorting by descending order of BillNumber
   // });
-  const combinedDataArray = dataArray;
+  const combinedDataArrayFull = dataArray;
 
-  console.log("Combined Array-------------------------->", combinedDataArray);
+  // console.log("Combined Array-------------------------->", combinedDataArray);
 
   const combinedVoidBillsData = {};
 
@@ -607,7 +618,13 @@ const BillingList = () => {
     "combined Void Data Array------------------------->",
     combinedVoidDataArray
   );
-
+  const combinedDataArray = combinedDataArrayFull.filter(
+    (v, i) => {
+      const start = limit * (page - 1);
+      const end = start + limit;
+      return i >= start && i < end;
+    }
+  );
   // const regenerateBillFn = (item) => {
   //   console.log(
   //     "Item--------------------------------- regenerate bill------------>",
@@ -644,7 +661,7 @@ const BillingList = () => {
     });
   };
 
-  console.log("Combined Array--->", combinedDataArray);
+  // console.log("Combined Array--->", combinedDataArray);
 
   const outletOpenDetails = useSelector((state) => state.auth?.outeltDetails);
 
@@ -774,7 +791,7 @@ const BillingList = () => {
                   <></>
                 )}
 
-                {reportId == 2 || reportId == 3 ? (
+                {reportId == 1 ||reportId == 2 || reportId == 3 ? (
                   <div className="col-md-3 col-lg-2 mb-2">
                     <p style={{ fontWeight: "bold" }}>Search By Bill Date</p>
                     <div className="input-group">
@@ -782,8 +799,8 @@ const BillingList = () => {
                         type="date"
                         className="form-control"
                         placeholder="Search name"
-                        onChange={(e) => setFutureDate(e.target.value)}
-                        value={futureDate}
+                        onChange={(e) => setBillDate(e.target.value)}
+                        value={billDate}
                       />
                     </div>
                   </div>
@@ -831,11 +848,11 @@ const BillingList = () => {
                         type="date"
                         className="form-control"
                         placeholder="Search name"
-                        onChange={(e) => setBillDate(e.target.value)}
+                        onChange={(e) => setFutureDate(e.target.value)}
                         // onChange={(e) => {console.log('billfuuu',e.target.value)}}
-                        value={billDate}
+                        // value={billDate}
                         // onChange={(e) => setFutureDate(e.target.value)}
-                        // value={futureDate}
+                        value={futureDate}
                       />
                     </div>
                   </div>
@@ -863,6 +880,7 @@ const BillingList = () => {
                   <div className="input-group">
                     <Select
                       className="custom-select"
+                      defaultValue={reportTypeOptions[2]}
                       options={reportTypeOptions}
                       onChange={handleReportTypeChange}
                     />
@@ -1473,6 +1491,27 @@ const BillingList = () => {
             </table>
           </>
         )}
+         <div className="my-1">
+        <Pagination
+          prev
+          next
+          first
+          last
+          ellipsis
+          boundaryLinks
+          maxButtons={10}
+          size="xs"
+          layout={["total", "-", "limit", "|", "pager", "skip"]}
+          total={
+           combinedDataArrayFull.length
+          }
+          limitOptions={[10, 25, 50, 100, 500]}
+          limit={limit}
+          activePage={page}
+          onChangePage={setPage}
+          onChangeLimit={handleChangeLimit}
+        />
+      </div>
       <ToastContainer />
 
       <Modal show={showViewMoreModal} onHide={handleCloseViewMore} size="lg">
