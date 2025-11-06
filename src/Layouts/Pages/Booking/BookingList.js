@@ -129,7 +129,7 @@ const BookingList = () => {
   useEffect(() => {
     fetchUserBookingFn();
     fetchPackageDetails();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -421,7 +421,7 @@ const BookingList = () => {
       cardType: cardAmount === "" ? null : cardType,
       UPIId: upiAmount === "" ? null : upiId,
       bookingId: UpdatePaymentDetails?.Id,
-      settleByCompany : paymentOption == "Company Settlement" ? 1 : 0
+      settleByCompany: paymentOption == "Company Settlement" ? 1 : 0
     };
 
     console.log("Data from Update Payment booking ------->", data);
@@ -436,55 +436,55 @@ const BookingList = () => {
               "Update Payment booking Response --------------?",
               callback?.response?.Details
             );
-              if (callback?.response?.Details?.IsBillGenerated != 1) {
-                navigate("/GenerateBill", {
-                  state: { userData: callback?.response?.Details },
-                });
-              }
-              else
-           { 
-            dispatch(
-              updateBillingDetails(
-                loginDetails?.logindata?.Token,
-                {
-                  bookingId: UpdatePaymentDetails?.Id,
-                },
-                (callback) => {
-                  if (callback.status) {
-                    console.log(
-                      "Callback------update---billing--payment--update",
-                      callback?.response.Details[0]
-                    );
+            if (callback?.response?.Details?.IsBillGenerated != 1) {
+              navigate("/GenerateBill", {
+                state: { userData: callback?.response?.Details },
+              });
+            }
+            else {
+              dispatch(
+                updateBillingDetails(
+                  loginDetails?.logindata?.Token,
+                  {
+                    bookingId: UpdatePaymentDetails?.Id,
+                  },
+                  (callback) => {
+                    if (callback.status) {
+                      console.log(
+                        "Callback------update---billing--payment--update",
+                        callback?.response.Details[0]
+                      );
 
-                    if (
-                      callback?.response?.Details[0]?.NumOfTeens -
+                      if (
+                        callback?.response?.Details[0]?.NumOfTeens -
                         callback?.response?.Details[0]?.TotalGuestCount ==
-                      0
-                    ) {
-                      navigate("/TeensBilling", {
-                        state: {
-                          BookingDetails: callback?.response?.Details,
-                        },
-                      });
-                      setLoader(false);
+                        0
+                      ) {
+                        navigate("/TeensBilling", {
+                          state: {
+                            BookingDetails: callback?.response?.Details,
+                          },
+                        });
+                        setLoader(false);
+                      } else {
+                        navigate("/BillingDetails", {
+                          state: {
+                            BookingDetails: callback?.response?.Details,
+                          },
+                        });
+                        setLoader(false);
+                      }
                     } else {
-                      navigate("/BillingDetails", {
-                        state: {
-                          BookingDetails: callback?.response?.Details,
-                        },
-                      });
-                      setLoader(false);
+                      console.log(
+                        "Callback------update --voidt>>error",
+                        callback.error
+                      );
+                      toast.error(callback.error);
                     }
-                  } else {
-                    console.log(
-                      "Callback------update --voidt>>error",
-                      callback.error
-                    );
-                    toast.error(callback.error);
                   }
-                }
-              )
-            );}
+                )
+              );
+            }
 
             toast.success("Payment details update success");
             setEnableUpdatepayment(false);
@@ -600,10 +600,10 @@ const BookingList = () => {
         GSTNumber: gstNumber ? gstNumber : editBookingDetails.GSTNumber,
         isActive: 1,
         packageId: editBookingDetails?.PackageId,
-        packageGuestCount:  editBookingDetails?.PackageGuestCount,
+        packageGuestCount: editBookingDetails?.PackageGuestCount,
         userId: loginDetails?.logindata?.userId,
         userTypeId: loginDetails?.logindata?.UserType,
-        shiftId:  editBookingDetails?.ShiftId,
+        shiftId: editBookingDetails?.ShiftId,
         actualAmount: editBookingDetails?.ActualAmount,
         governmentId: editBookingDetails?.GovernmentId,
         amountAfterDiscount: editBookingDetails?.AmountAfterDiscount,
@@ -630,55 +630,55 @@ const BookingList = () => {
             );
 
             toast.success("Updated Booking details success");
-              if (callback?.response?.Details?.IsBillGenerated == 1) {
-                dispatch(
-                  updateBillingDetails(
-                    loginDetails?.logindata?.Token,
-                    {
-                      bookingId: callback?.response?.Details?.Id,
-                    },
-                    (callback) => {
-                      if (callback.status) {
-                        console.log(
-                          "Callback------update---billing--payment--update",
-                          callback?.response.Details[0]
-                        );
-    
-                        if (
-                          callback?.response?.Details[0]?.NumOfTeens -
-                            callback?.response?.Details[0]?.TotalGuestCount ==
-                          0
-                        ) {
-                          navigate("/TeensBilling", {
-                            state: {
-                              BookingDetails: callback?.response?.Details,
-                            },
-                          });
-                          setLoader(false);
-                        } else {
-                          navigate("/BillingDetails", {
-                            state: {
-                              BookingDetails: callback?.response?.Details,
-                            },
-                          });
-                          setLoader(false);
-                        }
+            if (callback?.response?.Details?.IsBillGenerated == 1) {
+              dispatch(
+                updateBillingDetails(
+                  loginDetails?.logindata?.Token,
+                  {
+                    bookingId: callback?.response?.Details?.Id,
+                  },
+                  (callback) => {
+                    if (callback.status) {
+                      console.log(
+                        "Callback------update---billing--payment--update",
+                        callback?.response.Details[0]
+                      );
+
+                      if (
+                        callback?.response?.Details[0]?.NumOfTeens -
+                        callback?.response?.Details[0]?.TotalGuestCount ==
+                        0
+                      ) {
+                        navigate("/TeensBilling", {
+                          state: {
+                            BookingDetails: callback?.response?.Details,
+                          },
+                        });
+                        setLoader(false);
                       } else {
-                        console.log(
-                          "Callback------update --voidt>>error",
-                          callback.error
-                        );
-                        toast.error(callback.error);
+                        navigate("/BillingDetails", {
+                          state: {
+                            BookingDetails: callback?.response?.Details,
+                          },
+                        });
+                        setLoader(false);
                       }
+                    } else {
+                      console.log(
+                        "Callback------update --voidt>>error",
+                        callback.error
+                      );
+                      toast.error(callback.error);
                     }
-                  )
-                );
-              }
-              else{
-                navigate("/GenerateBill", {
-                  state: { userData: callback?.response?.Details },
-                });
-              }
+                  }
+                )
+              );
+            }
+            else {
+              navigate("/GenerateBill", {
+                state: { userData: callback?.response?.Details },
+              });
+            }
 
             // navigate(-1);
             toast.error(callback.error);
@@ -692,7 +692,7 @@ const BookingList = () => {
 
   const [shiftStatus, setShiftStatus] = useState(false);
 
- 
+
 
   console.log("shiftStatus--->", shiftStatus);
 
@@ -863,9 +863,9 @@ const BookingList = () => {
   }
 
   const GenerateBill = (item) => {
-    console.log('item?.FutureDate>>',item?.FutureDate);
-    console.log('item?.BookingDate-------',item?.BookingDate);
-    console.log('GenerateBill>>item>>',item);
+    console.log('item?.FutureDate>>', item?.FutureDate);
+    console.log('item?.BookingDate-------', item?.BookingDate);
+    console.log('GenerateBill>>item>>', item);
     //checking if its Travel Agent
     if (item?.UserTypeId == 5) {
       if (
@@ -904,23 +904,23 @@ const BookingList = () => {
           packageGuestCount: item.PackageGuestCount,
           totalGuestCount: item.TotalGuestCount,
           // bookingDate: item.CreatedOn?.slice(0, 10),
-          bookingDate: item?.BookingDate != null ? 
-          moment(item?.BookingDate).format("YYYY-MM-DD") :
-          moment(item?.FutureDate).format("YYYY-MM-DD"),
+          bookingDate: item?.BookingDate != null ?
+            moment(item?.BookingDate).format("YYYY-MM-DD") :
+            moment(item?.FutureDate).format("YYYY-MM-DD"),
           billingDate: today,
           teensCount: item.NumOfTeens,
           actualAmount: item.ActualAmount,
           amountAfterDiscount: item.AmountAfterDiscount,
           // discount: item.PanelDiscount ? item.PanelDiscount : item.CouponDiscount,
           discount: item.PanelDiscount
-          ? item.PanelDiscount
-          : item.WebsiteDiscount
-          ? item.WebsiteDiscount
-          : item.CouponDiscount
-          ? item.CouponDiscount
-          : item.AgentPanelDiscount
-          ? item.AgentPanelDiscount
-          : 0,
+            ? item.PanelDiscount
+            : item.WebsiteDiscount
+              ? item.WebsiteDiscount
+              : item.CouponDiscount
+                ? item.CouponDiscount
+                : item.AgentPanelDiscount
+                  ? item.AgentPanelDiscount
+                  : 0,
           packageWeekdayPrice: JSON.stringify(item.PackageWeekdayPrice),
           packageWeekendPrice: JSON.stringify(item.PackageWeekendPrice),
         };
@@ -934,13 +934,13 @@ const BookingList = () => {
           // ? 3
           // : 0,
           shiftTypeId:
-          (shifts && shifts[1] && shifts[1][0]?.ShiftOpen === 1) 
-          ? 1 
-          : (shifts && shifts[2] && shifts[2][0]?.ShiftOpen === 1) 
-          ? 2
-          : (shifts && shifts[3] && shifts[3][0]?.ShiftOpen === 1)
-          ? 3
-          : 0,
+            (shifts && shifts[1] && shifts[1][0]?.ShiftOpen === 1)
+              ? 1
+              : (shifts && shifts[2] && shifts[2][0]?.ShiftOpen === 1)
+                ? 2
+                : (shifts && shifts[3] && shifts[3][0]?.ShiftOpen === 1)
+                  ? 3
+                  : 0,
         };
         dispatch(
           updateShiftForBooking(
@@ -964,103 +964,103 @@ const BookingList = () => {
                       // setLocalAgentId(callback3?.response?.Details?.Id);
                       setTravelAgentDetails(callback3?.response?.Details);
                       const AgentSettlemetDiscount =
-                      callback3?.response?.Details?.DiscountPercent -
-                      item?.AgentPanelDiscount;
+                        callback3?.response?.Details?.DiscountPercent -
+                        item?.AgentPanelDiscount;
 
-                    console.log(
-                      "AgentSettlemetDiscount-------->",
-                      AgentSettlemetDiscount
-                    );
+                      console.log(
+                        "AgentSettlemetDiscount-------->",
+                        AgentSettlemetDiscount
+                      );
 
-                    const calculateAmountAfterDiscount =
-                      item?.ActualAmount *
-                      (1 -
-                        item?.AgentPanelDiscount / 100);
+                      const calculateAmountAfterDiscount =
+                        item?.ActualAmount *
+                        (1 -
+                          item?.AgentPanelDiscount / 100);
 
-                    console.log(
-                      "calculateAmountAfterDiscount",
-                      calculateAmountAfterDiscount
-                    );
+                      console.log(
+                        "calculateAmountAfterDiscount",
+                        calculateAmountAfterDiscount
+                      );
 
-                    // const AgentSettlementAmount =
-                    //   (calculateAmountAfterDiscount * AgentSettlemetDiscount) /
-                    //   100;
-                    const AgentSettlementAmount = ( AgentSettlemetDiscount/ 100) *item?.AmountAfterDiscount
-                    const agentData = {
-                      userId: callback3?.response?.Details?.Id,
-                      agentName: callback3?.response?.Details?.Name,
-                      userTypeId: callback3?.response?.Details?.UserType,
-                      settlementAmount: AgentSettlementAmount,
-                      bookingDate:
-                        item?.CreatedOn?.slice(0, 10),
-                      bookingId:item?.Id,
-                    };
-                    dispatch(
-                      AddupdateAgentSettlement(
-                        agentData,
-                        loginDetails?.logindata?.Token,
-                        (callback4) => {
-                          if (callback4.status) {
+                      // const AgentSettlementAmount =
+                      //   (calculateAmountAfterDiscount * AgentSettlemetDiscount) /
+                      //   100;
+                      const AgentSettlementAmount = (AgentSettlemetDiscount / 100) * item?.AmountAfterDiscount
+                      const agentData = {
+                        userId: callback3?.response?.Details?.Id,
+                        agentName: callback3?.response?.Details?.Name,
+                        userTypeId: callback3?.response?.Details?.UserType,
+                        settlementAmount: AgentSettlementAmount,
+                        bookingDate:
+                          item?.CreatedOn?.slice(0, 10),
+                        bookingId: item?.Id,
+                      };
+                      dispatch(
+                        AddupdateAgentSettlement(
+                          agentData,
+                          loginDetails?.logindata?.Token,
+                          (callback4) => {
+                            if (callback4.status) {
 
-                            dispatch(
-                              AddBillingDetails(
-                                loginDetails?.logindata?.Token,
-                                data,
-                                (callback2) => {
-                                  if (callback2.status) {
-                                    console.log(
-                                      "Generate Bill --------------",
-                                      callback2?.response?.Details
-                                    );
-                                    if (
-                                      callback2?.response?.Details[0]?.NumOfTeens -
+                              dispatch(
+                                AddBillingDetails(
+                                  loginDetails?.logindata?.Token,
+                                  data,
+                                  (callback2) => {
+                                    if (callback2.status) {
+                                      console.log(
+                                        "Generate Bill --------------",
+                                        callback2?.response?.Details
+                                      );
+                                      if (
+                                        callback2?.response?.Details[0]?.NumOfTeens -
                                         callback2?.response?.Details[0]
                                           ?.TotalGuestCount ==
-                                      0
-                                    ) {
-                                      navigate("/TeensBilling", {
-                                        state: {
-                                          BookingDetails: callback2?.response?.Details,
-                                        },
-                                      });
-                                      setLoader(false);
+                                        0
+                                      ) {
+                                        navigate("/TeensBilling", {
+                                          state: {
+                                            BookingDetails: callback2?.response?.Details,
+                                          },
+                                        });
+                                        setLoader(false);
+                                      } else {
+                                        navigate("/BillingDetails", {
+                                          state: {
+                                            BookingDetails: callback2?.response?.Details,
+                                          },
+                                        });
+                                        setLoader(false);
+                                      }
                                     } else {
-                                      navigate("/BillingDetails", {
-                                        state: {
-                                          BookingDetails: callback2?.response?.Details,
-                                        },
-                                      });
+                                      toast.error(callback2.error);
                                       setLoader(false);
                                     }
-                                  } else {
-                                    toast.error(callback2.error);
-                                    setLoader(false);
                                   }
-                                }
-                              )
-                            );
-                            console.log(
-                              "Callback add update details of agent discount seetlement amopunt---->",
-                              callback4?.response?.Details
-                            );
+                                )
+                              );
+                              console.log(
+                                "Callback add update details of agent discount seetlement amopunt---->",
+                                callback4?.response?.Details
+                              );
 
-                            setLoader(false);
+                              setLoader(false);
 
-                            // resolve(callback);
-                          } else {
-                            toast.error(callback4.error);
-                            // reject(callback);
+                              // resolve(callback);
+                            } else {
+                              toast.error(callback4.error);
+                              // reject(callback);
+                            }
                           }
-                        }
-                      )
-                    );
+                        )
+                      );
                     } else {
                       toast.error(callback3.error);
                     }
                   })
                 );
 
-    
+
               } else {
                 toast.error(callback1.error);
               }
@@ -1069,7 +1069,7 @@ const BookingList = () => {
         );
       }
     }
-    else{
+    else {
       if (
         (shifts && shifts[1] && !shifts[1][0]?.ShiftOpen === 1) ||
         (shifts && shifts[3] && !shifts[3][0]?.ShiftOpen === 1) ||
@@ -1106,23 +1106,23 @@ const BookingList = () => {
           packageGuestCount: item.PackageGuestCount,
           totalGuestCount: item.TotalGuestCount,
           // bookingDate: item.CreatedOn?.slice(0, 10),
-          bookingDate: item?.BookingDate != null ? 
-          moment(item?.BookingDate).format("YYYY-MM-DD") :
-          moment(item?.FutureDate).format("YYYY-MM-DD"),
+          bookingDate: item?.BookingDate != null ?
+            moment(item?.BookingDate).format("YYYY-MM-DD") :
+            moment(item?.FutureDate).format("YYYY-MM-DD"),
           billingDate: today,
           teensCount: item.NumOfTeens,
           actualAmount: item.ActualAmount,
           amountAfterDiscount: item.AmountAfterDiscount,
           // discount: item.PanelDiscount ? item.PanelDiscount : item.CouponDiscount,
           discount: item.PanelDiscount
-          ? item.PanelDiscount
-          : item.WebsiteDiscount
-          ? item.WebsiteDiscount
-          : item.CouponDiscount
-          ? item.CouponDiscount
-          : item.AgentPanelDiscount
-          ? item.AgentPanelDiscount
-          : 0,
+            ? item.PanelDiscount
+            : item.WebsiteDiscount
+              ? item.WebsiteDiscount
+              : item.CouponDiscount
+                ? item.CouponDiscount
+                : item.AgentPanelDiscount
+                  ? item.AgentPanelDiscount
+                  : 0,
           packageWeekdayPrice: JSON.stringify(item.PackageWeekdayPrice),
           packageWeekendPrice: JSON.stringify(item.PackageWeekendPrice),
         };
@@ -1136,13 +1136,13 @@ const BookingList = () => {
           // ? 3
           // : 0,
           shiftTypeId:
-          (shifts && shifts[1] && shifts[1][0]?.ShiftOpen === 1) 
-          ? 1 
-          : (shifts && shifts[2] && shifts[2][0]?.ShiftOpen === 1) 
-          ? 2
-          : (shifts && shifts[3] && shifts[3][0]?.ShiftOpen === 1)
-          ? 3
-          : 0,
+            (shifts && shifts[1] && shifts[1][0]?.ShiftOpen === 1)
+              ? 1
+              : (shifts && shifts[2] && shifts[2][0]?.ShiftOpen === 1)
+                ? 2
+                : (shifts && shifts[3] && shifts[3][0]?.ShiftOpen === 1)
+                  ? 3
+                  : 0,
         };
         dispatch(
           updateShiftForBooking(
@@ -1154,42 +1154,42 @@ const BookingList = () => {
                   "booking details updateShiftForBooking--------------?",
                   callback?.response?.Details
                 );
-                    dispatch(
-          AddBillingDetails(
-            loginDetails?.logindata?.Token,
-            data,
-            (callback) => {
-              if (callback.status) {
-                console.log(
-                  "Generate Bill --------------",
-                  callback?.response?.Details
+                dispatch(
+                  AddBillingDetails(
+                    loginDetails?.logindata?.Token,
+                    data,
+                    (callback) => {
+                      if (callback.status) {
+                        console.log(
+                          "Generate Bill --------------",
+                          callback?.response?.Details
+                        );
+
+                        if (
+                          callback?.response?.Details[0]?.NumOfTeens -
+                          callback?.response?.Details[0]?.TotalGuestCount ==
+                          0
+                        ) {
+                          navigate("/TeensBilling", {
+                            state: { BookingDetails: callback?.response?.Details },
+                          });
+                          setLoader(false);
+                        } else {
+                          navigate("/BillingDetails", {
+                            state: { BookingDetails: callback?.response?.Details },
+                          });
+                          setLoader(false);
+                        }
+
+                        toast.error(callback.error);
+                      } else {
+                        toast.error(callback.error);
+                        setLoader(false);
+                      }
+                    }
+                  )
                 );
-    
-                if (
-                  callback?.response?.Details[0]?.NumOfTeens -
-                    callback?.response?.Details[0]?.TotalGuestCount ==
-                  0
-                ) {
-                  navigate("/TeensBilling", {
-                    state: { BookingDetails: callback?.response?.Details },
-                  });
-                  setLoader(false);
-                } else {
-                  navigate("/BillingDetails", {
-                    state: { BookingDetails: callback?.response?.Details },
-                  });
-                  setLoader(false);
-                }
-    
-                toast.error(callback.error);
-              } else {
-                toast.error(callback.error);
-                setLoader(false);
-              }
-            }
-          )
-        );
-    
+
               } else {
                 toast.error(callback.error);
               }
@@ -1242,14 +1242,14 @@ const BookingList = () => {
             </div>
 
             <div className="col-md-4 col-lg-4 d-flex justify-content-end mb-3">
-            <Link
-                  to="/NewBooking"
-                  state={{ userType: "4" }}
-                  className="addLinks"
-                >
-              <button className="btn btn-primary h-100">
-                New Booking
-              </button>
+              <Link
+                to="/NewBooking"
+                state={{ userType: "4" }}
+                className="addLinks"
+              >
+                <button className="btn btn-primary h-100">
+                  New Booking
+                </button>
               </Link>
             </div>
           </div>
@@ -1283,16 +1283,16 @@ const BookingList = () => {
                 Update Booking
               </th>
               {
-               loginDetails?.logindata?.UserType === 1 ||
-                loginDetails?.logindata?.UserType === 2  ? (
+                loginDetails?.logindata?.UserType === 1 ||
+                  loginDetails?.logindata?.UserType === 2 ? (
                   <th scope="col" className="text-center table_heading">
-                  Update Payment
-                </th>
+                    Update Payment
+                  </th>
                 )
-                :
-                (
-                  <></>
-                )
+                  :
+                  (
+                    <></>
+                  )
               }
 
               <th scope="col" className="text-center table_heading">
@@ -1335,7 +1335,15 @@ const BookingList = () => {
               filteredUserBookings.map((item) => (
                 <tr key={item.id}>
                   <td className="manager-list ">{item.FullName}</td>
-                  <td className="manager-list">{item.Phone}</td>
+                  {/* <td className="manager-list">{item.Phone}</td> */}
+                  <td className="manager-list">
+  {item?.Phone
+    ? loginDetails?.logindata?.UserType === 2
+      ? item.Phone.replace(/\d(?=\d{4})/g, "*")
+      : item.Phone
+    : "N/A"}
+</td>
+
                   <td className="manager-list" style={{ fontSize: "12px" }}>
                     {item && item?.PackageName && item?.PackageName ? (
                       JSON.parse(item?.PackageName).map((item, index) => (
@@ -1391,79 +1399,79 @@ const BookingList = () => {
 
                   <td className="manager-list">
                     {item?.ActualAmount - item?.AmountAfterDiscount ==
-                    item?.ActualAmount
+                      item?.ActualAmount
                       ? item?.ActualAmount
                       : item?.AmountAfterDiscount}
                   </td>
                   <td className="manager-list">{item.TotalGuestCount}</td>
 
-                    {/*Generate Bill column */}
+                  {/*Generate Bill column */}
                   <td className="manager-list">
                     {
                       (item?.FutureDate == today) ?
-                      (item?.IsBillGenerated != 1) ? 
-                      <LiaFileInvoiceSolid
-                        onClick={() => startBillGeneration(item)}
-                        style={{
-                          height: "22px",
-                          width: "22px",
-                          backgroundColor: "white",
-                        }}
-                      />
-                      : 
-                      <p>Bill Generated</p>
-                      : (
-                        <p>-</p>
-                      )
+                        (item?.IsBillGenerated != 1) ?
+                          <LiaFileInvoiceSolid
+                            onClick={() => startBillGeneration(item)}
+                            style={{
+                              height: "22px",
+                              width: "22px",
+                              backgroundColor: "white",
+                            }}
+                          />
+                          :
+                          <p>Bill Generated</p>
+                        : (
+                          <p>-</p>
+                        )
                     }
                   </td>
 
-                    {/*Update booking column */}
+                  {/*Update booking column */}
                   <td className="manager-list">
-                  {
-                    (moment(item?.FutureDate).format("YYYY-MM-DD") === today) ||
-                    // moment(item?.BookingDate).format("YYYY-MM-DD") === today ? (
-                    moment(item?.BookingDate).format("YYYY-MM-DD") == activeDateOfOutlet?.OutletDate
-                    ? (
-                    <AiFillEdit
-                      onClick={() => ([1, 2].includes(loginDetails?.logindata?.UserType) && item?.IsBillGenerated != 1) ? navigate("/UpdateBooking/" + item.Id ) : startEditing(item)}
-                      style={{
-                        height: "20px",
-                        width: "20px",
-                        backgroundColor: "white",
-                      }}
-                    />
-                    )
-                    :(<p>-</p>)}
+                    {
+                      (moment(item?.FutureDate).format("YYYY-MM-DD") === today) ||
+                        // moment(item?.BookingDate).format("YYYY-MM-DD") === today ? (
+                        moment(item?.BookingDate).format("YYYY-MM-DD") == activeDateOfOutlet?.OutletDate
+                        ? (
+                          <AiFillEdit
+                            onClick={() => ([1, 2].includes(loginDetails?.logindata?.UserType) && item?.IsBillGenerated != 1) ? navigate("/UpdateBooking/" + item.Id) : startEditing(item)}
+                            style={{
+                              height: "20px",
+                              width: "20px",
+                              backgroundColor: "white",
+                            }}
+                          />
+                        )
+                        : (<p>-</p>)}
                   </td>
-                   
-                {/*Update Payment */}
-                {
-                loginDetails?.logindata?.UserType === 1 ||
-                loginDetails?.logindata?.UserType === 2  ? (
-                  <td className="manager-list">
+
+                  {/*Update Payment */}
                   {
-                  (moment(item?.FutureDate).format("YYYY-MM-DD") === today && item?.PayAtCounter == 1) ||
-                  // moment(item?.BookingDate).format("YYYY-MM-DD") === today ? (
-                  moment(item?.FutureDate).format("YYYY-MM-DD") == activeDateOfOutlet?.OutletDate
-                  ? (
-                    <LiaMoneyBillSolid
-                      onClick={() => StartUpdatingPayment(item)}
-                      style={{
-                        height: "22px",
-                        width: "22px",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  ) : (
-                    <p>-</p>
-                  )}
-                </td>
-                )
-                :
-                (
-                <></>
-                )}
+                    loginDetails?.logindata?.UserType === 1 ||
+                      loginDetails?.logindata?.UserType === 2 ? (
+                      <td className="manager-list">
+                        {
+                          (moment(item?.FutureDate).format("YYYY-MM-DD") === today && item?.PayAtCounter == 1) ||
+                            // moment(item?.BookingDate).format("YYYY-MM-DD") === today ? (
+                            moment(item?.FutureDate).format("YYYY-MM-DD") == activeDateOfOutlet?.OutletDate
+                            ? (
+                              <LiaMoneyBillSolid
+                                onClick={() => StartUpdatingPayment(item)}
+                                style={{
+                                  height: "22px",
+                                  width: "22px",
+                                  backgroundColor: "white",
+                                }}
+                              />
+                            ) : (
+                              <p>-</p>
+                            )}
+                      </td>
+                    )
+                      :
+                      (
+                        <></>
+                      )}
 
 
                   {/* <td className="manager-list">
@@ -1480,7 +1488,7 @@ const BookingList = () => {
 
                   <td
                     className="manager-list"
-                    // onClick={() => handleViewMore(item)}
+                  // onClick={() => handleViewMore(item)}
                   >
                     {/* <img src={more} className="more_img" /> */}
                     <CiCircleMore
@@ -1517,9 +1525,19 @@ const BookingList = () => {
                 Guest Name: <span> {selectedUserDetails.FullName}</span>
               </p>
             </div>
-            <div className="col-6">
+            {/* <div className="col-6">
               <p className="table-modal-list ">
                 Guest Phone no: {selectedUserDetails.Phone}
+              </p>
+            </div> */}
+            <div className="col-6">
+              <p className="table-modal-list">
+                Guest Phone no:{" "}
+                {selectedUserDetails?.Phone
+                  ? loginDetails?.logindata?.UserType === 2
+                    ? selectedUserDetails.Phone.replace(/\d(?=\d{4})/g, "*")
+                    : ""
+                  : "N/A"}
               </p>
             </div>
             {!selectedUserDetails.Email == "" ? (
@@ -1668,12 +1686,12 @@ const BookingList = () => {
             </div>
             {selectedUserDetails?.IsBookingWebsite ? <div className="col-6">
               <p className="table-modal-list ">
-              {`Booking Mode: Website`}
+                {`Booking Mode: Website`}
               </p>
             </div> : null}
             <div className="col-6">
               <p className="table-modal-list ">
-              {`Booking Date: ${selectedUserDetails?.CreatedOn?.slice(0, 10) || selectedUserDetails?.BookingDate}`}
+                {`Booking Date: ${selectedUserDetails?.CreatedOn?.slice(0, 10) || selectedUserDetails?.BookingDate}`}
               </p>
             </div>
           </Modal.Body>
@@ -2328,7 +2346,7 @@ const BookingList = () => {
             <Modal.Title>Generate Bill</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-           Are You sure you want to proceed?
+            Are You sure you want to proceed?
           </Modal.Body>
           <Modal.Footer>
             <Button

@@ -146,6 +146,81 @@ export const GetBillingDetails =
       });
   };
 
+// export const GetBillingDetails =
+//   (
+//     token,
+//     billDate,
+//     futureDate,
+//     userId,
+//     shiftId,
+//     billId,
+//     searchBillId,
+//     fromDate,
+//     toDate,
+//     online,
+//     methodOfPayment, // Add methodOfPayment parameter
+//     callback
+//   ) =>
+//   async (dispatch) => {
+//     console.log(
+//       "futureDate-----------------from redux***********************************************************>",
+//       futureDate
+//     );
+//     console.log("okkkk", online);
+//     console.log("searchBillId--->", parseInt(searchBillId));
+//     console.log("billDate>>", billDate);
+//     console.log("methodOfPayment lakra 22>>", typeof(methodOfPayment)); // Log the payment method
+
+//     const params = new URLSearchParams({
+//       billId: searchBillId ? parseInt(searchBillId) : 0,
+//       userId: userId ? parseInt(userId) : 0,
+//       billingDate: toDate || fromDate ? "" : billDate,
+//       shiftId: shiftId ? parseInt(shiftId) : 0,
+//       isBookingWebsite: online,
+//       futureDate,
+//       fromDate,
+//       toDate,
+//     });
+    
+//     // ✅ Only append methodOfPayment if it's NOT null or an object
+//     if (methodOfPayment && typeof methodOfPayment === "string" && methodOfPayment !== "null") {
+//       params.append("methodOfPayment", methodOfPayment);
+//     }
+    
+//     api.BILLING_PORT.get(`/billing/getBillingDetails?${params.toString()}`, {
+//       headers: { AuthToken: token },
+//     })
+
+//     // api.BILLING_PORT.get(
+//     //   `/billing/getBillingDetails?billId=${
+//     //     searchBillId ? parseInt(searchBillId) : 0
+//     //   }&userId=${userId ? parseInt(userId) : 0}&billingDate=${
+//     //     toDate || fromDate ? "" : billDate
+//     //   }&shiftId=${shiftId ? parseInt(shiftId) : 0}&isBookingWebsite=${online}&futureDate=${futureDate}&fromDate=${fromDate}&toDate=${toDate}&methodOfPayment=${methodOfPayment}`, // Add methodOfPayment to the query
+//     //   {
+//     //     headers: { AuthToken: token },
+//     //   }
+//     // )
+//       .then((response) => {
+//         console.log("Get Billing Details -> ->", response.data);
+//         if (response.data?.Details) {
+//           console.log(response.data?.Details);
+//           callback({
+//             status: true,
+//             response: response?.data,
+//           });
+//         } else if (response.data?.Error) {
+//           callback({
+//             status: false,
+//             error: response.data?.Error?.ErrorMessage,
+//           });
+//         }
+//       })
+//       .catch((err) => {
+//         console.log("error", err);
+//       });
+//   };
+
 export const uploadBillFile = (token, data, callback) => async (dispatch) => {
   console.log("Data for add billing details---------->", data);
   api.BILLING_PORT.post("/billing/uploadBillFile", data, {
